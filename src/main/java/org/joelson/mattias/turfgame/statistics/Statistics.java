@@ -39,12 +39,62 @@ public class Statistics implements Serializable {
         return municipalities.add(Objects.requireNonNull(municipality));
     }
 
+    public Municipality getMunicipality(String name) {
+        for (Municipality municipality : municipalities) {
+            if (municipality.getName().equals(name)) {
+                return municipality;
+            }
+        }
+        return null;
+    }
+
+    public boolean addZone(Zone zone) {
+        return zones.add(Objects.requireNonNull(zone));
+    }
+
+    public Zone getZone(String name) {
+        for (Zone zone : zones) {
+            if (zone.getName().equals(name)) {
+                return zone;
+            }
+        }
+        return null;
+    }
+
     public boolean addRound(Round round) {
         return rounds.add(Objects.requireNonNull(round));
     }
 
+    public Round getRound(int id) {
+        for (Round round : rounds) {
+            if (round.getId() == id) {
+                return round;
+            }
+        }
+        return null;
+    }
+
     public boolean addUser(User user) {
         return users.add(Objects.requireNonNull(user));
+    }
+
+    public User getUser(String name) {
+        for (User user : users) {
+            if (user.getName().equals(name)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public boolean addVisits(Visits visits) {
+        if (this.visits.stream()
+                .anyMatch(v -> v.getZone().equals(visits.getZone())
+                        && v.getUser().equals(visits.getUser())
+                        && v.getRound().equals(visits.getRound()))) {
+            return false;
+        }
+        return this.visits.add(visits);
     }
 
     @Override
