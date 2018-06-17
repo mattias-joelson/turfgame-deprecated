@@ -58,6 +58,22 @@ public class MonthlyZone {
         return assists;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof MonthlyZone) {
+            MonthlyZone that = (MonthlyZone) obj;
+            return name.equals(that.getName()) && municipality.equals(that.getMunicipality())
+                    && tp == that.getTP() && pph == that.getPPH()
+                    && takes == that.getTakes() && revisits == that.getRevisits() && assists == that.getAssists();
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
     private static String validString(String s) {
         if (s == null || s.isEmpty()) {
             throw new IllegalArgumentException("Null or empty string!");
