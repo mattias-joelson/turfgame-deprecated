@@ -16,7 +16,8 @@ public class StatisticsInitializer {
         addMunicipality(statistics, stockholm, "Danderyds kommun");
         addMunicipality(statistics, stockholm, "Sigtuna kommun");
         addMunicipality(statistics, stockholm, "Solna kommun");
-        addMunicipality(statistics, stockholm, "Stockholmns kommun");
+        addMunicipality(statistics, stockholm, "Sollentuna kommun");
+        addMunicipality(statistics, stockholm, "Stockholms kommun");
         addMunicipality(statistics, stockholm, "Sundbybergs kommun");
 
         Region uppsala = new Region(142, "Uppsala", sweden);
