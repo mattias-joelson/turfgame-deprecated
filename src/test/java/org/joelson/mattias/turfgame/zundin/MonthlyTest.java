@@ -2,6 +2,7 @@ package org.joelson.mattias.turfgame.zundin;
 
 import org.joelson.mattias.turfgame.statistics.Statistics;
 import org.joelson.mattias.turfgame.statistics.StatisticsInitializer;
+import org.joelson.mattias.turfgame.util.URLReader;
 import org.junit.Test;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class MonthlyTest {
     private Monthly getPartMonthly() throws IOException {
         File file = new File(getClass().getResource("/monthly_oberoff_round96_part.html").getFile());
         FileInputStream input = new FileInputStream(file);
-        Monthly monthly = Monthly.fromHTMLStream(OBEROFF, ROUND, input);
+        Monthly monthly = Monthly.fromHTML(OBEROFF, ROUND, URLReader.asString(input));
         input.close();
         return monthly;
     }
@@ -61,7 +62,7 @@ public class MonthlyTest {
     private Monthly getMonthly() throws IOException {
         File file = new File(getClass().getResource("/monthly_oberoff_round96.html").getFile());
         FileInputStream input = new FileInputStream(file);
-        Monthly monthly = Monthly.fromHTMLStream(OBEROFF, ROUND, input);
+        Monthly monthly = Monthly.fromHTML(OBEROFF, ROUND, URLReader.asString(input));
         input.close();
         return monthly;
     }
