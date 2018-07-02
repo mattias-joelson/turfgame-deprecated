@@ -7,10 +7,10 @@ import org.jsoup.select.Elements;
 
 public class MonthlyZone {
 
-    private static final String ZONE_NAME_LINK_TAG = "<a href=\"http://frut.zundin.se/zone.php?zoneid=";
+    private static final String ZONE_NAME_LINK_TAG = "<a href='http://frut.zundin.se/zone.php?zoneid=";
     private static final String TABLE_CELL_TAG = "<td>";
-    private static final String RIGHT_TABLE_CELL_TAG = "<td align=\"right\">";
-    private static final String LEFT_TABLE_CELL_TAG = "<td style=\"padding-left:10px\" align=\"left\">";
+    private static final String RIGHT_TABLE_CELL_TAG = "<td align='right'>";
+    private static final String LEFT_TABLE_CELL_TAG = "<td style='padding-left:10px' align='left'>";
 
     private final String name;
     private final int tp;

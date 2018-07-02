@@ -41,5 +41,29 @@ public class MonthlyTest {
         return monthly;
     }
 
+    @Test
+    public void parseStatisticsFile() throws IOException {
+        Monthly monthly = getMonthly();
+        assertNotNull(monthly);
+        assertEquals(OBEROFF, monthly.getUserName());
+        assertEquals(ROUND, monthly.getRound());
+        assertEquals(470, monthly.getZones().size());
+    }
+
+    @Test
+    public void testAddToStatistics() throws  IOException {
+        Monthly monthly = getMonthly();
+        Statistics statistics = StatisticsInitializer.initialize();
+        Monthly.addToStatistics(monthly, statistics);
+        System.out.println(statistics);
+    }
+
+    private Monthly getMonthly() throws IOException {
+        File file = new File(getClass().getResource("/monthly_oberoff_round96.html").getFile());
+        FileInputStream input = new FileInputStream(file);
+        Monthly monthly = Monthly.fromHTMLStream(OBEROFF, ROUND, input);
+        input.close();
+        return monthly;
+    }
 }
 
