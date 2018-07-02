@@ -6,6 +6,7 @@ import org.joelson.mattias.turfgame.statistics.Statistics;
 import org.joelson.mattias.turfgame.statistics.User;
 import org.joelson.mattias.turfgame.statistics.Visits;
 import org.joelson.mattias.turfgame.statistics.Zone;
+import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,23 +69,7 @@ public class Monthly {
         if (round > 0) {
             request += "&roundid=" + round;
         }
-        URL url = new URL(request);
-        URLConnection connection = url.openConnection();
-
-        try (InputStream input = connection.getInputStream()) {
-            return fromHTMLStream(userName, round, input);
-        }
-    }
-
-    public static Monthly fromHTMLStream(String userName, int round, InputStream input) throws IOException {
-        StringBuilder htmlBuilder = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        String line = reader.readLine();
-        while (line != null) {
-            htmlBuilder.append(line).append('\n');
-            line = reader.readLine();
-        }
-        return fromHTML(userName, round, htmlBuilder.toString());
+        return fromHTML(userName, round, URLReader.asString(request));
     }
 
     public static Monthly fromHTML(String userName, int round, String html) {
