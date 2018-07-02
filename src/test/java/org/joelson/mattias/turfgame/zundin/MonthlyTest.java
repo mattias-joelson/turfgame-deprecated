@@ -17,8 +17,8 @@ public class MonthlyTest {
     public static final int ROUND = 96;
 
     @Test
-    public void parseStatisticsFile() throws IOException {
-        Monthly monthly = getMonthly();
+    public void parseStatisticsPartFile() throws IOException {
+        Monthly monthly = getPartMonthly();
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
         assertEquals(ROUND, monthly.getRound());
@@ -26,15 +26,15 @@ public class MonthlyTest {
     }
 
     @Test
-    public void testAddToStatistics() throws  IOException {
-        Monthly monthly = getMonthly();
+    public void testAddPartToStatistics() throws  IOException {
+        Monthly monthly = getPartMonthly();
         Statistics statistics = StatisticsInitializer.initialize();
         Monthly.addToStatistics(monthly, statistics);
         System.out.println(statistics);
     }
 
-    private Monthly getMonthly() throws IOException {
-        File file = new File(getClass().getResource("/monthly_oberoff_round96.html").getFile());
+    private Monthly getPartMonthly() throws IOException {
+        File file = new File(getClass().getResource("/monthly_oberoff_round96_part.html").getFile());
         FileInputStream input = new FileInputStream(file);
         Monthly monthly = Monthly.fromHTMLStream(OBEROFF, ROUND, input);
         input.close();
