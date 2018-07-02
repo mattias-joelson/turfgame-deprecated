@@ -20,7 +20,7 @@ import java.util.Set;
 public class Monthly {
 
 
-    private static final String TURF_LINK_TAG = "<a href=\"https://www.turfgame.com/zone/";
+    private static final String TURF_LINK_TAG = "<a href='https://www.turfgame.com/zone/";
 
     private final String userName;
     private final int round;

@@ -8,6 +8,8 @@ public class StatisticsInitializer {
     public static Statistics initialize() {
         Statistics statistics = new Statistics();
 
+        Country spain = new Country("es", "Spain");
+        statistics.addCountry(spain);
         Country sweden = new Country("se", "Sweden");
         statistics.addCountry(sweden);
 
@@ -24,6 +26,10 @@ public class StatisticsInitializer {
         statistics.addRegion(uppsala);
         addMunicipality(statistics, stockholm, "Knivsta kommun");
         addMunicipality(statistics, uppsala, "Uppsala kommun");
+
+        Region spainRegion = new Region(211, "Spain", spain);
+        statistics.addRegion(spainRegion);
+        addMunicipality(statistics, spainRegion, "Spain");
 
         statistics.addUser(new User(80119, "Oberoff"));
 
