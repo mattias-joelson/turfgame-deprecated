@@ -3,26 +3,42 @@ package org.joelson.mattias.turfgame.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 
 public class JSONArray implements JSONValue {
 
     private final List<JSONValue> elements;
 
-    public JSONArray(List<JSONValue> elements) {
-        this.elements = elements;
-    }
-
-    @Override
-    public List<Object> asJava() {
-        List<Object> objects = new ArrayList<>(elements.size());
-        for (JSONValue element : elements) {
-            objects.add(element.asJava());
-        }
-        return objects;
+    JSONArray(List<JSONValue> elements) {
+        this.elements = new ArrayList<>(elements.size());
+        this.elements.addAll(elements);
     }
 
     public Iterable<JSONValue> getElements() {
         return Collections.unmodifiableList(elements);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof JSONArray && elements.equals(((JSONArray) obj).elements);
+    }
+
+    @Override
+    public int hashCode() {
+        return elements.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[");
+        boolean addComma = false;
+        for (JSONValue value : elements) {
+            if (addComma) {
+                sb.append(',');
+            }
+            addComma = true;
+            sb.append(value);
+        }
+        sb.append(']');
+        return sb.toString();
     }
 }

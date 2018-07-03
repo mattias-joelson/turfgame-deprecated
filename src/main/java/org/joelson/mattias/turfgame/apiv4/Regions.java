@@ -8,13 +8,15 @@ import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class Regions {
+public final class Regions {
 
-    public static final String REGIONS_REQUEST = "http://api.turfgame.com/v4/regions";
+    private static final String REGIONS_REQUEST = "http://api.turfgame.com/v4/regions";
+
+    private Regions() throws InstantiationException {
+        throw new InstantiationException("Should not be instantiated!");
+    }
 
     public static List<Region> readRegions() throws IOException {
         return fromHTML(URLReader.asString(REGIONS_REQUEST));

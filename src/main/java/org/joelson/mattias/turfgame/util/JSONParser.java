@@ -13,7 +13,7 @@ public class JSONParser {
     private static final String NULL_VALUE = "null";
 
     private String json = "";
-    private int pos = 0;
+    private int pos;
 
     /**
      *
@@ -22,7 +22,7 @@ public class JSONParser {
      * @throws JSONParseException if JSON is incorrect
      */
     public JSONValue parse(String jsonString) {
-        this.json = jsonString;
+        json = jsonString;
         pos = 0;
         return nextValue();
     }
@@ -30,11 +30,11 @@ public class JSONParser {
     private JSONValue nextValue() {
         if (matches(TRUE_VALUE)) {
             pos += TRUE_VALUE.length();
-            return new JSONTrue();
+            return new JSONBoolean(true);
         }
         if (matches(FALSE_VALUE)) {
             pos += FALSE_VALUE.length();
-            return new JSONFalse();
+            return new JSONBoolean(false);
         }
         if (matches(NULL_VALUE)) {
             pos += NULL_VALUE.length();
@@ -77,10 +77,10 @@ public class JSONParser {
     }
 
     private JSONPair nextPair() {
-        JSONString string = nextString();
+        JSONString name = nextString();
         expect(':');
         JSONValue value = nextValue();
-        return new JSONPair(string, value);
+        return new JSONPair(name, value);
     }
 
     private JSONArray nextArray() {
@@ -112,85 +112,79 @@ public class JSONParser {
 
     private JSONString nextString() {
         expect('"');
-        StringBuilder string = new StringBuilder();
-        boolean atEnd = false;
+        StringBuilder sb = new StringBuilder();
+        boolean hasMore = true;
         do {
             switch (nextChar()) {
             case '"':
-                atEnd = true;
+                hasMore = false;
                 break;
             case '\\':
-                pos += 1;
-                switch(nextChar()) {
-                case '"':
-                case '\\':
-                case '/':
-                case 'b':
-                case 'f':
-                case 'n':
-                case 'r':
-                case 't':
-                    string.append('\\');
-                    string.append(nextChar());
-                    pos += 1;
-                    break;
-                case 'u':
-                    pos -= 1;
-                    new RuntimeException("Not implemented yet!");
-                    break;
-                default:
-                    throw new JSONParseException("Invalid char '" + nextChar() + "' after escape at position "
-                            + (pos - 1) + '!');
-                }
+                nextStringEscape(sb);
                 break;
             default:
                 char ch = nextChar();
-                if (ch >= 32 && ch != '"' && ch != '\\' && (ch < 127 || ch > 160) && ch <= 0x10ffff) {
-                    string.append(ch);
+                if (ch >= ' ' && ch != '"' && ch != '\\' && (ch <= '~' || ch >= '¡')) {
+                    sb.append(ch);
                     pos += 1;
                 } else {
                     throw new JSONParseException("Invalid char '" + ch + "' (" + (int) ch + ") at position "
                             + pos + '!');
                 }
             }
-        } while (!atEnd);
+        } while (hasMore);
         expect('"');
-        return new JSONString(string.toString());
+        return new JSONString(sb.toString());
+    }
+
+    private void nextStringEscape(StringBuilder sb) {
+        pos += 1;
+        switch(nextChar()) {
+        case '"':
+        case '\\':
+        case '/':
+        case 'b':
+        case 'f':
+        case 'n':
+        case 'r':
+        case 't':
+            sb.append('\\');
+            sb.append(nextChar());
+            pos += 1;
+            break;
+        case 'u':
+            pos -= 1;
+            throw new RuntimeException("Not implemented yet!");
+        default:
+            throw new JSONParseException("Invalid char '" + nextChar() + "' after escape at position "
+                    + (pos - 1) + '!');
+        }
     }
 
     private JSONNumber nextNumber() {
         int startPos = pos;
-        boolean negative = false;
         if (matches('-')) {
-            negative = true;
             pos += 1;
         }
-        if (!matches('0')) {
-            while (matchesDigit()) {
-                pos += 1;
-            }
+        if (matches('0')) {
+            pos += 1;
         } else {
-            pos += 1;
+            consumeDigits();
         }
-        boolean integer = true;
         if (matches('.')) {
-            integer = false;
             pos += 1;
-            while (matchesDigit()) {
-                pos += 1;
-            }
+            consumeDigits();
         }
         if (matches('e') || matches('E')) {
             throw new RuntimeException("Exponents not yet implemented!");
         }
-        String numberString = json.substring(startPos, pos);
-        Number number;
-        if (integer) {
-            number = Long.valueOf(numberString);
-        } else {
-            number = Double.valueOf(numberString);
+        return new JSONNumber(json.substring(startPos, pos));
+    }
+
+    private void consumeDigits() {
+        while (matchesDigit()) {
+            pos += 1;
         }
-        return new JSONNumber(number);
     }
 
     private char nextChar() {
