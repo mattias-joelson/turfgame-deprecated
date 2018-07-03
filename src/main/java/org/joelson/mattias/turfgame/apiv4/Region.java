@@ -4,25 +4,41 @@ import org.joelson.mattias.turfgame.util.JSONNumber;
 import org.joelson.mattias.turfgame.util.JSONObject;
 import org.joelson.mattias.turfgame.util.JSONString;
 
-public class Region {
+public final class Region {
+
+    private static final String COUNTRY = "country";
+    private static final String NAME = "name";
+    private static final String ID = "id";
 
     private final String country;
     private final String name;
     private final int id;
 
-    public Region(String country, String name, int id) {
+    private Region(String country, String name, int id) {
         this.country = country;
         this.name = name;
         this.id = id;
     }
 
-    public static Region fromJSON(JSONObject obj) {
-        JSONString name = (JSONString) obj.getValue("name");
-        JSONNumber id = (JSONNumber) obj.getValue("id");
-        if (obj.containsString("country")) {
-            JSONString country = (JSONString) obj.getValue("country");
-            return new Region(country.asJava(), name.asJava(), id.asJava().intValue());
+    public String getCountry() {
+        return country;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    static Region fromJSON(JSONObject obj) {
+        JSONString name = (JSONString) obj.getValue(NAME);
+        JSONNumber id = (JSONNumber) obj.getValue(ID);
+        if (obj.containsName(COUNTRY)) {
+            JSONString country = (JSONString) obj.getValue(COUNTRY);
+            return new Region(country.toString(), name.toString(), id.intValue());
         }
-        return new Region(null, name.asJava(), id.asJava().intValue());
+        return new Region(null, name.toString(), id.intValue());
     }
 }

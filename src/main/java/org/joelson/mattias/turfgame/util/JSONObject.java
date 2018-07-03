@@ -1,58 +1,89 @@
 package org.joelson.mattias.turfgame.util;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 public class JSONObject implements JSONValue {
 
     private final List<JSONPair> members;
 
-    public JSONObject(List<JSONPair> members) {
-        this.members = members;
-    }
-
-    @Override
-    public List<Entry<String, Object>> asJava() {
-        List<Entry<String, Object>> members = new ArrayList<>();
-        for (JSONPair member : this.members) {
-            members.add(new AbstractMap.SimpleEntry<>(member.getString().asJava(), member.getValue().asJava()));
-        }
-        return members;
+    JSONObject(List<JSONPair> members) {
+        this.members = new ArrayList<>(members.size());
+        this.members.addAll(members);
     }
 
     public ListIterator<JSONPair> getMembers() {
         return Collections.unmodifiableList(members).listIterator();
     }
 
-    public boolean containsString(String s) {
-        return containsString(new JSONString(s));
+    public boolean containsName(String name) {
+        return containsName(new JSONString(name));
     }
 
-    public boolean containsString(JSONString s) {
+    public boolean containsName(JSONString name) {
+        return getPair(name) != null;
+    }
+
+    public JSONValue getValue(String name) {
+        return getValue(new JSONString(name));
+    }
+
+    public JSONValue getValue(JSONString name) {
+        JSONPair pair = getPair(name);
+        if (pair != null) {
+            return (pair).getValue();
+        }
+        throw new NoSuchElementException("There exist no value pair " + name + '!');
+    }
+
+    private JSONPair getPair(JSONString name) {
         for (JSONPair member : members) {
-            if (member.getString().equals(s)) {
-                return true;
+            if ((member.getName()).equals(name)) {
+                return member;
             }
         }
-        return false;
+        return null;
     }
 
-    public JSONValue getValue(String s) {
-        return getValue(new JSONString(s));
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof JSONObject && hasEqualMembers((JSONObject) obj);
     }
 
-    private JSONValue getValue(JSONString s) {
-        for (JSONPair member : members) {
-            if (member.getString().equals(s)) {
-                return member.getValue();
+    private boolean hasEqualMembers(JSONObject obj) {
+        if (members.size() != obj.members.size()) {
+            return false;
+        }
+        ListIterator<JSONPair> iterator = members.listIterator();
+        ListIterator<JSONPair> objIterator = members.listIterator();
+        while (iterator.hasNext()) {
+            if (!iterator.next().equals(objIterator.next())) {
+                return false;
             }
         }
-        throw new NoSuchElementException("There exist no value pair " + s.asJava() + '!');
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return members.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("{");
+        boolean addComma = false;
+        for (JSONPair member : members) {
+            if (addComma) {
+                sb.append(',');
+            }
+            addComma = true;
+            sb.append(member);
+        }
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -2,27 +2,31 @@ package org.joelson.mattias.turfgame.util;
 
 public class JSONString implements JSONValue {
 
-    private final String string;
+    private final String str;
 
-    public JSONString(String string) {
-        this.string = string;
+    JSONString(String str) {
+        this.str = str;
     }
 
-    @Override
-    public String asJava() {
-        return string;
+    public String stringValue() {
+        return str;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof JSONString) {
-            return string.equals(((JSONString) obj).string);
+            return str.equals(((JSONString) obj).stringValue());
         }
         return super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return string.hashCode();
+        return str.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return '"' + str + '"';
     }
 }

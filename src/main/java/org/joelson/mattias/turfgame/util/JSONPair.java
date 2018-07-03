@@ -1,20 +1,38 @@
 package org.joelson.mattias.turfgame.util;
 
-public class JSONPair {
+class JSONPair {
 
-    private final JSONString string;
+    private final JSONString name;
     private final JSONValue value;
 
-    public JSONPair(JSONString string, JSONValue value) {
-        this.string = string;
+    JSONPair(JSONString name, JSONValue value) {
+        this.name = name;
         this.value = value;
     }
 
-    public JSONString getString() {
-        return string;
+    JSONString getName() {
+        return name;
     }
 
-    public JSONValue getValue() {
+    JSONValue getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof JSONPair) {
+            return name.equals(((JSONPair) obj).name) && value.equals(((JSONPair) obj).value);
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode() * 31 + value.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return name + ":" + value;
     }
 }
