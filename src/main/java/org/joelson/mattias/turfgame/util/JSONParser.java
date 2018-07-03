@@ -112,7 +112,7 @@ public class JSONParser {
 
     private JSONString nextString() {
         expect('"');
-        StringBuilder sb = new StringBuilder();
+        int startPos = pos;
         boolean hasMore = true;
         do {
             switch (nextChar()) {
@@ -120,12 +120,11 @@ public class JSONParser {
                 hasMore = false;
                 break;
             case '\\':
-                nextStringEscape(sb);
+                nextStringEscape();
                 break;
             default:
                 char ch = nextChar();
                 if (ch >= ' ' && ch != '"' && ch != '\\' && (ch <= '~' || ch >= '¡')) {
-                    sb.append(ch);
                     pos += 1;
                 } else {
                     throw new JSONParseException("Invalid char '" + ch + "' (" + (int) ch + ") at position "
@@ -133,11 +132,12 @@ public class JSONParser {
                 }
             }
         } while (hasMore);
+        String value = json.substring(startPos, pos);
         expect('"');
-        return new JSONString(sb.toString());
+        return new JSONString(value);
     }
 
-    private void nextStringEscape(StringBuilder sb) {
+    private void nextStringEscape() {
         pos += 1;
         switch(nextChar()) {
         case '"':
@@ -148,13 +148,17 @@ public class JSONParser {
         case 'n':
         case 'r':
         case 't':
-            sb.append('\\');
-            sb.append(nextChar());
             pos += 1;
             break;
         case 'u':
-            pos -= 1;
-            throw new RuntimeException("Not implemented yet!");
+            pos += 1;
+            for (int i = 0; i < 4; i += 1) {
+                if (!matchesHexDigit()) {
+                    throw new JSONParseException("Invalid hex digit '" + nextChar() + "' at postion " + pos + '!');
+                }
+                pos += 1;
+            }
+            break;
         default:
             throw new JSONParseException("Invalid char '" + nextChar() + "' after escape at position "
                     + (pos - 1) + '!');
@@ -206,6 +210,11 @@ public class JSONParser {
     private boolean matchesDigit() {
         char ch = nextChar();
         return ch >= '0' && ch <= '9';
+    }
+
+    private boolean matchesHexDigit() {
+        char ch = nextChar();
+        return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <='F') || (ch >= 'a' && ch <= 'f');
     }
 
     private String createExceptionMessage() {
