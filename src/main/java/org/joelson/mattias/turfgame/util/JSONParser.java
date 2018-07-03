@@ -176,7 +176,11 @@ public class JSONParser {
             consumeDigits();
         }
         if (matches('e') || matches('E')) {
-            throw new RuntimeException("Exponents not yet implemented!");
+            pos += 1;
+            if (matches('+') || matches('-')) {
+                pos += 1;
+            }
+            consumeDigits();
         }
         return new JSONNumber(json.substring(startPos, pos));
     }
