@@ -1,6 +1,7 @@
 package org.joelson.mattias.turfgame.apiv4;
 
 import org.joelson.mattias.turfgame.util.URLReader;
+import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Test;
 
 import java.io.File;
@@ -17,11 +18,7 @@ public class ZonesTest {
         assertEquals(55774, zones.size());
     }
 
-    private List<Zone> getAllZones() throws IOException {
-        File file = new File(getClass().getResource("/zones-all.json").getFile());
-        FileInputStream input = new FileInputStream(file);
-        List<Zone> zones = Zones.fromHTML(URLReader.asString(input));
-        input.close();
-        return zones;
+    private static List<Zone> getAllZones() throws IOException {
+        return URLReaderTest.readProperties("/zones-all.json", Zones::fromHTML);
     }
 }

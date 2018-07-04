@@ -8,14 +8,11 @@ import org.joelson.mattias.turfgame.statistics.Visits;
 import org.joelson.mattias.turfgame.statistics.Zone;
 import org.joelson.mattias.turfgame.util.URLReader;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Monthly {
@@ -25,12 +22,12 @@ public class Monthly {
 
     private final String userName;
     private final int round;
-    private final Set<MonthlyZone> zones;
+    private final List<MonthlyZone> zones;
 
-    public Monthly(String userName, int round, Set<MonthlyZone> zones) {
+    private Monthly(String userName, int round, List<MonthlyZone> zones) {
         this.userName = userName;
         this.round = round;
-        this.zones = new HashSet<>();
+        this.zones = new ArrayList<>();
         this.zones.addAll(zones);
     }
 
@@ -42,8 +39,8 @@ public class Monthly {
         return round;
     }
 
-    public Set<MonthlyZone> getZones() {
-        return Collections.unmodifiableSet(zones);
+    public List<MonthlyZone> getZones() {
+        return Collections.unmodifiableList(zones);
     }
 
     public static void addToStatistics(Monthly monthly, Statistics statistics) {
@@ -53,7 +50,7 @@ public class Monthly {
             Zone zone = statistics.getZone(monthlyZone.getName());
             if (zone == null) {
                 Municipality municipality = statistics.getMunicipality(monthlyZone.getMunicipality());
-                zone = new Zone(-1, monthlyZone.getName(), municipality, 0f, 0f);
+                zone = new Zone(-1, monthlyZone.getName(), municipality, 0.0f, 0.0f);
                 statistics.addZone(zone);
             }
             Visits visits = new Visits(zone, user, round, monthlyZone.getTP(), monthlyZone.getPPH(),
@@ -69,11 +66,11 @@ public class Monthly {
         if (round > 0) {
             request += "&roundid=" + round;
         }
-        return fromHTML(userName, round, URLReader.asString(request));
+        return fromHTML(userName, round, URLReader.getRequest(request));
     }
 
     public static Monthly fromHTML(String userName, int round, String html) {
-        Set<MonthlyZone> zones = new HashSet<>();
+        List<MonthlyZone> zones = new ArrayList<>();
         int pos = html.indexOf(TURF_LINK_TAG);
         if (pos == -1) {
             return new Monthly(userName, round, zones);

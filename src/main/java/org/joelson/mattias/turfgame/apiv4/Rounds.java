@@ -19,7 +19,7 @@ public final class Rounds {
     }
 
     public static List<Round> readRounds() throws IOException {
-        return fromHTML(URLReader.asString(ROUNDS_REQUEST));
+        return fromHTML(URLReader.getRequest(ROUNDS_REQUEST));
     }
 
     static List<Round> fromHTML(String s) {

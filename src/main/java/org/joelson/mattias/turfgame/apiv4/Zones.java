@@ -19,7 +19,7 @@ public final class Zones {
     }
 
     public static List<Zone> readAllZones() throws IOException {
-        return fromHTML(URLReader.asString(ALL_ZONES_REQUEST));
+        return fromHTML(URLReader.getRequest(ALL_ZONES_REQUEST));
     }
 
     static List<Zone> fromHTML(String s) {

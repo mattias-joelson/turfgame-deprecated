@@ -19,7 +19,7 @@ public final class Regions {
     }
 
     public static List<Region> readRegions() throws IOException {
-        return fromHTML(URLReader.asString(REGIONS_REQUEST));
+        return fromHTML(URLReader.getRequest(REGIONS_REQUEST));
     }
 
     static List<Region> fromHTML(String s) {
