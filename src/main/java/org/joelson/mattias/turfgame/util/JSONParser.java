@@ -200,7 +200,8 @@ public class JSONParser {
     }
 
     private boolean matches(String pattern) {
-        return json.substring(pos, pos + pattern.length()).equals(pattern);
+        int minEnd = Math.min(pos + pattern.length(), json.length());
+        return json.substring(pos, minEnd).equals(pattern);
     }
 
     private boolean matches(char ch) {
