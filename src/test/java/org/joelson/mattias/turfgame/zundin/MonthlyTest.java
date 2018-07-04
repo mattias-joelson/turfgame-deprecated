@@ -2,7 +2,7 @@ package org.joelson.mattias.turfgame.zundin;
 
 import org.joelson.mattias.turfgame.statistics.Statistics;
 import org.joelson.mattias.turfgame.statistics.StatisticsInitializer;
-import org.joelson.mattias.turfgame.util.URLReader;
+import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Test;
 
 import java.io.File;
@@ -23,7 +23,7 @@ public class MonthlyTest {
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
         assertEquals(ROUND, monthly.getRound());
-        assertEquals(343, monthly.getZones().size());
+        assertEquals(343, (monthly.getZones()).size());
     }
 
     @Test
@@ -34,12 +34,8 @@ public class MonthlyTest {
         System.out.println(statistics);
     }
 
-    private Monthly getPartMonthly() throws IOException {
-        File file = new File(getClass().getResource("/monthly_oberoff_round96_part.html").getFile());
-        FileInputStream input = new FileInputStream(file);
-        Monthly monthly = Monthly.fromHTML(OBEROFF, ROUND, URLReader.asString(input));
-        input.close();
-        return monthly;
+    private static Monthly getPartMonthly() throws IOException {
+        return readProperties("/monthly_oberoff_round96_part.html");
     }
 
     @Test
@@ -48,7 +44,7 @@ public class MonthlyTest {
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
         assertEquals(ROUND, monthly.getRound());
-        assertEquals(470, monthly.getZones().size());
+        assertEquals(470, (monthly.getZones()).size());
     }
 
     @Test
@@ -59,12 +55,12 @@ public class MonthlyTest {
         System.out.println(statistics);
     }
 
-    private Monthly getMonthly() throws IOException {
-        File file = new File(getClass().getResource("/monthly_oberoff_round96.html").getFile());
-        FileInputStream input = new FileInputStream(file);
-        Monthly monthly = Monthly.fromHTML(OBEROFF, ROUND, URLReader.asString(input));
-        input.close();
-        return monthly;
+    private static Monthly getMonthly() throws IOException {
+        return readProperties("/monthly_oberoff_round96.html");
+    }
+
+    private static Monthly readProperties(String resource) throws IOException {
+        return URLReaderTest.readProperties("/rounds.json", s -> Monthly.fromHTML(OBEROFF, ROUND, s));
     }
 }
 
