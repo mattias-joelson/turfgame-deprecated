@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 public class MonthlyTest {
 
     private static final String OBEROFF = "Oberoff";
-    public static final int ROUND = 96;
+    private static final int ROUND = 96;
 
     @Test
     public void parseStatisticsPartFile() throws IOException {
@@ -60,7 +60,7 @@ public class MonthlyTest {
     }
 
     private static Monthly readProperties(String resource) throws IOException {
-        return URLReaderTest.readProperties("/rounds.json", s -> Monthly.fromHTML(OBEROFF, ROUND, s));
+        return URLReaderTest.readProperties(resource, s -> Monthly.fromHTML(OBEROFF, ROUND, s));
     }
 }
 
