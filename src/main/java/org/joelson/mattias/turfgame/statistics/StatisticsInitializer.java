@@ -3,14 +3,18 @@ package org.joelson.mattias.turfgame.statistics;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-public class StatisticsInitializer {
+public final class StatisticsInitializer {
+
+    private StatisticsInitializer() throws InstantiationException {
+        throw new InstantiationException("Should not be instantiated!");
+    }
 
     public static Statistics initialize() {
         Statistics statistics = new Statistics();
 
-        Country spain = new Country("es", "Spain");
+        Country spain = new Country("es");
         statistics.addCountry(spain);
-        Country sweden = new Country("se", "Sweden");
+        Country sweden = new Country("se");
         statistics.addCountry(sweden);
 
         Region stockholm = new Region(141, "Stockholm", sweden);

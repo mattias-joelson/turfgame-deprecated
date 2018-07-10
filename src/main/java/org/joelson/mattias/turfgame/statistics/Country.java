@@ -6,16 +6,10 @@ public class Country implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final String id;
     private final String name;
 
-    public Country(String id, String name) {
-        this.id = id;
+    public Country(String name) {
         this.name = name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getName() {
@@ -24,20 +18,16 @@ public class Country implements Serializable {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return name.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Country) {
-            Country country = (Country) obj;
-            return id.equals(country.id) && name.equals(country.name);
-        }
-        return super.equals(obj);
+        return obj instanceof Country && name.equals(((Country) obj).name);
     }
 
     @Override
     public String toString() {
-        return "Country{id:'" + id + "',name:'" + name + "'}";
+        return "Country{name:'" + name + "'}";
     }
 }

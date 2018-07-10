@@ -13,7 +13,7 @@ public class Region implements Serializable {
     private final String name;
 
     public Region(int id, String name, Country country) {
-        this.country = Objects.requireNonNull(country);
+        this.country = country;
 
         this.id = id;
         this.name = Objects.requireNonNull(name);
@@ -46,6 +46,10 @@ public class Region implements Serializable {
 
     @Override
     public String toString() {
-        return "Region{country:" + country + ",id:" + id + ",name:'" + name + "'}";
+        return "Region{" + countryToString() + "id:" + id + ",name:'" + name + "'}";
+    }
+
+    private String countryToString() {
+        return (country == null) ? "" : "country:" + country + ',';
     }
 }
