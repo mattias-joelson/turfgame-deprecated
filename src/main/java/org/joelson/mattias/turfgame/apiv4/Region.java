@@ -37,8 +37,8 @@ public final class Region {
         JSONNumber id = (JSONNumber) obj.getValue(ID);
         if (obj.containsName(COUNTRY)) {
             JSONString country = (JSONString) obj.getValue(COUNTRY);
-            return new Region(country.toString(), name.toString(), id.intValue());
+            return new Region(country.stringValue(), name.stringValue(), id.intValue());
         }
-        return new Region(null, name.toString(), id.intValue());
+        return new Region(null, name.stringValue(), id.intValue());
     }
 }

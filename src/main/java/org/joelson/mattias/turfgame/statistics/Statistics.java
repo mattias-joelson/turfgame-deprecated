@@ -1,7 +1,10 @@
 package org.joelson.mattias.turfgame.statistics;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,8 +34,16 @@ public class Statistics implements Serializable {
         return countries.add(Objects.requireNonNull(country));
     }
 
+    public Set<Country> getCountries() {
+        return Collections.unmodifiableSet(countries);
+    }
+
     public boolean addRegion(Region region) {
         return regions.add(Objects.requireNonNull(region));
+    }
+
+    public Set<Region> getRegions() {
+        return Collections.unmodifiableSet(regions);
     }
 
     public boolean addMunicipality(Municipality municipality) {
@@ -102,4 +113,72 @@ public class Statistics implements Serializable {
         return "Statistics{countries:" + countries + ",regions:" + regions + ",municipalities:" + municipalities
                 + ",zones:" + zones + ",rounds:" + rounds + ",users:" + users + ",visits:" + visits + '}';
     }
+
+    public void importRegions(List<org.joelson.mattias.turfgame.apiv4.Region> regions) {
+        for (org.joelson.mattias.turfgame.apiv4.Region region : regions) {
+            String countryName = region.getCountry();
+            if (countryName == null) {
+                countryName = getCountryCode(region.getName());
+            }
+            Country country = findOrAddCountry(countryName);
+            findOrAddRegion(country, region.getId(), region.getName());
+        }
+    }
+
+    private static String getCountryCode(String name) {
+        /*for (String iso : Locale.getISOCountries()) {
+            Locale l = new Locale("", iso);
+            if (l.getDisplayCountry().equals(name)) {
+                return iso;
+            }
+        }*/
+        for (Locale locale : Locale.getAvailableLocales()) {
+            if (locale.getDisplayCountry().equals(name)) {
+                return locale.getISO3Country();
+            }
+        }
+        return "-1";
+    }
+
+    private Country findOrAddCountry(String name) {
+        for (Country country : countries) {
+            if (country.getName().equals(name)) {
+                return country;
+            }
+        }
+        Country country = new Country(name);
+        addCountry(country);
+        return country;
+    }
+
+    private Region findOrAddRegion(Country country, int id, String name) {
+        for (Region region : regions) {
+            boolean issueRegion = false;
+            if (region.getName().equals(name)) {
+                if (region.getId() == id) {
+                    throw new IllegalStateException("Region '" + name + "' has id " + id + " - the same as " + region);
+                }
+                if (region.getId() != id) {
+                    // https://issues.turfgame.com/view/8013
+                    if (!name.equals("Argentina") && !name.equals("Kenya") && !name.equals("Utah") && !name.equals("template")) {
+                        throw new IllegalStateException("Region '" + name + "' has both id "
+                                + region.getId() + " and " + id + '!');
+                    } else {
+                        issueRegion = true;
+                    }
+                }
+                if (country != region.getCountry()) {
+                    throw new IllegalStateException("Region '" + name + "' has both country "
+                            + region.getCountry() + " and " + country + '!');
+                }
+                if (!issueRegion) {
+                    return region;
+                }
+            }
+        }
+        Region region = new Region(id, name, country);
+        addRegion(region);
+        return region;
+    }
+
 }

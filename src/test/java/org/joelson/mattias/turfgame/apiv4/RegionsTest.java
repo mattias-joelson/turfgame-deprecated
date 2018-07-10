@@ -16,7 +16,7 @@ public class RegionsTest {
         assertEquals(304, regions.size());
     }
 
-    private static List<Region> getRegions() throws IOException {
+    public static List<Region> getRegions() throws IOException {
         return URLReaderTest.readProperties("/regions.json", Regions::fromHTML);
     }
 }
