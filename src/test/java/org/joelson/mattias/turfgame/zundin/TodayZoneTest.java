@@ -25,7 +25,6 @@ public class TodayZoneTest {
         assertNotNull(zone);
         assertEquals("2018-07-06 17:48:44", zone.getDate());
         assertEquals("DockZone", zone.getZoneName());
-        assertEquals(326, zone.getZoneId());
         assertEquals("Stockholms kommun", zone.getAreaName());
         assertEquals(65, zone.getTP());
         assertEquals(-1, zone.getPPH());

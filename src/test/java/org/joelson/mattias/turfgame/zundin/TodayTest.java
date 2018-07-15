@@ -11,12 +11,16 @@ import static org.junit.Assert.assertEquals;
 public class TodayTest {
 
     @Test
-    public void testZopnerXToday() throws IOException {
+    public void testZonerXToday() throws IOException {
         Today today = getZonerXToday();
         assertNotNull(today);
         assertEquals("ZonerX", today.getUserName());
         assertEquals("2018-06-30", today.getDate());
-        assertEquals(880, today.getZones().size());
+        assertEquals(879, today.getZones().size());
+        assertEquals(513, getActivityCount(today, "Takeover"));
+        assertEquals(0, getActivityCount(today, "Assist"));
+        assertEquals(1, getActivityCount(today, "Revisit"));
+        assertEquals(365, getActivityCount(today, "Lost"));
     }
 
     private static Today getZonerXToday() throws IOException {
@@ -29,9 +33,21 @@ public class TodayTest {
         assertNotNull(today);
         assertEquals("Oberoff", today.getUserName());
         assertEquals("2018-07-06", today.getDate());
-        assertEquals(341, today.getZones().size());
+        assertEquals(331, today.getZones().size());
+        assertEquals(153, getActivityCount(today, "Takeover"));
+        assertEquals(10, getActivityCount(today, "Assist"));
+        assertEquals(168, getActivityCount(today, "Lost"));
     }
 
+    private static int getActivityCount(Today today, String activity) {
+        int count = 0;
+        for (TodayZone zone : today.getZones()) {
+            if (zone.getActivity().equals(activity)) {
+                count += 1;
+            }
+        }
+        return count;
+    }
     private static Today getOberoffToday() throws IOException {
         return readProperties("/todays_activity_oberoff_2018-07-06.html", "Oberoff", "2018-07-06");
     }
