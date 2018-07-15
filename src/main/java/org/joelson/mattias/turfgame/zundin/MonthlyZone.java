@@ -1,10 +1,5 @@
 package org.joelson.mattias.turfgame.zundin;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import static org.joelson.mattias.turfgame.zundin.Parser.StringPosition;
 import static org.joelson.mattias.turfgame.zundin.Parser.validString;
 import static org.joelson.mattias.turfgame.zundin.Parser.validNumber;
@@ -87,34 +82,5 @@ public class MonthlyZone {
         return new MonthlyZone(namePosition.stringValue(), tpPosition.integerValue(), pphPosition.integerValue(),
                 municipalityPosition.stringValue(), takesPosition.integerValue(), revisitsPosition.integerValue(),
                 assistsPosition.integerValue());
-    }
-
-    private static MonthlyZone fromJsoupHTML(String html) {
-
-        Document doc = Jsoup.parse(html);
-        Elements rows = doc.getElementsByTag("tr");
-        for (Element row : rows) {
-            Elements cells = row.getElementsByTag("td");
-            return new MonthlyZone(parseZoneName(cells.get(1)), parseInteger(cells.get(2)), parseInteger(cells.get(3)),
-                    parseMunicipality(cells.get(4)), parseInteger(cells.get(6)),
-                    parseInteger(cells.get(7)), parseInteger(cells.get(8)));
-        }
-        return null;
-    }
-
-    private static String parseZoneName(Element element) {
-        Elements links = element.getElementsByTag("a");
-        for (Element link : links) {
-            return element.text();
-        }
-        return null;
-    }
-
-    private static int parseInteger(Element element) {
-        return Integer.valueOf(element.text());
-    }
-
-    private static String parseMunicipality(Element element) {
-        return element.text();
     }
 }
