@@ -18,7 +18,7 @@ public class ZonesTest {
         assertEquals(55774, zones.size());
     }
 
-    private static List<Zone> getAllZones() throws IOException {
+    public static List<Zone> getAllZones() throws IOException {
         return URLReaderTest.readProperties("/zones-all.json", Zones::fromHTML);
     }
 }
