@@ -40,7 +40,6 @@ public class MonthlyTest {
         Monthly monthly = getPartMonthly();
         Statistics statistics = StatisticsInitializer.initialize();
         Monthly.addToStatistics(monthly, statistics);
-        System.out.println(statistics);
     }
 
     private static Monthly getPartMonthly() throws IOException {
@@ -61,7 +60,6 @@ public class MonthlyTest {
         Monthly monthly = getMonthly();
         Statistics statistics = StatisticsInitializer.initialize();
         Monthly.addToStatistics(monthly, statistics);
-        System.out.println(statistics);
     }
 
     private static Monthly getMonthly() throws IOException {
