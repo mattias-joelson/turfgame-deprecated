@@ -31,3 +31,6 @@ target/
 
 # Emacs backup
 *~
+
+# OSX
+.DS_store
