@@ -13,7 +13,7 @@ public class RegionsTest {
     @Test
     public void parseRegions() throws IOException {
         List<Region> regions = getRegions();
-        assertEquals(304, regions.size());
+        assertEquals(328, regions.size());
     }
 
     public static List<Region> getRegions() throws IOException {
