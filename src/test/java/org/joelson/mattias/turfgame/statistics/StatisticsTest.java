@@ -14,7 +14,7 @@ public class StatisticsTest {
     public void testImportRegions() throws IOException {
         Statistics statistics = new Statistics();
         statistics.importRegions(RegionsTest.getRegions());
-        assertEquals(163, statistics.getCountries().size());
-        assertEquals(304, statistics.getRegions().size());
+        assertEquals(165, statistics.getCountries().size());
+        assertEquals(328, statistics.getRegions().size());
     }
 }
