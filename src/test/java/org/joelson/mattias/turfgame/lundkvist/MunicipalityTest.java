@@ -33,7 +33,36 @@ public class MunicipalityTest {
                 taken += 1;
             }
         }
-        assertEquals(813, taken);
+        assertEquals(927, taken);
+    }
+    
+    @Test
+    public void readSundbyberg() throws IOException {
+        Map<String, Boolean> zones = getSundbybergZones();
+        assertEquals(98, zones.size());
+        int taken = 0;
+        for (Boolean takenZone : zones.values()) {
+            if (takenZone) {
+                taken += 1;
+            }
+        }
+        assertEquals(98, taken);
+    }
+    
+    public static Map<String, Boolean> getHuddingeZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_huddinge.html", Municipality::fromHTML);
+    }
+
+    public static Map<String, Boolean> getJarfallaZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_jarfalla.html", Municipality::fromHTML);
+    }
+
+    public static Map<String, Boolean> getNackaZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_nacka.html", Municipality::fromHTML);
+    }
+
+    public static Map<String, Boolean> getSollentunaZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_sollentuna.html", Municipality::fromHTML);
     }
 
     public static Map<String, Boolean> getSolnaZones() throws IOException {
@@ -42,5 +71,13 @@ public class MunicipalityTest {
     
     public static Map<String, Boolean> getStockholmZones() throws IOException {
         return URLReaderTest.readProperties("/lundkvist_141_stockholm.html", Municipality::fromHTML);
+    }
+    
+    public static Map<String, Boolean> getSundbybergZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_sundbyberg.html", Municipality::fromHTML);
+    }
+    
+    public static Map<String, Boolean> getUpplandsBroZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_upplands-bro.html", Municipality::fromHTML);
     }
 }
