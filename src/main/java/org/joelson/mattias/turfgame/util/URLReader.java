@@ -54,7 +54,7 @@ public final class URLReader {
     }
 
     static String readStream(InputStream inputStream) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF8"))) {
             StringBuilder htmlBuilder = new StringBuilder();
             String line = reader.readLine();
             while (line != null) {
