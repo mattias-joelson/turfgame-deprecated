@@ -3,8 +3,11 @@ package org.joelson.mattias.turfgame.lundkvist;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Municipality {
@@ -13,8 +16,42 @@ public class Municipality {
     private static final String ROW_END = "</td></tr>";
     
     public static Map<String, Boolean> fromLundkvist(String userName, String country, int region, String municipality) throws IOException {
+        return fromHTML(getMunicipalityHTML(userName, country, region, municipality));
+    }
+
+    private static String getMunicipalityHTML(String userName, String country, int region, String municipality)
+            throws IOException {
         String request = String.format("https://turf.lundkvist.com/?user=%s&country=%s&region=%d&city=%s", userName, country, region, municipality);
-        return fromHTML(URLReader.getRequest(request));
+        return URLReader.getRequest(request);
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length == 0) {
+            System.out.println(String.format("Usage:\n\t%s user=username country=country region=regionnumber city [city ...]",
+                    Municipality.class.getName()));
+            return;
+        }
+        String username = "";
+        String country = "";
+        int region = -1;
+        List<String> cities = new ArrayList<>();
+        for (String arg : args) {
+            if (arg.startsWith("user=")) {
+                username = arg.substring(5);
+            } else if (arg.startsWith("country=")) {
+                country = arg.substring(8);
+            } else if (arg.startsWith("region=")) {
+                region = Integer.parseInt(arg.substring(7));
+            } else {
+                cities.add(arg);
+            }
+        }
+        for (String city : cities) {
+            String html = getMunicipalityHTML(username, country, region, city);
+            PrintWriter writer = new PrintWriter("lundkvist_" + region + "_" + city.toLowerCase() + ".html", "UTF8");
+            writer.println(html);
+            writer.close();
+        }
     }
     
     public static Map<String, Boolean> fromHTML(String html) {
