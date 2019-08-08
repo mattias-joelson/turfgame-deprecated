@@ -72,8 +72,8 @@ public class MonthlyTest {
 
     @Test
     public void createYearly() throws IOException {
-        //File outFile = new File(URLReaderTest.class.getResource("/yearly.html").getFile());
-        File outFile = new File("/Users/mattias.joelson/src/turfgame-statistics/src/test/resources/yearly.html");
+        File outFile = new File(URLReaderTest.class.getResource("/yearly.html").getFile());
+        //File outFile = new File("/Users/mattias.joelson/src/turfgame-statistics/src/test/resources/yearly.html");
         try (FileOutputStream output = new FileOutputStream(outFile)) {
             File startFile = new File(URLReaderTest.class.getResource("/yearly_start.html").getFile());
             try (FileInputStream input = new FileInputStream(startFile)) {
