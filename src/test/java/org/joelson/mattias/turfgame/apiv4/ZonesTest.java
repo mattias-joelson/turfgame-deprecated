@@ -1,11 +1,8 @@
 package org.joelson.mattias.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.URLReader;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
