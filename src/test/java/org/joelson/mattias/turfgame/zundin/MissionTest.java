@@ -2,18 +2,19 @@ package org.joelson.mattias.turfgame.zundin;
 
 import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
-import org.joelson.mattias.turfgame.lundkvist.Municipality;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -21,13 +22,8 @@ import static org.junit.Assert.assertTrue;
 
 public class MissionTest {
 
+    //private static String MAP_KEY = "AIzaSyDDNqlkLEcWkf5GTuIOkwYQOSBCq_5Zzlg";
     private static String MAP_KEY = "";
-    
-    @Test
-    public void jarfallaSnurrTest() throws IOException {
-        List<Integer> zones = readJarfallaSnurrZones();
-        assertEquals(302, zones.size());
-    }
     
     @Test
     public void oberoffJarfallaSnurrTest() throws IOException {
@@ -36,15 +32,9 @@ public class MissionTest {
     }
     
     @Test
-    public void soderSnurrTest() throws IOException {
-        List<Integer> zones = readSoderSnurrZones();
-        assertEquals(517, zones.size());
-    }
-    
-    @Test
     public void oberoffSoderSnurrTest() throws IOException {
         List<Integer> zones = readOberoffSoderSnurrZones();
-        assertEquals(291, zones.size());
+        assertEquals(265, zones.size());
     }
 
     @Test
@@ -53,35 +43,21 @@ public class MissionTest {
         assertEquals(256, zones.size());
     }
     
-    public static List<Integer> readJarfallaSnurrZones() throws IOException {
-        return URLReaderTest.readProperties("/mission_37_jarfalla.html", Mission::fromHTML);
-    
-    }
-    
     public static List<Integer> readOberoffJarfallaSnurrZones() throws IOException {
-        return URLReaderTest.readProperties("/mission_37_jarfalla_oberoff.html", Mission::fromHTML);
-        
-    }
-    
-    public static List<Integer> readSoderSnurrZones() throws IOException {
-        return URLReaderTest.readProperties("/mission_34_sodersnurr.html", Mission::fromHTML);
+        return URLReaderTest.readProperties("/mission_37_oberoff.html", Mission::fromHTML);
         
     }
     
     public static List<Integer> readOberoffSoderSnurrZones() throws IOException {
-        return URLReaderTest.readProperties("/mission_34_sodersnurr_oberoff.html", Mission::fromHTML);
+        return URLReaderTest.readProperties("/mission_34_oberoff.html", Mission::fromHTML);
         
     }
     
     public static List<Integer> readSolnaSnurrZones() throws IOException {
-        return URLReaderTest.readProperties("/mission_33_solna.html", Mission::fromHTML);
+        return URLReaderTest.readProperties("/mission_33.html", Mission::fromHTML);
         
     }
     
-    public static List<Integer> readOberoffSolnaSnurrZones() throws IOException {
-        return URLReaderTest.readProperties("/mission_33_solna_oberoff.html", Mission::fromHTML);
-    }
-
     private static class ZoneStat implements Comparable<ZoneStat> {
         private final String name;
         private final int id;
@@ -142,7 +118,14 @@ public class MissionTest {
         out.println("<html><head><style>");
         out.println("#map { height: 75%; }");
         out.println("#table { height: 200px; }");
-        out.println("</style><script>");
+        out.println("</style>");
+        out.println("<body><div id='table'><table><tr><th>Name</th><th>Mission</th><th>Taken</th></tr>");
+        for (ZoneStat zone : includedZones) {
+            out.println("  <tr><td>" + zone.name + "</td><td>" + (zone.next != null) + "</td><td>" + zone.taken + "</td></tr>");
+        }
+        out.println("</table></div><div id='map'>");
+        out.println("</div>");
+        out.println("<script>");
         out.println("function initMap() {");
         out.println("var myLatLng = {lat: " + zoneStat.latitude + ", lng: " + zoneStat.longitude + "};");
         out.println("var map = new google.maps.Map(document.getElementById('map'), { zoom: 10, center: myLatLng });");
@@ -164,13 +147,7 @@ public class MissionTest {
         out.println("}");
         out.println("</script>");
         out.println("<script async defer src=\"https://maps.googleapis.com/maps/api/js?key=" + MAP_KEY + "&callback=initMap\"></script></head>");
-        out.println("<body><div id='table'><table><tr><th>Name</th><th>Mission</th><th>Taken</th></tr>");
-        for (ZoneStat zone : includedZones) {
-            out.println("  <tr><td>" + zone.name + "</td><td>" + (zone.next != null) + "</td><td>" + zone.taken + "</td></tr>");
-        }
-        out.println("</table></div><div id='map'>");
-        //out.println("Hi!");
-        out.println("</div></body></html>");
+        out.println("</body></html>");
         out.close();
     }
     
@@ -178,28 +155,30 @@ public class MissionTest {
         String[] zoneIcons = null;
         switch (zone.municipality) {
             case "Stockholm":
+            case "Upplands-Bro":
             case "":
-                zoneIcons = new String[] { "http://maps.google.com/mapfiles/ms/icons/red-dot.png", "http://maps.google.com/mapfiles/ms/icons/orange.png", "http://maps.google.com/mapfiles/ms/icons/green.png"};
+                zoneIcons = new String[] { "http://maps.google.com/mapfiles/ms/icons/red-dot.png", "http://maps.google.com/mapfiles/ms/icons/orange-dot.png", "http://maps.google.com/mapfiles/ms/icons/orange.png", "http://maps.google.com/mapfiles/ms/icons/green.png"};
                 break;
             case "Huddinge":
             case "Järfälla":
             case "Nacka":
-                zoneIcons = new String[] { "http://maps.google.com/mapfiles/ms/icons/purple-dot.png", "http://maps.google.com/mapfiles/ms/icons/lightblue.png", "http://maps.google.com/mapfiles/ms/icons/pink.png"};
+                zoneIcons = new String[] { "http://maps.google.com/mapfiles/ms/icons/purple-dot.png", "http://maps.google.com/mapfiles/ms/icons/ltblue-dot.png", "http://maps.google.com/mapfiles/ms/icons/lightblue.png", "http://maps.google.com/mapfiles/ms/icons/pink.png"};
                 break;
             case "Sollentuna":
-                zoneIcons = new String[] { "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", "http://maps.google.com/mapfiles/ms/icons/yellow.png", "http://maps.google.com/mapfiles/ms/icons/lightblue.png"};
-                break;
-            case "Upplands-Bro":
-                zoneIcons = new String[] { "http://maps.google.com/mapfiles/ms/icons/red-dot.png", "http://maps.google.com/mapfiles/ms/icons/orange.png", "http://maps.google.com/mapfiles/ms/icons/green.png"};
+                zoneIcons = new String[] { "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png", "http://maps.google.com/mapfiles/ms/icons/yellow.png", "http://maps.google.com/mapfiles/ms/icons/lightblue.png"};
                 break;
             default:
                 assertTrue("Missing " + zone.municipality, false);
         }
         String icon = zoneIcons[0];
         if (zone.next != null) {
-            icon = zoneIcons[1];
+            if (zone.taken) {
+                icon = zoneIcons[2];
+            } else {
+                icon = zoneIcons[1];
+            }
         } else if (zone.taken) {
-            icon = zoneIcons[2];
+            icon = zoneIcons[3];
         }
         return icon;
     }
@@ -272,7 +251,18 @@ public class MissionTest {
         out.println("<html><head><style>");
         out.println("#map { height: 75%; }");
         out.println("#table { height: 200px; }");
-        out.println("</style><script>");
+        out.println("</style>");
+        out.println("<body><div id='table'><table><tr><th>Name</th><th>Mission</th><th>Taken</th></tr>");
+        PrintWriter stdout = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
+        for (ZoneStat zone : includedZones) {
+            out.println("  <tr><td>" + zone.name + "</td><td>" + (zone.next != null) + "</td><td>" + zone.taken + "</td></tr>");
+            if (zone.next == null) {
+                stdout.println(zone.name);
+            }
+        }
+        out.println("</table></div><div id='map'>");
+        out.println("</div>");
+        out.println("<script>");
         out.println("function initMap() {");
         out.println("var myLatLng = {lat: " + zoneStat.latitude + ", lng: " + zoneStat.longitude + "};");
         out.println("var map = new google.maps.Map(document.getElementById('map'), { zoom: 10, center: myLatLng });");
@@ -294,16 +284,7 @@ public class MissionTest {
         out.println("}");
         out.println("</script>");
         out.println("<script async defer src=\"https://maps.googleapis.com/maps/api/js?key=" + MAP_KEY + "&callback=initMap\"></script></head>");
-        out.println("<body><div id='table'><table><tr><th>Name</th><th>Mission</th><th>Taken</th></tr>");
-        for (ZoneStat zone : includedZones) {
-            out.println("  <tr><td>" + zone.name + "</td><td>" + (zone.next != null) + "</td><td>" + zone.taken + "</td></tr>");
-            if (zone.next == null) {
-                System.out.println(zone.name);
-            }
-        }
-        out.println("</table></div><div id='map'>");
-        //out.println("Hi!");
-        out.println("</div></body></html>");
+        out.println("</body></html>");
         out.close();
     }
 }
