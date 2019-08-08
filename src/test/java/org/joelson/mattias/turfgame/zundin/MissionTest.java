@@ -22,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 
 public class MissionTest {
 
-    //private static String MAP_KEY = "AIzaSyDDNqlkLEcWkf5GTuIOkwYQOSBCq_5Zzlg";
     private static String MAP_KEY = "";
     
     @Test
