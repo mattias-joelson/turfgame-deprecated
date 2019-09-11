@@ -78,20 +78,21 @@ public final class Zone {
     static Zone fromJSON(JSONObject obj) {
         JSONString name = (JSONString) obj.getValue(NAME);
         JSONNumber id = (JSONNumber) obj.getValue(ID);
-        JSONObject region = (JSONObject) obj.getValue(REGION);
+        Region region = null;
+        if (obj.containsName(REGION)) {
+            region = Region.fromJSON((JSONObject) obj.getValue(REGION));
+        }
         JSONNumber latitude = (JSONNumber) obj.getValue(LATITIUDE);
         JSONNumber longitude = (JSONNumber) obj.getValue(LONGITUDE);
         JSONNumber takeoverPoints = (JSONNumber) obj.getValue(TAKEOVER_POINTS);
         JSONNumber pointsPerHour = (JSONNumber) obj.getValue(POINTS_PER_HOUR);
         JSONNumber totalTakeovers = (JSONNumber) obj.getValue(TOTAL_TAKEOVERS);
+        String dateCreated = null;
         if (obj.containsName(DATE_CREATED)) {
-            JSONString dateCreated = (JSONString) obj.getValue(DATE_CREATED);
-            return new Zone(name.stringValue(), id.intValue(), Region.fromJSON(region),
-                    latitude.doubleValue(), longitude.doubleValue(), dateCreated.stringValue(),
-                    takeoverPoints.intValue(), pointsPerHour.intValue(), totalTakeovers.intValue());
+            dateCreated = ((JSONString) obj.getValue(DATE_CREATED)).stringValue();
         }
-        return new Zone(name.stringValue(), id.intValue(), Region.fromJSON(region),
-                latitude.doubleValue(), longitude.doubleValue(), null,
+        return new Zone(name.stringValue(), id.intValue(), region,
+                latitude.doubleValue(), longitude.doubleValue(), dateCreated,
                 takeoverPoints.intValue(), pointsPerHour.intValue(), totalTakeovers.intValue());
     }
 }
