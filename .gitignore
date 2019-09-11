@@ -26,8 +26,16 @@ hs_err_pid*
 .idea/
 *.iml
 
+# Eclipse project
+.classpath
+.project
+.settings/
+
 # Maven
 target/
 
 # Emacs backup
 *~
+
+# OSX
+.DS_store

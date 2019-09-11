@@ -7,6 +7,7 @@ import org.joelson.mattias.turfgame.util.JSONValue;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,19 @@ public final class Zones {
     }
 
     public static List<Zone> readAllZones() throws IOException {
-        return fromHTML(URLReader.getRequest(ALL_ZONES_REQUEST));
+        return fromHTML(getAllZonesJSON());
     }
+
+    private static String getAllZonesJSON() throws IOException {
+        return URLReader.getRequest(ALL_ZONES_REQUEST);
+    }
+
+    public static void main(String[] args) throws IOException {
+	    String json = getAllZonesJSON();
+	    PrintWriter writer = new PrintWriter("zones-all.json", "UTF8");
+	    writer.println(json);
+	    writer.close();
+	}
 
     static List<Zone> fromHTML(String s) {
         JSONArray valueArray = (JSONArray) new JSONParser().parse(s);

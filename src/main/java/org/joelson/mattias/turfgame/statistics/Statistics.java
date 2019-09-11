@@ -158,21 +158,12 @@ public class Statistics implements Serializable {
                 if (region.getId() == id) {
                     throw new IllegalStateException("Region '" + name + "' has id " + id + " - the same as " + region);
                 }
-                if (region.getId() != id) {
+                if (!country.equals(region.getCountry())) {
+                    // is OK if belonging to different countries
+                } else if (!name.equals("Argentina") && !name.equals("Kenya") && !name.equals("Utah") && !name.equals("template")) {
                     // https://issues.turfgame.com/view/8013
-                    if (!name.equals("Argentina") && !name.equals("Kenya") && !name.equals("Utah") && !name.equals("template")) {
-                        throw new IllegalStateException("Region '" + name + "' has both id "
-                                + region.getId() + " and " + id + '!');
-                    } else {
-                        issueRegion = true;
-                    }
-                }
-                if (country != region.getCountry()) {
-                    throw new IllegalStateException("Region '" + name + "' has both country "
-                            + region.getCountry() + " and " + country + '!');
-                }
-                if (!issueRegion) {
-                    return region;
+                    throw new IllegalStateException("Region '" + name + "' has both id "
+                            + region.getId() + " and " + id + '!');
                 }
             }
         }
