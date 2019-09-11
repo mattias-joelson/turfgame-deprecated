@@ -53,6 +53,8 @@ public class Flipp08MissionTest {
         out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
         out.println("<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:xal=\"urn:oasis:names:tc:ciq:xsdschema:xAL:2.0\">");
         out.println("  <Document>");
+        out.println("    <Folder>");
+        out.println("      <name>Flip08All</name>");
 
         int totalZoneCount = 0;
         int takenZoneCount = 0;
@@ -80,24 +82,27 @@ public class Flipp08MissionTest {
             assertEquals(flipZoneCount, count);
             System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
 
-            out.println("    <Folder>");
-            out.println("      <name>" + flipName + "</name>");
+//            out.println("    <Folder>");
+//            out.println("      <name>" + flipName + "</name>");
+//            out.println("      <visibility>" + ((flipZoneTaken) ? 0 : 1) + "</visibility>");
             for (String zoneName : uniqueZoneNames.stream().sorted(String::compareTo).collect(Collectors.toList())) {
                 Zone zone = zoneMap.get(zoneName);
                 out.println("        <Placemark>");
                 out.println("          <name>" + zoneName + "</name>");
                 out.println("          <description>" + flipName + " - " + zoneName + "</description>");
+//                out.println("          <visibility>" + ((flipZoneTaken) ? 0 : 1) + "</visibility>");
                 out.println("          <Point>");
                 out.println("            <coordinates>" + zone.getLongitude() + ',' + zone.getLatitude() + "</coordinates>");
                 out.println("          </Point>");
                 out.println("        </Placemark>");
             }
-            out.println("    </Folder>");
+//            out.println("    </Folder>");
             totalZoneCount += count;
             if (flipZoneTaken) {
                 takenZoneCount += count;
             }
         }
+        out.println("    </Folder>");
         out.println("  </Document>");
         out.println("</kml>");
         out.close();
