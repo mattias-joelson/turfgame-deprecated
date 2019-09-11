@@ -27,13 +27,13 @@ public class MissionTest {
     @Test
     public void oberoffJarfallaSnurrTest() throws IOException {
         List<Integer> zones = readOberoffJarfallaSnurrZones();
-        assertEquals(197, zones.size());
+        assertEquals(121, zones.size());
     }
     
     @Test
     public void oberoffSoderSnurrTest() throws IOException {
         List<Integer> zones = readOberoffSoderSnurrZones();
-        assertEquals(265, zones.size());
+        assertEquals(32, zones.size());
     }
 
     @Test
