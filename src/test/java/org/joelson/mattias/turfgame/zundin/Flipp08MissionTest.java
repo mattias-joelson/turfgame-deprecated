@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -61,8 +62,6 @@ public class Flipp08MissionTest {
             int flipZoneCount = ((JSONNumber) flip.getValue("zoneCount")).intValue();
             boolean flipZoneTaken = ((JSONString) flip.getValue("taken")).stringValue().equals("true");
             System.out.println("  Taken " + flipZoneTaken);
-            out.println("    <Folder>");
-            out.println("      <name>" + flipName + "</name>");
             JSONArray array = (JSONArray) flip.getValue("zones");
             int count = 0;
             Set<String> uniqueZoneNames = new HashSet<>();
@@ -75,6 +74,16 @@ public class Flipp08MissionTest {
                     assertTrue(zone != null);
                 }
                 System.out.println("  " + zoneName);
+                count += 1;
+            }
+            assertEquals(count, uniqueZoneNames.size());
+            assertEquals(flipZoneCount, count);
+            System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
+
+            out.println("    <Folder>");
+            out.println("      <name>" + flipName + "</name>");
+            for (String zoneName : uniqueZoneNames.stream().sorted(String::compareTo).collect(Collectors.toList())) {
+                Zone zone = zoneMap.get(zoneName);
                 out.println("        <Placemark>");
                 out.println("          <name>" + zoneName + "</name>");
                 out.println("          <description>" + flipName + " - " + zoneName + "</description>");
@@ -82,12 +91,8 @@ public class Flipp08MissionTest {
                 out.println("            <coordinates>" + zone.getLongitude() + ',' + zone.getLatitude() + "</coordinates>");
                 out.println("          </Point>");
                 out.println("        </Placemark>");
-                count += 1;
             }
             out.println("    </Folder>");
-            System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
-            assertEquals(count, uniqueZoneNames.size());
-            assertEquals(flipZoneCount, count);
             totalZoneCount += count;
             if (flipZoneTaken) {
                 takenZoneCount += count;
