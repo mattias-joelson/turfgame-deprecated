@@ -53,10 +53,14 @@ public class Flipp08MissionTest {
         out.println("<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:xal=\"urn:oasis:names:tc:ciq:xsdschema:xAL:2.0\">");
         out.println("  <Document>");
 
+        int totalZoneCount = 0;
+        int takenZoneCount = 0;
         for (JSONObject flip : flips) {
             String flipName = ((JSONString) flip.getValue("name")).stringValue();
             System.out.println("Processing " + flipName);
             int flipZoneCount = ((JSONNumber) flip.getValue("zoneCount")).intValue();
+            boolean flipZoneTaken = ((JSONString) flip.getValue("taken")).stringValue().equals("true");
+            System.out.println("  Taken " + flipZoneTaken);
             out.println("    <Folder>");
             out.println("      <name>" + flipName + "</name>");
             JSONArray array = (JSONArray) flip.getValue("zones");
@@ -84,9 +88,15 @@ public class Flipp08MissionTest {
             System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
             assertEquals(count, uniqueZoneNames.size());
             assertEquals(flipZoneCount, count);
+            totalZoneCount += count;
+            if (flipZoneTaken) {
+                takenZoneCount += count;
+            }
         }
         out.println("  </Document>");
         out.println("</kml>");
         out.close();
+        System.out.println("Total zones: " + totalZoneCount);
+        System.out.println("Taken zones: " + takenZoneCount);
     }
 }
