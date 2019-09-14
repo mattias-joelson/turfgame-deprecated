@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,8 @@ public class Flipp08MissionTest {
         int totalZoneCount = 0;
         int takenZoneCount = 0;
         Set<String> uniqueZoneNames = new HashSet<>();
+        Map<String,String> allTakenZones = new HashMap<>();
+        Map<String,String> allRemainingZones = new HashMap<>();
         for (JSONObject flip : flips) {
             String flipName = ((JSONString) flip.getValue("name")).stringValue();
             System.out.println("Processing " + flipName);
@@ -67,6 +70,7 @@ public class Flipp08MissionTest {
             System.out.println("  Taken " + flipZoneTaken);
             JSONArray array = (JSONArray) flip.getValue("zones");
             int count = 0;
+            Set<String> flipZoneNames = new HashSet<>();
             for (JSONValue value : array.getElements()) {
                 String zoneName = ((JSONString) value).stringValue();
                 assertFalse(uniqueZoneNames.contains(zoneName));
@@ -77,25 +81,42 @@ public class Flipp08MissionTest {
                     assertTrue(zone != null);
                 }
                 System.out.println("  " + zoneName);
+                flipZoneNames.add(zoneName);
                 count += 1;
             }
             assertEquals(flipZoneCount, count);
             System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
 
             totalZoneCount += count;
-            for (String zoneName : uniqueZoneNames.stream().sorted(String::compareTo).collect(Collectors.toList())) {
-                Zone zone = zoneMap.get(zoneName);
-                outAll.writePlacemark(zoneName, flipName + ": " + zoneName, zone.getLongitude(), zone.getLatitude());
-            }
             if (flipZoneTaken) {
+                flipZoneNames.stream()
+                    .forEach(name -> allTakenZones.put(name, flipName + ": " + name));
                 takenZoneCount += count;
             } else if (count > 0) {
+                flipZoneNames.stream()
+                    .forEach(name -> allRemainingZones.put(name, flipName + ": " + name));
                 outRemaining.writeFolder(flipName);
-                for (String zoneName : uniqueZoneNames.stream().sorted(String::compareTo).collect(Collectors.toList())) {
+                for (String zoneName : flipZoneNames.stream()
+                        .sorted(String::compareTo)
+                        .collect(Collectors.toList())) {
                     Zone zone = zoneMap.get(zoneName);
                     outRemaining.writePlacemark(zoneName, flipName + ": " + zoneName, zone.getLongitude(), zone.getLatitude());
                 }
             }
+        }
+        outAll.writeFolder("Taken zones");
+        for (Entry<String, String> entry : allTakenZones.entrySet().stream()
+                .sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
+                .collect(Collectors.toList())) {
+            Zone zone = zoneMap.get(entry.getKey());
+            outAll.writePlacemark(entry.getKey(), entry.getValue(), zone.getLongitude(), zone.getLatitude());
+        }
+        outAll.writeFolder("Remaining zones");
+        for (Entry<String, String> entry : allRemainingZones.entrySet().stream()
+                .sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
+                .collect(Collectors.toList())) {
+            Zone zone = zoneMap.get(entry.getKey());
+            outAll.writePlacemark(entry.getKey(), entry.getValue(), zone.getLongitude(), zone.getLatitude());
         }
         outRemaining.close();
         outAll.close();
