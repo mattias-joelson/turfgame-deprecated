@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class Flipp08MissionTest {
@@ -57,6 +58,7 @@ public class Flipp08MissionTest {
 
         int totalZoneCount = 0;
         int takenZoneCount = 0;
+        Set<String> uniqueZoneNames = new HashSet<>();
         for (JSONObject flip : flips) {
             String flipName = ((JSONString) flip.getValue("name")).stringValue();
             System.out.println("Processing " + flipName);
@@ -65,9 +67,9 @@ public class Flipp08MissionTest {
             System.out.println("  Taken " + flipZoneTaken);
             JSONArray array = (JSONArray) flip.getValue("zones");
             int count = 0;
-            Set<String> uniqueZoneNames = new HashSet<>();
             for (JSONValue value : array.getElements()) {
                 String zoneName = ((JSONString) value).stringValue();
+                assertFalse(uniqueZoneNames.contains(zoneName));
                 uniqueZoneNames.add(zoneName);
                 Zone zone = zoneMap.get(zoneName);
                 if (zone == null) {
@@ -77,7 +79,6 @@ public class Flipp08MissionTest {
                 System.out.println("  " + zoneName);
                 count += 1;
             }
-            assertEquals(count, uniqueZoneNames.size());
             assertEquals(flipZoneCount, count);
             System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
 
