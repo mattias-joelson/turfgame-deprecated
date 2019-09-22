@@ -12,7 +12,7 @@ public class ZonesTest {
     @Test
     public void parseAllZones() throws IOException {
         List<Zone> zones = getAllZones();
-        assertEquals(62545, zones.size());
+        assertEquals(63017, zones.size());
     }
 
     public static List<Zone> getAllZones() throws IOException {
