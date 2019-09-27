@@ -21,9 +21,9 @@ public class TakenZoneTest {
     @Test
     public void takenZonesTest() throws IOException {
         Map<String, Integer> takenZones = readTakenZones();
-        assertEquals(2639, takenZones.size());
+        assertEquals(2658, takenZones.size());
         assertTrue(takenZones.containsKey("Åbergssons"));
-        assertEquals(485, (long) takenZones.get("Åbergssons"));
+        assertEquals(487, (long) takenZones.get("Åbergssons"));
     }
     
     @Test
