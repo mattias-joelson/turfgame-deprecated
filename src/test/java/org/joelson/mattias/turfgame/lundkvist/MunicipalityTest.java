@@ -13,14 +13,14 @@ public class MunicipalityTest {
     @Test
     public void readSolna() throws IOException {
         Map<String, Boolean> zones = getSolnaZones();
-        assertEquals(185, zones.size());
+        assertEquals(186, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(185, taken);
+        assertEquals(186, taken);
     }
     
     @Test
@@ -39,14 +39,18 @@ public class MunicipalityTest {
     @Test
     public void readSundbyberg() throws IOException {
         Map<String, Boolean> zones = getSundbybergZones();
-        assertEquals(98, zones.size());
+        assertEquals(101, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(98, taken);
+        assertEquals(101, taken);
+    }
+    
+    public static Map<String, Boolean> getDanderydZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_danderyd.html", Municipality::fromHTML);
     }
     
     public static Map<String, Boolean> getHuddingeZones() throws IOException {
