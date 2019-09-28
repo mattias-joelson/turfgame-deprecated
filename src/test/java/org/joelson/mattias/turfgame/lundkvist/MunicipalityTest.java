@@ -13,14 +13,14 @@ public class MunicipalityTest {
     @Test
     public void readSolna() throws IOException {
         Map<String, Boolean> zones = getSolnaZones();
-        assertEquals(186, zones.size());
+        assertEquals(187, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(186, taken);
+        assertEquals(187, taken);
     }
     
     @Test
@@ -33,20 +33,20 @@ public class MunicipalityTest {
                 taken += 1;
             }
         }
-        assertEquals(1170, taken);
+        assertEquals(1377, taken);
     }
     
     @Test
     public void readSundbyberg() throws IOException {
         Map<String, Boolean> zones = getSundbybergZones();
-        assertEquals(101, zones.size());
+        assertEquals(102, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(101, taken);
+        assertEquals(102, taken);
     }
     
     public static Map<String, Boolean> getDanderydZones() throws IOException {
