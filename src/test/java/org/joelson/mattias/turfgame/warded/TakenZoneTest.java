@@ -27,6 +27,11 @@ public class TakenZoneTest {
     }
     
     @Test
+    public void danderydHeatmap() throws IOException {
+        municipalityHeatmap("danderyd_heatmap.kml", MunicipalityTest.getDanderydZones());
+    }
+
+    @Test
     public void solnaHeatmap() throws IOException {
         municipalityHeatmap("solna_heatmap.kml", MunicipalityTest.getSolnaZones());
     }
@@ -34,11 +39,6 @@ public class TakenZoneTest {
     @Test
     public void sundbybergHeatmap() throws IOException {
         municipalityHeatmap("sundbyberg_heatmap.kml", MunicipalityTest.getSundbybergZones());
-    }
-    
-    @Test
-    public void danderydHeatmap() throws IOException {
-        municipalityHeatmap("dnaderyd_heatmap.kml", MunicipalityTest.getDanderydZones());
     }
 
     private void municipalityHeatmap(String filename, Map<String, Boolean> municipalityZones) throws IOException {
