@@ -23,7 +23,7 @@ public class TakenZoneTest {
         Map<String, Integer> takenZones = readTakenZones();
         assertEquals(2739, takenZones.size());
         assertTrue(takenZones.containsKey("Åbergssons"));
-        assertEquals(487, (long) takenZones.get("Åbergssons"));
+        assertEquals(488, (long) takenZones.get("Åbergssons"));
     }
     
     @Test
