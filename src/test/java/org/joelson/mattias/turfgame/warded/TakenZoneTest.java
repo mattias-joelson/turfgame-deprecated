@@ -21,9 +21,9 @@ public class TakenZoneTest {
     @Test
     public void takenZonesTest() throws IOException {
         Map<String, Integer> takenZones = readTakenZones();
-        assertEquals(2739, takenZones.size());
-        assertTrue(takenZones.containsKey("Åbergssons"));
-        assertEquals(488, (long) takenZones.get("Åbergssons"));
+        assertEquals(2741, takenZones.size());
+        assertTrue(takenZones.containsKey("Bockholmen"));
+        assertEquals(105, (long) takenZones.get("Bockholmen"));
     }
     
     @Test
@@ -51,16 +51,21 @@ public class TakenZoneTest {
         Map<Zone, Integer> orange = new HashMap<>();
         Map<Zone, Integer> red = new HashMap<>();
         Map<Zone, Integer> violet = new HashMap<>();
+        Map<String, Integer> municipalityCount = new HashMap<>(municipalityZones.size());
+        int toOrange = 0;
+        int toRed = 0;
+        int toViolet = 0;
         for (String zoneName : municipalityZones.keySet()) {
             int count = 0;
             if (takenZones.containsKey(zoneName)) {
                 count = takenZones.get(zoneName);
             }
+            municipalityCount.put(zoneName, count);
             for (Zone zone : allZones) {
                 if (zone.getName().equals(zoneName)) {
                     if (count == 0) {
                         untaken.put(zone, 0);
-                    } else if (count <= 1) {
+                    } else if (count == 1) {
                         green.put(zone, count);
                     } else if (count <= 10) {
                         yellow.put(zone, count);
@@ -71,6 +76,9 @@ public class TakenZoneTest {
                     } else  {
                         violet.put(zone, count);
                     }
+                    toOrange += Math.max(11 - count, 0);
+                    toRed += Math.max(21 - count, 0);
+                    toViolet += Math.max(51 - count, 0);
                     break;
                 }
             }
@@ -84,6 +92,11 @@ public class TakenZoneTest {
         writeHeatmapFolder(out, red, "red");
         writeHeatmapFolder(out, violet, "violet");
         out.close();
+
+        System.out.println("Municipality:     " + filename);
+        System.out.println("Takes to orange:  " + toOrange);
+        System.out.println("Takes to red:     " + toRed);
+        System.out.println("Takes to violett: " + toViolet);
     }
     
     private void writeHeatmapFolder( KMLWriter out, Map<Zone, Integer> zoneCounts, String folderName) {
