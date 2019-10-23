@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -51,16 +52,16 @@ public class TakenZoneTest {
         Map<Zone, Integer> orange = new HashMap<>();
         Map<Zone, Integer> red = new HashMap<>();
         Map<Zone, Integer> violet = new HashMap<>();
-        Map<String, Integer> municipalityCount = new HashMap<>(municipalityZones.size());
         int toOrange = 0;
         int toRed = 0;
         int toViolet = 0;
+        int[] zoneCount = new int[52];
+    
         for (String zoneName : municipalityZones.keySet()) {
             int count = 0;
             if (takenZones.containsKey(zoneName)) {
                 count = takenZones.get(zoneName);
             }
-            municipalityCount.put(zoneName, count);
             for (Zone zone : allZones) {
                 if (zone.getName().equals(zoneName)) {
                     if (count == 0) {
@@ -79,6 +80,7 @@ public class TakenZoneTest {
                     toOrange += Math.max(11 - count, 0);
                     toRed += Math.max(21 - count, 0);
                     toViolet += Math.max(51 - count, 0);
+                    zoneCount[Math.min(count, 51)] += 1;
                     break;
                 }
             }
@@ -92,6 +94,29 @@ public class TakenZoneTest {
         writeHeatmapFolder(out, red, "red");
         writeHeatmapFolder(out, violet, "violet");
         out.close();
+    
+        int max = IntStream.of(zoneCount).max().getAsInt();
+        if (max % 5 != 0) {
+            max = ((max / 5) + 1) * 5;
+        }
+        System.out.println("max: " + max);
+        for (int i = max; i > 0; i -= 1) {
+            if (i % 5 == 0) {
+                if (i >= 10) {
+                    System.out.print(i + " + ");
+                } else {
+                    System.out.print(" " + i + " + ");
+                }
+            } else {
+                System.out.print("   | ");
+            }
+            for (int c = 0; c < zoneCount.length; c += 1) {
+                System.out.print((zoneCount[c] >= i) ? "*" : " ");
+            }
+            System.out.println();
+        }
+        System.out.println("   +-+----+----+----+----+----+----+----+----+----+----+-");
+        System.out.println("     0    5   10   15   20   25   30   35   40   45   50");
 
         System.out.println("Municipality:    " + filename);
         System.out.println("Takes to orange: " + toOrange);
