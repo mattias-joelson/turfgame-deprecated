@@ -55,6 +55,9 @@ public class TakenZoneTest {
         int toOrange = 0;
         int toRed = 0;
         int toViolet = 0;
+        int toOrangeZones = 0;
+        int toRedZones = 0;
+        int toVioletZones = 0;
         int[] zoneCount = new int[52];
     
         for (String zoneName : municipalityZones.keySet()) {
@@ -66,14 +69,19 @@ public class TakenZoneTest {
                 if (zone.getName().equals(zoneName)) {
                     if (count == 0) {
                         untaken.put(zone, 0);
+                        toOrangeZones += 1;
                     } else if (count == 1) {
                         green.put(zone, count);
+                        toOrangeZones += 1;
                     } else if (count <= 10) {
                         yellow.put(zone, count);
+                        toOrangeZones += 1;
                     } else if (count <= 20) {
                         orange.put(zone, count);
+                        toRedZones += 1;
                     } else if (count <= 50) {
                         red.put(zone, count);
+                        toVioletZones += 1;
                     } else  {
                         violet.put(zone, count);
                     }
@@ -85,6 +93,8 @@ public class TakenZoneTest {
                 }
             }
         }
+        toRedZones += toOrangeZones;
+        toVioletZones += toRedZones;
         
         KMLWriter out = new KMLWriter(filename);
         writeHeatmapFolder(out, untaken, "untaken");
@@ -118,9 +128,9 @@ public class TakenZoneTest {
         System.out.println("     0    5   10   15   20   25   30   35   40   45   50");
 
         System.out.println("Municipality:    " + filename);
-        System.out.println("Takes to orange: " + toOrange);
-        System.out.println("Takes to red:    " + toRed);
-        System.out.println("Takes to violet: " + toViolet);
+        System.out.println("Takes to orange: " + toOrange + " (" + toOrangeZones + " zones)");
+        System.out.println("Takes to red:    " + toRed + " (" + toRedZones + " zones)");
+        System.out.println("Takes to violet: " + toViolet + " (" + toVioletZones + " zones)");
     }
     
     private void writeHeatmapFolder( KMLWriter out, Map<Zone, Integer> zoneCounts, String folderName) {
