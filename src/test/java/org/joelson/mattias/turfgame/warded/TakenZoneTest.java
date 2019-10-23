@@ -93,10 +93,10 @@ public class TakenZoneTest {
         writeHeatmapFolder(out, violet, "violet");
         out.close();
 
-        System.out.println("Municipality:     " + filename);
-        System.out.println("Takes to orange:  " + toOrange);
-        System.out.println("Takes to red:     " + toRed);
-        System.out.println("Takes to violett: " + toViolet);
+        System.out.println("Municipality:    " + filename);
+        System.out.println("Takes to orange: " + toOrange);
+        System.out.println("Takes to red:    " + toRed);
+        System.out.println("Takes to violet: " + toViolet);
     }
     
     private void writeHeatmapFolder( KMLWriter out, Map<Zone, Integer> zoneCounts, String folderName) {
