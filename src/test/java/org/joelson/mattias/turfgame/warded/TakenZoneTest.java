@@ -99,7 +99,6 @@ public class TakenZoneTest {
         if (max % 5 != 0) {
             max = ((max / 5) + 1) * 5;
         }
-        System.out.println("max: " + max);
         for (int i = max; i > 0; i -= 1) {
             if (i % 5 == 0) {
                 if (i >= 10) {
