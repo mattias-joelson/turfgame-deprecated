@@ -14,10 +14,12 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -56,6 +59,12 @@ public class Flipp08MissionTest {
         outAll.writeFolder("Nollåttaflippen - alla zoner");
                 
         KMLWriter outRemaining = new KMLWriter("flipp08-remaining.kml");
+        
+        int roundRobin = flips.size() / 10 + ((flips.size() % 10 > 0) ? 1 : 0);
+        List<KMLWriter> roundRobinMaps = new ArrayList<>(roundRobin);
+        for (int i = 0; i < roundRobin; i += 1) {
+            roundRobinMaps.add(new KMLWriter("flipp-08-round-" + i + ".kml"));
+        }
 
         int totalZoneCount = 0;
         int takenZoneCount = 0;
@@ -103,6 +112,15 @@ public class Flipp08MissionTest {
                     outRemaining.writePlacemark(zoneName, flipName + ": " + zoneName, zone.getLongitude(), zone.getLatitude());
                 }
             }
+            int flipNumber = Integer.valueOf(flipName.substring(5, flipName.indexOf(' ', 5)));
+            KMLWriter roundMap = roundRobinMaps.get(flipNumber % roundRobin);
+            roundMap.writeFolder(flipName);
+            for (String zoneName : flipZoneNames.stream()
+                    .sorted(String::compareTo)
+                    .collect(Collectors.toList())) {
+                Zone zone = zoneMap.get(zoneName);
+                roundMap.writePlacemark(zoneName, flipName + ": " + zoneName, zone.getLongitude(), zone.getLatitude());
+            }
         }
         outAll.writeFolder("Taken zones");
         for (Entry<String, String> entry : allTakenZones.entrySet().stream()
@@ -120,6 +138,9 @@ public class Flipp08MissionTest {
         }
         outRemaining.close();
         outAll.close();
+        for (KMLWriter roundMap : roundRobinMaps) {
+            roundMap.close();
+        }
         System.out.println("Total zones: " + totalZoneCount);
         System.out.println("Taken zones: " + takenZoneCount);
     }
