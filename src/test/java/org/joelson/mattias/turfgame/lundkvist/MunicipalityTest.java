@@ -13,14 +13,14 @@ public class MunicipalityTest {
     @Test
     public void readSolna() throws IOException {
         Map<String, Boolean> zones = getSolnaZones();
-        assertEquals(187, zones.size());
+        assertEquals(188, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(187, taken);
+        assertEquals(188, taken);
     }
     
     @Test

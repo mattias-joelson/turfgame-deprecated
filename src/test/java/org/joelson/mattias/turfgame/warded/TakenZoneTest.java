@@ -22,9 +22,9 @@ public class TakenZoneTest {
     @Test
     public void takenZonesTest() throws IOException {
         Map<String, Integer> takenZones = readTakenZones();
-        assertEquals(2741, takenZones.size());
+        assertEquals(2781, takenZones.size());
         assertTrue(takenZones.containsKey("Bockholmen"));
-        assertEquals(105, (long) takenZones.get("Bockholmen"));
+        assertEquals(1, (long) takenZones.get("Lambastranden"));
     }
     
     @Test
