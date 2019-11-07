@@ -105,12 +105,21 @@ public class TakenZoneTest {
         writeHeatmapFolder(out, violet, "violet");
         out.close();
     
-        int max = IntStream.of(zoneCount).max().getAsInt();
+        int[][] zoneCountArray = IntStream.range(0, zoneCount.length).mapToObj(i -> new int[] { i, zoneCount[i]}).sorted(Comparator.comparingInt(a -> a[1])).toArray(int[][]::new);
+        int max = zoneCountArray[51][1];
         if (max % 5 != 0) {
             max = ((max / 5) + 1) * 5;
         }
+        int nextToMax = zoneCountArray[50][1];
+        if (nextToMax % 5 != 0) {
+            nextToMax = ((nextToMax / 5) + 1) * 5;
+        }
         for (int i = max; i > 0; i -= 1) {
             if (i % 5 == 0) {
+                if (i + 5 == max && i > nextToMax + 5) {
+                    System.out.println(String.format("   :  %" + zoneCountArray[51][0] + "s", ":"));
+                    i = nextToMax;
+                }
                 if (i >= 10) {
                     System.out.print(i + " + ");
                 } else {
