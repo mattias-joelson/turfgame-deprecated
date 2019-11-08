@@ -13,7 +13,11 @@ import java.nio.file.StandardOpenOption;
 public class FilesUtil {
     
     public static final String DEFAULT_OUTPUT_DIRECTORY = "output";
-    public static final OpenOption[] DEFAULT_OPEN_OPTIONS = { StandardOpenOption.CREATE, StandardOpenOption.WRITE };
+    public static final OpenOption[] DEFAULT_OPEN_OPTIONS = {
+            StandardOpenOption.WRITE,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING
+    };
     public static final Charset DEFAULT_CHARSET = Charset.forName("UTF8");
     
     public static Path filenamePath(String... filenameParts) {
