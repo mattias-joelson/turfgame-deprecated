@@ -3,6 +3,7 @@ package org.joelson.mattias.turfgame.zundin;
 import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
+import org.joelson.mattias.turfgame.util.FilesUtil;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Test;
 
@@ -113,7 +114,7 @@ public class MissionTest {
         List<ZoneStat> includedZones = zones.values().stream().sorted().collect(Collectors.toList());
         ZoneStat zoneStat = includedZones.get(0);
 
-        PrintStream out = new PrintStream(new FileOutputStream("testStockholm.html"));
+        PrintStream out = new PrintStream(FilesUtil.newDefaultOutputStream("testStockholm.html"));
         out.println("<html><head><style>");
         out.println("#map { height: 75%; }");
         out.println("#table { height: 200px; }");
@@ -246,7 +247,7 @@ public class MissionTest {
         List<ZoneStat> includedZones = zones.values().stream().sorted().collect(Collectors.toList());
         ZoneStat zoneStat = includedZones.get(0);
         
-        PrintStream out = new PrintStream(new FileOutputStream("testSolna.html"));
+        PrintStream out = new PrintStream(FilesUtil.newDefaultOutputStream("testSolna.html"));
         out.println("<html><head><style>");
         out.println("#map { height: 75%; }");
         out.println("#table { height: 200px; }");
