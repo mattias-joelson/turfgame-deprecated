@@ -39,3 +39,6 @@ target/
 
 # OSX
 .DS_store
+
+# project output
+output/
