@@ -13,9 +13,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -23,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
 public class MonthlyTest {
 
     private static final String OBEROFF = "Oberoff";
-    private static final int ROUND = 96;
+    private static final int ROUND = 113;
 
     @Test
     public void parseStatisticsPartFile() throws IOException {
@@ -31,7 +33,19 @@ public class MonthlyTest {
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
         assertEquals(ROUND, monthly.getRound());
-        assertEquals(343, (monthly.getZones()).size());
+        assertEquals(423, (monthly.getZones()).size());
+        int takes = monthly.getZones().stream()
+                .map(MonthlyZone::getTakes)
+                .collect(Collectors.summingInt(Integer::intValue));
+        assertEquals(872, takes);
+        int sumPoints = monthly.getZones().stream()
+                .map(MonthlyZone::getPoints)
+                .collect(Collectors.summingInt(Integer::intValue));
+        assertEquals(159616, sumPoints);
+        long totalDuration = monthly.getZones().stream()
+                .collect(Collectors.summingLong(zone -> zone.getTakes() * zone.getAverageDuration().toSeconds()));
+        long averageDuration = totalDuration / takes;
+        assertEquals(Duration.ofSeconds(13 * 3600 + 43 * 60 + 25), Duration.ofSeconds(averageDuration));
     }
 
     @Test
@@ -42,7 +56,7 @@ public class MonthlyTest {
     }
 
     private static Monthly getPartMonthly() throws IOException {
-        return readProperties("/monthly_oberoff_round96_part.html");
+        return readProperties("/monthly_oberoff_round113_part.html");
     }
 
     @Test
@@ -51,7 +65,7 @@ public class MonthlyTest {
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
         assertEquals(ROUND, monthly.getRound());
-        assertEquals(470, (monthly.getZones()).size());
+        assertEquals(659, (monthly.getZones()).size());
     }
 
     @Test
@@ -62,7 +76,7 @@ public class MonthlyTest {
     }
 
     private static Monthly getMonthly() throws IOException {
-        return readProperties("/monthly_oberoff_round96.html");
+        return readProperties("/monthly_oberoff_round113.html");
     }
 
     private static Monthly readProperties(String resource) throws IOException {

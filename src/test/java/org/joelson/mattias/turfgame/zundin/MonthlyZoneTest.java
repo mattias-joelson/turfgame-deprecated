@@ -7,29 +7,31 @@ import static org.junit.Assert.assertEquals;
 
 public class MonthlyZoneTest {
 
-    private static final String HTML_ROW = "   <tr bgcolor='#b0e0e6'>\n" +
-            "    <td align='right'>4</td>\n" +
-            "    <td><a href='https://www.turfgame.com/zone/Southball'><img height='12' src='./monthly_oberoff_round96_files/turf.ico'></a> <a href='http://frut.zundin.se/zone.php?zoneid=257&amp;roundid=96'>Southball</a></td>\n" +
-            "\t<td align='right'>65</td>\n" +
-            "\t<td style='padding-left:10px' align='left'> +9</td>\n" +
-            "\t<td>Stockholms kommun</td>\n" +
-            "\t<td align='right'>6</td>\n" +
-            "\t<td align='right'>6</td>\n" +
-            "\t<td align='right'>0</td>\n" +
-            "\t<td align='right'>1</td>\n" +
-            "   </tr>\n" +
-            "\t\t\n";
+    private static final String HTML_ROW = "<tr>\n"
+            + "                    <td align='right'>224</td>\n"
+            + "                    <td><a href='https://www.turfgame.com/zone/Southball'><img height='12' src='images/turf.ico'/></a> <a href='zone.php?zoneid=257&roundid=113'>Southball</a></td>\n"
+            + "                    <td>Stockholms kommun</td>\n"
+            + "                    <td>Stockholm</td>\n"
+            + "                    <td align='right'>80</td>\n"
+            + "                    <td align='right'> +8</td>\n"
+            + "                    <td align='right'>240</td>\n"
+            + "                    <td align='right'>05:00:56</td>\n"
+            + "                    <td align='right'>2</td>\n"
+            + "                    <td align='right'>2</td>\n"
+            + "                    <td align='right'>0</td>\n"
+            + "                    <td align='right'>0</td>\n"
+            + "                </tr>";
 
     @Test
     public void parseRowTest() {
         MonthlyZone zone = MonthlyZone.fromHTML(HTML_ROW);
         assertNotNull(zone);
         assertEquals("Southball", zone.getName());
-        assertEquals(65, zone.getTP());
-        assertEquals(9, zone.getPPH());
+        assertEquals(80, zone.getTP());
+        assertEquals(8, zone.getPPH());
         assertEquals("Stockholms kommun", zone.getMunicipality());
-        assertEquals(6, zone.getTakes());
+        assertEquals(2, zone.getTakes());
         assertEquals(0, zone.getRevisits());
-        assertEquals(1, zone.getAssists());
+        assertEquals(0, zone.getAssists());
     }
 }
