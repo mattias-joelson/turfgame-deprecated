@@ -28,6 +28,7 @@ public class JSONParser {
     }
 
     private JSONValue nextValue() {
+        consumeWhitespaces();
         if (matches(TRUE_VALUE)) {
             pos += TRUE_VALUE.length();
             return new JSONBoolean(true);
@@ -63,7 +64,21 @@ public class JSONParser {
                 throw new JSONParseException(createExceptionMessage());
         }
     }
-
+    
+    private void consumeWhitespaces() {
+        for (;;) {
+            switch (nextChar()) {
+                case ' ':
+                case '\t':
+                case '\n':
+                    pos += 1;
+                    break;
+                default:
+                    return;
+            }
+        }
+    }
+    
     private JSONObject nextObject() {
         expect('{');
         List<JSONPair> pairs = new ArrayList<>();
@@ -72,6 +87,7 @@ public class JSONParser {
             pairs.add(nextPair());
             hasPair = containsAnother();
         }
+        consumeWhitespaces();
         expect('}');
         return new JSONObject(pairs);
     }
@@ -91,6 +107,7 @@ public class JSONParser {
             elements.add(nextValue());
             hasElement = containsAnother();
         }
+        consumeWhitespaces();
         expect(']');
         return new JSONArray(elements);
     }
@@ -111,6 +128,7 @@ public class JSONParser {
     }
 
     private JSONString nextString() {
+        consumeWhitespaces();
         expect('"');
         int startPos = pos;
         boolean hasMore = true;

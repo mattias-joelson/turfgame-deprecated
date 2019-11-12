@@ -1,11 +1,7 @@
 package org.joelson.mattias.turfgame.util;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 public class KMLWriter extends Writer {
@@ -13,8 +9,8 @@ public class KMLWriter extends Writer {
     private final PrintWriter out;
     private boolean hasFolder;
     
-    public KMLWriter(String filename) throws UnsupportedEncodingException, FileNotFoundException {
-        out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF8"));
+    public KMLWriter(String... filenameParts) throws IOException {
+        out = new PrintWriter(FilesUtil.newDefaultWriter(filenameParts));
         hasFolder = false;
         writeHeader();
     }

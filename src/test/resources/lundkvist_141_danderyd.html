@@ -1,0 +1,1020 @@
+<html lang="sv"><head><title>Visa zoner i kommuner</title><style type="text/css">
+label {
+    font: normal 12px arial !important;
+}
+a {
+    font: normal 12px arial !important;
+}
+div.info {
+    font: normal 12px arial !important;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    margin-left: 10px;
+}
+div.error {
+    font: normal 12px arial !important;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    margin-left: 10px;
+    color: red;
+}
+
+tr.takenZone td {
+    background-color: #b3ffb3; color: black;
+}
+option.allZones {
+    background-color: yellow; color: black;
+}
+option.allZonesLost {
+    background-color: DarkOrange; color: black;
+}
+option.noZones {
+    background-color: #ffaaaa; color: black;
+}
+
+#list {
+    display:inline-block;
+    float:left;
+    padding-right:20px;
+    height: 100%;
+    width: 480px;
+    overflow-x: visible;
+    overflow-y: auto;
+}
+
+#map {
+    margin-left:500px;
+    height: 100%;
+    position:fixed;
+}
+</style>
+<meta http-equiv="content-language" content="sv">
+<link rel="stylesheet" href="/css/theme.default.css">
+<!-- load jQuery and tablesorter scripts -->
+<script type="text/javascript" src="/script/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="/script/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="/script/jquery.tablesorter.widgets.js"></script>
+
+</head>
+<body>
+
+<div id="list">
+<form name="mainform" action="" method="GET">
+<table><tr><td><label>Turfare:</label></td>
+<td rowspan='2' style='vertical-align:bottom'><div id='medal'></div></td>
+</tr>
+<tr><td><input type='text' id=user name=user value='Oberoff'></td>
+</tr></table>
+<div class='info'>Tagit 3208 av 63157 zoner och 23 av 322 regioner.<br>
+</div>&nbsp;<select name=country id=country onchange='countryChanged()'><option value='0' >Välj land</option><option value='#ALLA#' >Alla mina</option><option value='#' >Världen</option><option value='se' selected>Sverige</option><option value='dk' >Danmark</option><option value='fi' >Finland</option><option value='no' >Norge</option><option value='is' >Island</option><option value='nl' >Nederländerna</option><option value='gb' >Storbritannien</option><option value='de' >Tyskland</option><option value='kr' >Sydkorea</option><option value='us' >USA</option><option value='jp' >Japan</option><option value='SP23' >Bergstoppar</option><option value='SP08' >Broar</option><option value='SP22' >Nationalparker</option><option value='SP09' >Heliga zoner</option><option value='SP13' >Järnvägsstationer</option><option value='SP21' >Monument</option><option value='SP16' >Ruin</option><option value='SP14' >Slott</option><option value='SP03' >Vattenzoner</option><option value='SP06' >Vinnarzoner</option><option value='SP15' >Världsarv</option><option value='ESK' >En Skånsk Klassiker</option><option value='FTT' >Aldrig tagna</option></select>
+&nbsp;<a href='Kommunkarta.php?id=80119&country=se' target='#KommunKarta#'>Visa kommunkarta</a><br>
+<div class='info'>Tagit 3199 zoner av 34461 i 130 av 290 kommuner och 19 av 21 regioner.</div>
+&nbsp;<select name=region id=region onchange='regionChanged()'>
+<option value='0'>Välj region</option>
+<option value='136'  >Blekinge (5 / 591 / 1%)</option>
+<option value='129'  >Dalarna (8 / 1560 / 1%)</option>
+<option value='138'  >Gotland (35 / 307 / 11%)</option>
+<option value='144'  >Gävleborg (2 / 1173 / 0%)</option>
+<option value='134'  >Halland (1 / 916 / 0%)</option>
+<option value='128'  class='noZones'>Jämtland (0 / 774 / 0%)</option>
+<option value='133'  >Jönköping (4 / 1553 / 0%)</option>
+<option value='137'  >Kalmar (26 / 1332 / 2%)</option>
+<option value='147'  >Kronoberg (6 / 764 / 1%)</option>
+<option value='126'  class='noZones'>Norrbotten (0 / 1219 / 0%)</option>
+<option value='135'  >Skåne (22 / 3198 / 1%)</option>
+<option value='141' selected >Stockholm (2738 / 4869 / 56%)</option>
+<option value='140'  >Södermanland (9 / 1244 / 1%)</option>
+<option value='142'  >Uppsala (50 / 1554 / 3%)</option>
+<option value='130'  >Värmland (5 / 1571 / 0%)</option>
+<option value='127'  >Västerbotten (77 / 1635 / 5%)</option>
+<option value='145'  >Västernorrland (1 / 908 / 0%)</option>
+<option value='143'  >Västmanland (31 / 1599 / 2%)</option>
+<option value='132'  >Västra Götaland (157 / 4599 / 3%)</option>
+<option value='131'  >Örebro (15 / 1538 / 1%)</option>
+<option value='139'  >Östergötland (7 / 1557 / 0%)</option>
+</select>
+&nbsp;&nbsp;
+<select name=city id=city onchange='this.form.submit()'>
+<option value='0'>Välj kommun</option>
+<option value='#ALLA#' >Alla kommuner</option>
+<option value='#ORANGE#' >Orange kommuner</option>
+<option value='Botkyrka'  >Botkyrka (12 / 165 / 7%)</option>
+<option value='Danderyd' selected class='allZones'>Danderyd (117 / 117 / 100%)</option>
+<option value='Ekerö'  >Ekerö (7 / 87 / 8%)</option>
+<option value='Haninge'  >Haninge (17 / 212 / 8%)</option>
+<option value='Huddinge'  >Huddinge (96 / 271 / 35%)</option>
+<option value='Järfälla'  class='allZones'>Järfälla (232 / 232 / 100%)</option>
+<option value='Lidingö'  class='allZones'>Lidingö (114 / 114 / 100%)</option>
+<option value='Nacka'  >Nacka (64 / 280 / 23%)</option>
+<option value='Norrtälje'  >Norrtälje (1 / 141 / 1%)</option>
+<option value='Nykvarn'  >Nykvarn (1 / 36 / 3%)</option>
+<option value='Nynäshamn'  >Nynäshamn (4 / 89 / 4%)</option>
+<option value='Salem'  >Salem (1 / 59 / 2%)</option>
+<option value='Sigtuna'  >Sigtuna (11 / 120 / 9%)</option>
+<option value='Sollentuna'  class='allZones'>Sollentuna (191 / 191 / 100%)</option>
+<option value='Solna'  class='allZones'>Solna (187 / 187 / 100%)</option>
+<option value='Stockholm'  class='allZones'>Stockholm (1378 / 1378 / 100%)</option>
+<option value='Sundbyberg'  class='allZones'>Sundbyberg (102 / 102 / 100%)</option>
+<option value='Södertälje'  >Södertälje (1 / 240 / 0%)</option>
+<option value='Tyresö'  >Tyresö (1 / 152 / 1%)</option>
+<option value='Täby'  class='allZones'>Täby (165 / 165 / 100%)</option>
+<option value='Upplands Väsby'  >Upplands Väsby (3 / 101 / 3%)</option>
+<option value='Upplands-Bro'  >Upplands-Bro (7 / 113 / 6%)</option>
+<option value='Vallentuna'  >Vallentuna (22 / 70 / 31%)</option>
+<option value='Vaxholm'  >Vaxholm (1 / 50 / 2%)</option>
+<option value='Värmdö'  >Värmdö (1 / 101 / 1%)</option>
+<option value='Österåker'  >Österåker (2 / 96 / 2%)</option>
+</select><div class='info'>Tagit zoner i 26 av 26 kommuner, varav 8 kommuner där alla zoner är tagna.</div>
+<div class='info'><a href='help.php' target='#MyHelp#'>Hjälp&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='List.php?user=Oberoff' target='#List#'>Sammanställning&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='ListRegions.php?user=Oberoff' target='#RegList#'>Regionslista&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='ListRegions2.php?user=Oberoff' target='#RegList#'>Kommunlista&nbsp;</a></div>
+<div class='info'><a href='EskList.php?user=Oberoff' target='#EskList#'>En Skånsk Klassiker&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='EskList2.php' target='#EskList#'>Klassikerzoner&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='Landskarta.php?id=80119' target='#WorldMap#'>Världskarta&nbsp;</a></div>
+<div class='info'><a href='TopListCities.php' target='#TopListCities#'>Topplista kommuner</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='MyStats.php?user=Oberoff' target='#MyStats#'>Min statistik</a>&nbsp;&nbsp;<a href='AssistTurf.php' target='#AssistTurf#'>Assistturf</a></div>
+<div class='info'><input name=showTaken id='showTaken' type='checkbox' onclick='setMarkers(this, "green")' checked>Tagna&nbsp;&nbsp;<input name=showUntaken id=showUntaken  type='checkbox' onclick='setMarkers(this, "red")' checked>Otagna&nbsp;&nbsp;<input name=showMe id=showMe  type='checkbox' onclick='setIAmHere(this)' checked>Jag är här&nbsp;&nbsp;<a href='GetZonefile.php?user=Oberoff&country=se&region=141&city=Danderyd&zones=alla'>Spara alla&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='GetZonefile.php?user=Oberoff&country=se&region=141&city=Danderyd&zones=unika'>Spara unika&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='GetZonefile.php?user=Oberoff&country=se&region=141&city=Danderyd&zones=otagna'>Spara otagna&nbsp;</a>&nbsp;&nbsp;&nbsp;</div>
+<div><table id='zoneTable' class='tablesorter'><thead><tr><th>Zon</th><th>Typ</th><th style='text-align:right'>tp</th><th style='text-align:right'>pph</th><th style='text-align:right'>Tagningar</th><th>Tagen</th></tr><tr><th class='sorter-false'>Summa</th><th class='sorter-false'>&nbsp;</th><th class='sorter-false' style='text-align:right'>18675</th><th class='sorter-false' style='text-align:right'>315</th><th class='sorter-false' style='text-align:right'>132059</th><th class='sorter-false'>&nbsp;</th></tr></thead>
+<tbody><tr class='takenZone'><td><a href='https://turfgame.com/map/Altorp' TARGET='Altorp'>Altorp</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1335</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/AltorpsKapell' TARGET='AltorpsKapell'>AltorpsKapell</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>182</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/AngantyrZone' TARGET='AngantyrZone'>AngantyrZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>100</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Animaliskt' TARGET='Animaliskt'>Animaliskt</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>617</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Animalisle' TARGET='Animalisle'>Animalisle</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>824</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/AnimalSquare' TARGET='AnimalSquare'>AnimalSquare</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1190</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/AnimalTee' TARGET='AnimalTee'>AnimalTee</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1182</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/AshZone' TARGET='AshZone'>AshZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1052</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/BenkeMeFärjan' TARGET='BenkeMeFärjan'>BenkeMeFärjan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>1017</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Bergakrysset' TARGET='Bergakrysset'>Bergakrysset</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>1028</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Bergstigen' TARGET='Bergstigen'>Bergstigen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>376</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/BjörnsMinne' TARGET='BjörnsMinne'>BjörnsMinne</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>155</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Blanchegården' TARGET='Blanchegården'>Blanchegården</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>446</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Bråstoppet' TARGET='Bråstoppet'>Bråstoppet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>2145</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/CallesKlimp' TARGET='CallesKlimp'>CallesKlimp</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>235</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/ColdNoseZone' TARGET='ColdNoseZone'>ColdNoseZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>533</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DagermansPark' TARGET='DagermansPark'>DagermansPark</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>156</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Dalakröken' TARGET='Dalakröken'>Dalakröken</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>900</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DanaSkog' TARGET='DanaSkog'>DanaSkog</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>545</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DandeForest' TARGET='DandeForest'>DandeForest</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>293</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DandeGolf' TARGET='DandeGolf'>DandeGolf</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>105</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Danderyd' TARGET='Danderyd'>Danderyd</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1393</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DanderydCave' TARGET='DanderydCave'>DanderydCave</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>163</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DanderydsHamn' TARGET='DanderydsHamn'>DanderydsHamn</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>4</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Dandeudde' TARGET='Dandeudde'>Dandeudde</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>566</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DandeWoods' TARGET='DandeWoods'>DandeWoods</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>62</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Dandezone' TARGET='Dandezone'>Dandezone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>95</td><td style='text-align:right'>7</td><td style='text-align:right'>9741</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Dandybron' TARGET='Dandybron'>Dandybron</a></td><td style='text-align:center'><img src='/image/Brozon.png' alt='Brozon' height='16' width='16'><span style='display:none'>3</span>&nbsp;&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>3061</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DandyFenja' TARGET='DandyFenja'>DandyFenja</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>305</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DandyWood' TARGET='DandyWood'>DandyWood</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>334</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DandyWoods' TARGET='DandyWoods'>DandyWoods</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>397</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DjursAura' TARGET='DjursAura'>DjursAura</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>163</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Djursholm' TARGET='Djursholm'>Djursholm</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>186</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DjursholmC' TARGET='DjursholmC'>DjursholmC</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>368</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Djösby' TARGET='Djösby'>Djösby</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>169</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Dudden' TARGET='Dudden'>Dudden</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>902</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/DöendeDandyn' TARGET='DöendeDandyn'>DöendeDandyn</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2752</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Edsviken' TARGET='Edsviken'>Edsviken</a></td><td style='text-align:center'><img src='/image/Vattenzon.png' alt='Vattenzon' height='16' width='16'><span style='display:none'>1</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>139</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/EdviksGolf' TARGET='EdviksGolf'>EdviksGolf</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>110</td><td style='text-align:right'>6</td><td style='text-align:right'>4241</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Ekebybryggan' TARGET='Ekebybryggan'>Ekebybryggan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>332</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Ekebysjön' TARGET='Ekebysjön'>Ekebysjön</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>338</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Emblavägen' TARGET='Emblavägen'>Emblavägen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>658</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Enebyberg' TARGET='Enebyberg'>Enebyberg</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>110</td><td style='text-align:right'>6</td><td style='text-align:right'>2726</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/EnebybergsIP' TARGET='EnebybergsIP'>EnebybergsIP</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>200</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/EnebyBush' TARGET='EnebyBush'>EnebyBush</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>516</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/EnebyShopping' TARGET='EnebyShopping'>EnebyShopping</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>346</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Enebytorg' TARGET='Enebytorg'>Enebytorg</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>168</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/ForeSome' TARGET='ForeSome'>ForeSome</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1515</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/ForestBay' TARGET='ForestBay'>ForestBay</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1549</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/FyraTallar' TARGET='FyraTallar'>FyraTallar</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>300</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Fågelvägen' TARGET='Fågelvägen'>Fågelvägen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>2000</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/GamlaElla' TARGET='GamlaElla'>GamlaElla</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1221</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Gena' TARGET='Gena'>Gena</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>653</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Gränsgärdet' TARGET='Gränsgärdet'>Gränsgärdet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>296</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Gränsvalet' TARGET='Gränsvalet'>Gränsvalet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>15</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/GrönaStigen' TARGET='GrönaStigen'>GrönaStigen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>546</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Hildingen' TARGET='Hildingen'>Hildingen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>209</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/HitTheWater' TARGET='HitTheWater'>HitTheWater</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1496</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Inverness' TARGET='Inverness'>Inverness</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1942</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Karlsruhe' TARGET='Karlsruhe'>Karlsruhe</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2039</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Kevinge' TARGET='Kevinge'>Kevinge</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>984</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/KevingeStrand' TARGET='KevingeStrand'>KevingeStrand</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1372</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/KlingstaGård' TARGET='KlingstaGård'>KlingstaGård</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>997</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/KlockarMalm' TARGET='KlockarMalm'>KlockarMalm</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2498</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/KriminellVäxt' TARGET='KriminellVäxt'>KriminellVäxt</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>338</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/KulleMedEk' TARGET='KulleMedEk'>KulleMedEk</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>908</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/KöpSätraÄng' TARGET='KöpSätraÄng'>KöpSätraÄng</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>316</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Lagmannen' TARGET='Lagmannen'>Lagmannen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>819</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Lagmanskungen' TARGET='Lagmanskungen'>Lagmanskungen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>685</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Lakestugan' TARGET='Lakestugan'>Lakestugan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>345</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/LillaKalmar' TARGET='LillaKalmar'>LillaKalmar</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>637</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/LittleBritain' TARGET='LittleBritain'>LittleBritain</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>194</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/LokePark' TARGET='LokePark'>LokePark</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>395</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Midgårdsfält' TARGET='Midgårdsfält'>Midgårdsfält</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>798</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/MotKäppala' TARGET='MotKäppala'>MotKäppala</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>2</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Myran' TARGET='Myran'>Myran</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>2735</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Mörbydalen' TARGET='Mörbydalen'>Mörbydalen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>3959</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Mörbylund' TARGET='Mörbylund'>Mörbylund</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>110</td><td style='text-align:right'>6</td><td style='text-align:right'>4168</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Mörbyrundeln' TARGET='Mörbyrundeln'>Mörbyrundeln</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>6040</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/MörbyZone' TARGET='MörbyZone'>MörbyZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>7484</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/NoraTräsk' TARGET='NoraTräsk'>NoraTräsk</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>2162</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Notchbay' TARGET='Notchbay'>Notchbay</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>258</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/NStrandVy' TARGET='NStrandVy'>NStrandVy</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>188</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/OldOak' TARGET='OldOak'>OldOak</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>165</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/PappaBetalar' TARGET='PappaBetalar'>PappaBetalar</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>144</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Petruskyrkan' TARGET='Petruskyrkan'>Petruskyrkan</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>257</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/PilaVilan' TARGET='PilaVilan'>PilaVilan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>807</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Ranängen' TARGET='Ranängen'>Ranängen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>126</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Roddstigen' TARGET='Roddstigen'>Roddstigen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1462</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Rondellzonen' TARGET='Rondellzonen'>Rondellzonen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1699</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/RoseRoadZone' TARGET='RoseRoadZone'>RoseRoadZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2238</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/RösjöÄngar' TARGET='RösjöÄngar'>RösjöÄngar</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>119</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/SagornasSkog' TARGET='SagornasSkog'>SagornasSkog</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1212</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Santara' TARGET='Santara'>Santara</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1271</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/ShortCutZone' TARGET='ShortCutZone'>ShortCutZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>2349</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/SkogsTrean' TARGET='SkogsTrean'>SkogsTrean</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>192</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/SmallFrogs' TARGET='SmallFrogs'>SmallFrogs</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1919</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/SnorreVale' TARGET='SnorreVale'>SnorreVale</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>13</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/SpiceYard' TARGET='SpiceYard'>SpiceYard</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2194</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Spårringen' TARGET='Spårringen'>Spårringen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>1216</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Stenbåten' TARGET='Stenbåten'>Stenbåten</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>875</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/StockPier' TARGET='StockPier'>StockPier</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>844</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Stocksund' TARGET='Stocksund'>Stocksund</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>1602</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/StockTown' TARGET='StockTown'>StockTown</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>839</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Stockzone' TARGET='Stockzone'>Stockzone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1005</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/SunCroftPier' TARGET='SunCroftPier'>SunCroftPier</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1782</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/SvalnäsWoods' TARGET='SvalnäsWoods'>SvalnäsWoods</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>553</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Svanpasset' TARGET='Svanpasset'>Svanpasset</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>578</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/SätraÄng' TARGET='SätraÄng'>SätraÄng</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1023</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/TenderCare' TARGET='TenderCare'>TenderCare</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>2888</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/TenderCity' TARGET='TenderCity'>TenderCity</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>2426</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/TillSolna' TARGET='TillSolna'>TillSolna</a></td><td style='text-align:center'><img src='/image/Brozon.png' alt='Brozon' height='16' width='16'><span style='display:none'>3</span>&nbsp;&nbsp;</td><td style='text-align:right'>110</td><td style='text-align:right'>6</td><td style='text-align:right'>185</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/TimberPath' TARGET='TimberPath'>TimberPath</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>480</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Tranpiren' TARGET='Tranpiren'>Tranpiren</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>178</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Transporten' TARGET='Transporten'>Transporten</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>2185</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/Tunnelskog' TARGET='Tunnelskog'>Tunnelskog</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>329</td><td class='sorter-false'>Ja</td></tr>
+<tr class='takenZone'><td><a href='https://turfgame.com/map/WhatSayBrahe' TARGET='WhatSayBrahe'>WhatSayBrahe</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>195</td><td class='sorter-false'>Ja</td></tr>
+</tbody></table></div>
+</form>
+</div>
+
+<div id="map"></div>
+<script type = "text/javascript" charset = "utf-8" > 
+
+var map;
+
+var markers = [];
+var iAmHereMarker;
+
+var bikesShown = false;
+var bikeLayer;
+
+function countryChanged() {
+    var regionSelect = document.getElementById('region');
+    if (regionSelect != null)
+        regionSelect.selectedIndex = 0;
+    regionSelect = document.getElementById('countrySP');
+    if (regionSelect != null)
+        regionSelect.selectedIndex = 0;
+    regionChanged();
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(setCurrentLocation);
+    } else {
+        alert( "Geolocation is not supported by this browser.");
+    }
+}
+function setCurrentLocation(position) {
+    iAmHereMarker = new google.maps.Marker({
+        icon: '/image/currentlocation3.png', 
+        position: {lat: position.coords.latitude, lng: position.coords.longitude}, 
+        map: map, 
+        visible: true,
+        title: 'Här är du', 
+    });
+}
+
+function regionChanged() {
+    var citySelect = document.getElementById('city');
+    if (citySelect != null)
+        citySelect.selectedIndex = 0;
+    document.forms["mainform"].submit();
+}
+
+function fttCountryChanged() {
+    var regionSelect = document.getElementById('regionFTT');
+    if (regionSelect != null)
+        regionSelect.selectedIndex = 0;
+    document.forms["mainform"].submit();
+}
+
+function continentChanged() {
+    var ccSelect = document.getElementById('countryContinent');
+    if (ccSelect != null)
+        ccSelect.selectedIndex = 0;
+    document.forms["mainform"].submit();
+}
+
+function submitForm() {
+    document.forms["mainform"].submit();
+}
+
+function BikeControl(controlDiv, map) {
+    controlDiv.style.padding = '5px';
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = 'GhostWhite';
+    controlUI.style.border='1px solid';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Cykelbanor';
+    controlDiv.appendChild(controlUI);
+    var controlText = document.createElement('div');
+    controlText.style.fontFamily='Arial,sans-serif';
+    controlText.style.fontSize='12px';
+    controlText.style.paddingLeft = '4px';
+    controlText.style.paddingRight = '4px';
+    controlText.style.paddingTop = '4px';
+    controlText.style.paddingBottom = '4px';
+    controlText.innerHTML = '<b>Cykelbanor<b>'
+    controlUI.appendChild(controlText);
+
+    // Setup click-event listener
+    google.maps.event.addDomListener(controlUI, 'click', function() {
+    if (bikeLayer == null)
+        bikeLayer = new google.maps.BicyclingLayer();
+    if (bikesShown)
+        bikeLayer.setMap(null);
+    else
+        bikeLayer.setMap(map);
+    bikesShown = !bikesShown;
+  });
+}
+
+ 
+function initMap() {
+//sql= SELECT Min(Longitude) + ((Max(Longitude) - Min(Longitude))/2), Min(Latitude) + ((Max(Latitude) - Min(Latitude))/2)  FROM Zones  WHERE RegionId = ?  AND City = ? 
+var myLatLng = {lat: 0, lng: 0};
+map = new google.maps.Map(document.getElementById('map'), {zoom: 12,center: myLatLng});
+var bounds = new google.maps.LatLngBounds();
+getLocation();
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.438148, lng: 18.039884}, map: map, title: "SagornasSkog", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "SagornasSkog"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/SagornasSkog", "SagornasSkog");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.390167, lng: 18.030451}, map: map, title: "Dudden", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Dudden"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Dudden", "Dudden");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.397861, lng: 18.017231}, map: map, title: "SunCroftPier", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "SunCroftPier"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/SunCroftPier", "SunCroftPier");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.396411, lng: 18.09399}, map: map, title: "AnimalSquare", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "AnimalSquare"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/AnimalSquare", "AnimalSquare");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.385381, lng: 18.081245}, map: map, title: "StockTown", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "StockTown"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/StockTown", "StockTown");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.405472, lng: 18.060386}, map: map, title: "Bråstoppet", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Bråstoppet"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Bråstoppet", "Bråstoppet");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.409275, lng: 18.031162}, map: map, title: "ShortCutZone", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "ShortCutZone"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/ShortCutZone", "ShortCutZone");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.381988, lng: 18.046685}, map: map, title: "BenkeMeFärjan", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "BenkeMeFärjan"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/BenkeMeFärjan", "BenkeMeFärjan");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.435323, lng: 18.033715}, map: map, title: "SpiceYard", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "SpiceYard"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/SpiceYard", "SpiceYard");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.393203, lng: 18.030888}, map: map, title: "HitTheWater", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "HitTheWater"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/HitTheWater", "HitTheWater");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.415304, lng: 18.034214}, map: map, title: "Transporten", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Transporten"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Transporten", "Transporten");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.414411, lng: 17.99855}, map: map, title: "Roddstigen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Roddstigen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Roddstigen", "Roddstigen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.406574, lng: 18.028686}, map: map, title: "KlockarMalm", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "KlockarMalm"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/KlockarMalm", "KlockarMalm");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.384258, lng: 18.040627}, map: map, title: "Inverness", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Inverness"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Inverness", "Inverness");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.387244, lng: 18.042494}, map: map, title: "Mörbylund", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Mörbylund"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Mörbylund", "Mörbylund");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.411709, lng: 18.062402}, map: map, title: "LillaKalmar", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "LillaKalmar"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/LillaKalmar", "LillaKalmar");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.397562, lng: 18.079062}, map: map, title: "Midgårdsfält", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Midgårdsfält"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Midgårdsfält", "Midgårdsfält");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.400542, lng: 18.039022}, map: map, title: "Karlsruhe", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Karlsruhe"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Karlsruhe", "Karlsruhe");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.410324, lng: 18.072723}, map: map, title: "Altorp", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Altorp"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Altorp", "Altorp");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.404471, lng: 18.022174}, map: map, title: "SmallFrogs", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "SmallFrogs"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/SmallFrogs", "SmallFrogs");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.399269, lng: 18.055203}, map: map, title: "Rondellzonen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Rondellzonen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Rondellzonen", "Rondellzonen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.418069, lng: 18.072328}, map: map, title: "Animaliskt", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Animaliskt"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Animaliskt", "Animaliskt");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.417842, lng: 18.050438}, map: map, title: "Dalakröken", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Dalakröken"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Dalakröken", "Dalakröken");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.403303, lng: 18.014474}, map: map, title: "NoraTräsk", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "NoraTräsk"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/NoraTräsk", "NoraTräsk");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.415533, lng: 18.060527}, map: map, title: "SvalnäsWoods", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "SvalnäsWoods"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/SvalnäsWoods", "SvalnäsWoods");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.404561, lng: 18.008187}, map: map, title: "Fågelvägen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Fågelvägen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Fågelvägen", "Fågelvägen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.395113, lng: 18.019979}, map: map, title: "ForeSome", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "ForeSome"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/ForeSome", "ForeSome");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.390978, lng: 18.063468}, map: map, title: "TimberPath", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "TimberPath"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/TimberPath", "TimberPath");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.390411, lng: 18.041131}, map: map, title: "Dandezone", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Dandezone"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Dandezone", "Dandezone");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.414614, lng: 18.043922}, map: map, title: "Danderyd", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Danderyd"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Danderyd", "Danderyd");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.384895, lng: 18.058576}, map: map, title: "Stenbåten", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Stenbåten"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Stenbåten", "Stenbåten");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.413645, lng: 18.015028}, map: map, title: "PilaVilan", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "PilaVilan"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/PilaVilan", "PilaVilan");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.432235, lng: 18.016943}, map: map, title: "EnebyBush", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "EnebyBush"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/EnebyBush", "EnebyBush");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.428648, lng: 18.042664}, map: map, title: "AshZone", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "AshZone"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/AshZone", "AshZone");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.394893, lng: 18.048073}, map: map, title: "Mörbydalen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Mörbydalen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Mörbydalen", "Mörbydalen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.405616, lng: 18.08118}, map: map, title: "Emblavägen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Emblavägen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Emblavägen", "Emblavägen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.422723, lng: 18.022413}, map: map, title: "DandyWoods", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DandyWoods"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DandyWoods", "DandyWoods");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.392424, lng: 18.022352}, map: map, title: "KevingeStrand", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "KevingeStrand"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/KevingeStrand", "KevingeStrand");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.382455, lng: 18.076394}, map: map, title: "Svanpasset", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Svanpasset"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Svanpasset", "Svanpasset");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.436021, lng: 18.042687}, map: map, title: "GamlaElla", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "GamlaElla"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/GamlaElla", "GamlaElla");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.390555, lng: 18.090637}, map: map, title: "KulleMedEk", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "KulleMedEk"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/KulleMedEk", "KulleMedEk");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.397105, lng: 18.034905}, map: map, title: "MörbyZone", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "MörbyZone"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/MörbyZone", "MörbyZone");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.407031, lng: 18.015283}, map: map, title: "DandeForest", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DandeForest"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DandeForest", "DandeForest");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.398633, lng: 18.026962}, map: map, title: "Kevinge", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Kevinge"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Kevinge", "Kevinge");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.422793, lng: 18.036571}, map: map, title: "Santara", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Santara"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Santara", "Santara");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.376427, lng: 18.092127}, map: map, title: "Tranpiren", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Tranpiren"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Tranpiren", "Tranpiren");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.380495, lng: 18.055808}, map: map, title: "Stockzone", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Stockzone"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Stockzone", "Stockzone");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.378408, lng: 18.063093}, map: map, title: "Lagmanskungen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Lagmanskungen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Lagmanskungen", "Lagmanskungen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.379153, lng: 18.082729}, map: map, title: "StockPier", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "StockPier"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/StockPier", "StockPier");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.416498, lng: 18.082669}, map: map, title: "ColdNoseZone", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "ColdNoseZone"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/ColdNoseZone", "ColdNoseZone");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.431701, lng: 18.03496}, map: map, title: "RoseRoadZone", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "RoseRoadZone"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/RoseRoadZone", "RoseRoadZone");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.4258, lng: 18.051214}, map: map, title: "Enebyberg", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Enebyberg"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Enebyberg", "Enebyberg");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.409558, lng: 18.005548}, map: map, title: "ForestBay", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "ForestBay"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/ForestBay", "ForestBay");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.400928, lng: 18.067216}, map: map, title: "Animalisle", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Animalisle"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Animalisle", "Animalisle");});
+var marker = new google.maps.Marker({icon: '/image/9green.png', position: {lat: 59.407456, lng: 18.036244}, map: map, title: "DöendeDandyn", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/9green.png", name: "DöendeDandyn"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DöendeDandyn", "DöendeDandyn");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.423095, lng: 18.075865}, map: map, title: "AnimalTee", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "AnimalTee"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/AnimalTee", "AnimalTee");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.400546, lng: 18.035657}, map: map, title: "Mörbyrundeln", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Mörbyrundeln"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Mörbyrundeln", "Mörbyrundeln");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.379533, lng: 18.070586}, map: map, title: "Lagmannen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Lagmannen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Lagmannen", "Lagmannen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.392051, lng: 18.073931}, map: map, title: "LokePark", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "LokePark"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/LokePark", "LokePark");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.408666, lng: 18.001158}, map: map, title: "Dandeudde", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Dandeudde"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Dandeudde", "Dandeudde");});
+var marker = new google.maps.Marker({icon: '/image/3green.png', position: {lat: 59.416712, lng: 17.99708}, map: map, title: "Edsviken", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/3green.png", name: "Edsviken"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Edsviken", "Edsviken");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.416725, lng: 17.998456}, map: map, title: "SätraÄng", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "SätraÄng"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/SätraÄng", "SätraÄng");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.396816, lng: 18.044091}, map: map, title: "Myran", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Myran"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Myran", "Myran");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.406142, lng: 18.05109}, map: map, title: "Ekebybryggan", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Ekebybryggan"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Ekebybryggan", "Ekebybryggan");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.401204, lng: 18.01929}, map: map, title: "KlingstaGård", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "KlingstaGård"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/KlingstaGård", "KlingstaGård");});
+var marker = new google.maps.Marker({icon: '/image/8green.png', position: {lat: 59.395933, lng: 18.039188}, map: map, title: "Dandybron", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/8green.png", name: "Dandybron"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Dandybron", "Dandybron");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.392342, lng: 18.042818}, map: map, title: "TenderCare", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "TenderCare"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/TenderCare", "TenderCare");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.408196, lng: 18.05668}, map: map, title: "Ekebysjön", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Ekebysjön"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Ekebysjön", "Ekebysjön");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.41668, lng: 18.089427}, map: map, title: "BjörnsMinne", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "BjörnsMinne"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/BjörnsMinne", "BjörnsMinne");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.398421, lng: 18.039545}, map: map, title: "TenderCity", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "TenderCity"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/TenderCity", "TenderCity");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.3987, lng: 18.033255}, map: map, title: "EdviksGolf", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "EdviksGolf"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/EdviksGolf", "EdviksGolf");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.389717, lng: 18.045884}, map: map, title: "Spårringen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Spårringen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Spårringen", "Spårringen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.408014, lng: 18.047797}, map: map, title: "Lakestugan", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Lakestugan"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Lakestugan", "Lakestugan");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.383951, lng: 18.069015}, map: map, title: "FyraTallar", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "FyraTallar"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/FyraTallar", "FyraTallar");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.386633, lng: 18.068289}, map: map, title: "Tunnelskog", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Tunnelskog"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Tunnelskog", "Tunnelskog");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.382751, lng: 18.051982}, map: map, title: "Bergstigen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Bergstigen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Bergstigen", "Bergstigen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.41267, lng: 18.094037}, map: map, title: "Ranängen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Ranängen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Ranängen", "Ranängen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.394991, lng: 18.056677}, map: map, title: "SkogsTrean", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "SkogsTrean"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/SkogsTrean", "SkogsTrean");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.410914, lng: 18.047644}, map: map, title: "DandyFenja", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DandyFenja"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DandyFenja", "DandyFenja");});
+var marker = new google.maps.Marker({icon: '/image/9green.png', position: {lat: 59.389966, lng: 18.05819}, map: map, title: "Petruskyrkan", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/9green.png", name: "Petruskyrkan"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Petruskyrkan", "Petruskyrkan");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.387123, lng: 18.086185}, map: map, title: "Notchbay", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Notchbay"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Notchbay", "Notchbay");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.385607, lng: 18.036282}, map: map, title: "CallesKlimp", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "CallesKlimp"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/CallesKlimp", "CallesKlimp");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.397356, lng: 18.087973}, map: map, title: "DjursholmC", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DjursholmC"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DjursholmC", "DjursholmC");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.384979, lng: 18.04381}, map: map, title: "Stocksund", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Stocksund"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Stocksund", "Stocksund");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.400982, lng: 18.089507}, map: map, title: "Djursholm", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Djursholm"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Djursholm", "Djursholm");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.403676, lng: 18.03806}, map: map, title: "Bergakrysset", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Bergakrysset"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Bergakrysset", "Bergakrysset");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.388653, lng: 18.074357}, map: map, title: "Gränsgärdet", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Gränsgärdet"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Gränsgärdet", "Gränsgärdet");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.40427, lng: 18.066407}, map: map, title: "Hildingen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Hildingen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Hildingen", "Hildingen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.408122, lng: 18.076484}, map: map, title: "AltorpsKapell", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "AltorpsKapell"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/AltorpsKapell", "AltorpsKapell");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.406448, lng: 18.074607}, map: map, title: "LittleBritain", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "LittleBritain"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/LittleBritain", "LittleBritain");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.391853, lng: 18.03689}, map: map, title: "GrönaStigen", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "GrönaStigen"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/GrönaStigen", "GrönaStigen");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.387993, lng: 18.037454}, map: map, title: "DandyWood", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DandyWood"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DandyWood", "DandyWood");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.404405, lng: 18.030786}, map: map, title: "Gena", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Gena"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Gena", "Gena");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.40813, lng: 18.02374}, map: map, title: "DanaSkog", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DanaSkog"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DanaSkog", "DanaSkog");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.416312, lng: 18.025802}, map: map, title: "DandeGolf", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DandeGolf"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DandeGolf", "DandeGolf");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.424612, lng: 18.007076}, map: map, title: "DandeWoods", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DandeWoods"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DandeWoods", "DandeWoods");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.426008, lng: 18.030817}, map: map, title: "EnebybergsIP", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "EnebybergsIP"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/EnebybergsIP", "EnebybergsIP");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.421857, lng: 18.046498}, map: map, title: "EnebyShopping", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "EnebyShopping"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/EnebyShopping", "EnebyShopping");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.404212, lng: 18.002293}, map: map, title: "DanderydCave", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DanderydCave"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DanderydCave", "DanderydCave");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.429167, lng: 18.035557}, map: map, title: "KriminellVäxt", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "KriminellVäxt"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/KriminellVäxt", "KriminellVäxt");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.405835, lng: 18.024188}, map: map, title: "Blanchegården", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Blanchegården"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Blanchegården", "Blanchegården");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.394833, lng: 18.086592}, map: map, title: "DjursAura", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DjursAura"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DjursAura", "DjursAura");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.411561, lng: 18.024801}, map: map, title: "KöpSätraÄng", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "KöpSätraÄng"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/KöpSätraÄng", "KöpSätraÄng");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.430906, lng: 18.044628}, map: map, title: "DagermansPark", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DagermansPark"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DagermansPark", "DagermansPark");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.434927, lng: 18.008328}, map: map, title: "RösjöÄngar", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "RösjöÄngar"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/RösjöÄngar", "RösjöÄngar");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.400032, lng: 18.011063}, map: map, title: "NStrandVy", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "NStrandVy"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/NStrandVy", "NStrandVy");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.386143, lng: 18.050974}, map: map, title: "WhatSayBrahe", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "WhatSayBrahe"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/WhatSayBrahe", "WhatSayBrahe");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.417798, lng: 18.002176}, map: map, title: "OldOak", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "OldOak"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/OldOak", "OldOak");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.403546, lng: 18.04747}, map: map, title: "AngantyrZone", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "AngantyrZone"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/AngantyrZone", "AngantyrZone");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.402114, lng: 18.082589}, map: map, title: "PappaBetalar", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "PappaBetalar"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/PappaBetalar", "PappaBetalar");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.432409, lng: 18.039474}, map: map, title: "Enebytorg", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Enebytorg"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Enebytorg", "Enebytorg");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.398129, lng: 18.058919}, map: map, title: "Djösby", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Djösby"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Djösby", "Djösby");});
+var marker = new google.maps.Marker({icon: '/image/8green.png', position: {lat: 59.383181, lng: 18.041467}, map: map, title: "TillSolna", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/8green.png", name: "TillSolna"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/TillSolna", "TillSolna");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.421989, lng: 18.064838}, map: map, title: "Gränsvalet", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Gränsvalet"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Gränsvalet", "Gränsvalet");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.397, lng: 18.069367}, map: map, title: "SnorreVale", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "SnorreVale"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/SnorreVale", "SnorreVale");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.405902, lng: 18.091693}, map: map, title: "DanderydsHamn", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "DanderydsHamn"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/DanderydsHamn", "DanderydsHamn");});
+var marker = new google.maps.Marker({icon: '/image/green-dot.png', position: {lat: 59.418195, lng: 18.017858}, map: map, title: "MotKäppala", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "MotKäppala"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/MotKäppala", "MotKäppala");});
+    // Don't zoom in too far on only one marker
+    if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+       var extendPoint1 = new google.maps.LatLng(bounds.getNorthEast().lat() + 0.01, bounds.getNorthEast().lng() + 0.01);
+       var extendPoint2 = new google.maps.LatLng(bounds.getNorthEast().lat() - 0.01, bounds.getNorthEast().lng() - 0.01);
+       bounds.extend(extendPoint1);
+       bounds.extend(extendPoint2);
+    }
+map.fitBounds(bounds);
+var bikeControlDiv = document.createElement('div');
+var bikeControl = new BikeControl(bikeControlDiv, map);
+map.controls[google.maps.ControlPosition.RIGHT_TOP].push(bikeControlDiv);
+
+}
+
+function setMedal(country) {
+    var elem = document.createElement("img");
+    elem.src = "/image/" +  country + "Explorer.png";
+    elem.setAttribute("height", "30");
+    elem.setAttribute("width", "30");
+    elem.setAttribute("alt", "Explorer medal");
+    document.getElementById("medal").appendChild(elem);
+}
+
+function findMarker(name) {
+    for (var i = 0; i < markers.length; i++) {
+        if ($(markers[i]).data().name == name)
+            return markers[i];
+    }
+    return null;
+}
+
+function setMarkers(cb,  name) 
+{
+    for (var i = 0; i < markers.length; i++) {
+        if (markers[i].icon.indexOf(name) > 0)
+            markers[i].setVisible(cb.checked);
+    }
+}
+
+function setIAmHere(cb) 
+{
+    if (iAmHereMarker)
+        iAmHereMarker.setVisible(cb.checked);
+}
+
+$(function(){
+    $.tablesorter.addWidget({
+        id: "hover",
+        format: function(table) {
+            $('tr',$(table)).mouseover(function () {
+                zoneName = this.cells["0"].textContent;
+                marker = findMarker(zoneName);
+                if (marker == null)
+                    return;
+                marker.setIcon('/image/currentlocation2.png');
+            }).mouseout(function () {
+                zoneName = this.cells["0"].textContent;
+                marker = findMarker(zoneName);
+                if (marker == null)
+                    return;
+                icon = $(marker).data().imgURL;
+                marker.setIcon(icon);
+            });
+        }
+    });
+    
+    
+    $("#zoneTable").tablesorter({
+        widgets: ["stickyHeaders", "hover"],
+        widgetOptions : {
+          // css class name applied to the sticky header
+          stickyHeaders : "tablesorter-stickyHeader"
+        }
+    });
+    
+});
+
+</script >
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGBae8LUZmyGD6x9f0eYMcNUUR0UmJpME&callback=initMap"></script>
+</body></html>
+
