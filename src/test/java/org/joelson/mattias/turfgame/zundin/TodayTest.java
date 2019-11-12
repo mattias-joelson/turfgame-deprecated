@@ -32,11 +32,11 @@ public class TodayTest {
         Today today = getOberoffToday();
         assertNotNull(today);
         assertEquals("Oberoff", today.getUserName());
-        assertEquals("2018-07-06", today.getDate());
-        assertEquals(331, today.getZones().size());
-        assertEquals(153, getActivityCount(today, "Takeover"));
-        assertEquals(10, getActivityCount(today, "Assist"));
-        assertEquals(168, getActivityCount(today, "Lost"));
+        assertEquals("2019-11-11", today.getDate());
+        assertEquals(254, today.getZones().size());
+        assertEquals(87, getActivityCount(today, "Takeover"));
+        assertEquals(1, getActivityCount(today, "Assist"));
+        assertEquals(166, getActivityCount(today, "Lost"));
     }
 
     private static int getActivityCount(Today today, String activity) {
@@ -49,7 +49,7 @@ public class TodayTest {
         return count;
     }
     private static Today getOberoffToday() throws IOException {
-        return readProperties("/todays_activity_oberoff_2018-07-06.html", "Oberoff", "2018-07-06");
+        return readProperties("/todays_activity_oberoff_2019-11-11.html", "Oberoff", "2019-11-11");
     }
 
     private static Today readProperties(String resource, String name, String date) throws IOException {

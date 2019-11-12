@@ -20,11 +20,13 @@ public final class StatisticsInitializer {
         Region stockholm = new Region(141, "Stockholm", sweden);
         statistics.addRegion(stockholm);
         addMunicipality(statistics, stockholm, "Danderyds kommun");
+        addMunicipality(statistics, stockholm, "Järfälla kommun");
         addMunicipality(statistics, stockholm, "Sigtuna kommun");
         addMunicipality(statistics, stockholm, "Solna kommun");
         addMunicipality(statistics, stockholm, "Sollentuna kommun");
         addMunicipality(statistics, stockholm, "Stockholms kommun");
         addMunicipality(statistics, stockholm, "Sundbybergs kommun");
+        addMunicipality(statistics, stockholm, "Täby kommun");
 
         Region uppsala = new Region(142, "Uppsala", sweden);
         statistics.addRegion(uppsala);
@@ -37,9 +39,9 @@ public final class StatisticsInitializer {
 
         statistics.addUser(new User(80119, "Oberoff"));
 
-        statistics.addRound(new Round(96, "June",
-                ZonedDateTime.of(2018, 6, 3,
-                        10, 0, 0, 0,
+        statistics.addRound(new Round(113, "June",
+                ZonedDateTime.of(2019, 11, 3,
+                        11, 0, 0, 0,
                         ZoneId.of("UTC+00:00"))));
 
         return statistics;
