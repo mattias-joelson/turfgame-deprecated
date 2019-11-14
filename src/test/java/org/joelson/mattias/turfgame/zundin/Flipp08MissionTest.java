@@ -49,7 +49,7 @@ public class Flipp08MissionTest {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), "UTF8"))) {
             String line;
             while ((line = in.readLine()) != null) {
-                System.out.println("Parsing " + line);
+                //System.out.println("Parsing " + line);
                 JSONObject flip = (JSONObject) new JSONParser().parse(line);
                 flips.add(flip);
             }
@@ -73,10 +73,10 @@ public class Flipp08MissionTest {
         Map<String,String> allRemainingZones = new HashMap<>();
         for (JSONObject flip : flips) {
             String flipName = ((JSONString) flip.getValue("name")).stringValue();
-            System.out.println("Processing " + flipName);
+            //System.out.println("Processing " + flipName);
             int flipZoneCount = ((JSONNumber) flip.getValue("zoneCount")).intValue();
             boolean flipZoneTaken = ((JSONString) flip.getValue("taken")).stringValue().equals("true");
-            System.out.println("  Taken " + flipZoneTaken);
+            //System.out.println("  Taken " + flipZoneTaken);
             JSONArray array = (JSONArray) flip.getValue("zones");
             int count = 0;
             Set<String> flipZoneNames = new HashSet<>();
@@ -89,12 +89,12 @@ public class Flipp08MissionTest {
                     System.err.println("Zone '" + zoneName + "' not found!");
                     assertTrue(zone != null);
                 }
-                System.out.println("  " + zoneName);
+                //System.out.println("  " + zoneName);
                 flipZoneNames.add(zoneName);
                 count += 1;
             }
             assertEquals(flipZoneCount, count);
-            System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
+            //System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
 
             totalZoneCount += count;
             if (flipZoneTaken) {
