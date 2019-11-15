@@ -50,8 +50,20 @@ public class MonthlyZone {
         return points;
     }
     
+    public int getTakePoints() {
+        return tp * (takes + assists) + (int) Math.floor(tp / 2.) * revisits;
+    }
+    
+    public int getPPHPoints() {
+        return getPoints() - getTakePoints();
+    }
+    
     public Duration getAverageDuration() {
         return averageDuration;
+    }
+    
+    public int getVisits() {
+        return takes + revisits + assists;
     }
 
     public int getTakes() {
