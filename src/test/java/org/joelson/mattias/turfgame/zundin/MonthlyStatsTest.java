@@ -83,7 +83,7 @@ public class MonthlyStatsTest {
         System.out.println("Score per visit per TP per municipality");
         System.out.println(String.format("%20s ", "")
                 + Arrays.stream(POSSIBLE_TP)
-                .mapToObj(tp -> String.format(" %4d", tp))
+                .mapToObj(tp -> String.format(" %4d      ", tp))
                 .collect(Collectors.joining()));
         Map<String, List<MonthlyZone>> municipalityZones = getMunicipalityZones(monthly);
         municipalityZones.put("all", monthly.getZones());
@@ -96,9 +96,9 @@ public class MonthlyStatsTest {
                             .map(tpEntry -> {
                                 int pointsPerTPVisit = getPointsPerVisit(tpEntry.getValue());
                                 if (pointsPerTPVisit == 0) {
-                                    return "     ";
+                                    return "           ";
                                 }
-                                return String.format(" %4d", pointsPerTPVisit);
+                                return String.format(" %4d (%3d)", pointsPerTPVisit, tpEntry.getValue().stream().mapToInt(MonthlyZone::getVisits).sum());
                             })
                             .collect(Collectors.joining());
                     return municipalityString;
