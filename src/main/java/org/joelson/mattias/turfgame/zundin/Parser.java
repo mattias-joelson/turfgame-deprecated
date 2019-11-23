@@ -67,6 +67,10 @@ final class Parser {
                 days = Integer.valueOf(str.substring(0, dayIndex));
                 dayIndex += 5;
             }
+            // assists have no time
+            if (str.substring(dayIndex + 1).isEmpty()) {
+                return Duration.ofSeconds(0);
+            }
             TemporalAccessor time = DateTimeFormatter.ISO_TIME.parse(str.substring(dayIndex + 1));
             return Duration.ofSeconds(time.getLong(ChronoField.SECOND_OF_DAY)).plusDays(days);
         }
