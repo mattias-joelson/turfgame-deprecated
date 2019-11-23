@@ -87,8 +87,13 @@ public class ZonesComparisonTest {
     
     @Test
     public void zoneCompareAllTest() throws IOException {
-        Map<String, Zone> oldScores = getZones("zones-all.pre-tomtesv.json");
-        Map<String, Zone> newScores = getZones("zones-all.2019-11-18.json");
+//        Map<String, Zone> oldScores = getZones("zones-all.pre-tomtesv.json");
+//        Map<String, Zone> oldScores = getZones("zones-all.2019-11-18.json");
+//        Map<String, Zone> oldScores = getZones("zones-all.2019-11-19.json");
+//        Map<String, Zone> oldScores = getZones("zones-all.2019-11-20.json");
+//        Map<String, Zone> oldScores = getZones("zones-all.2019-11-21.json");
+        Map<String, Zone> oldScores = getZones("zones-all.2019-11-22.json");
+        Map<String, Zone> newScores = getZones("zones-all.2019-11-23.json");
         
         int[] changed = new int[] { 0, 0 };
         
