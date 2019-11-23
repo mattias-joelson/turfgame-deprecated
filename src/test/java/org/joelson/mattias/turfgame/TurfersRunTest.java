@@ -32,6 +32,7 @@ public class TurfersRunTest {
         KMLWriter writer = new KMLWriter("runs.kml");
 
         writeRun(writer, "zonerx_2019-11-15");
+        writeRun(writer, "oberoff_2019-11-21");
 
         writer.close();
     }
