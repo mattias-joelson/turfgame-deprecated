@@ -10,7 +10,7 @@ public class TodayZone {
 
     public static final String AREA_TABLE_CELL_TAG = "<td align='left'>";
     public static final String ACTIVITY_TABLE_CELL_TAG = "<td bgcolor='";
-    public static final String USER_NAME_LINK_TAG = "<a href='http://frut.zundin.se/unika.php?userid=";
+    public static final String USER_NAME_LINK_TAG = "<a href='today.php?userid=";
 
     private final String date;
     private final String eagerTime;
