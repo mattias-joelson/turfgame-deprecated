@@ -1,10 +1,15 @@
 package org.joelson.mattias.turfgame.zundin;
 
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
+
 final class Parser {
 
     private static final String DATE_TABLE_CELL_TAG =
             "<td><script language='javascript' type='text/javascript'>document.write(getLocalDate('";
-    static final String ZONE_NAME_LINK_TAG = "<a href='http://frut.zundin.se/zone.php?zoneid=";
+    static final String ZONE_NAME_LINK_TAG = "<a href='zone.php?zoneid=";
     static final String TABLE_CELL_TAG = "<td>";
     static final String RIGHT_TABLE_CELL_TAG = "<td align='right'>";
     static final String LEFT_TABLE_CELL_TAG = "<td style='padding-left:10px' align='left'>";
@@ -53,6 +58,21 @@ final class Parser {
 
         int getPosition() {
             return position;
+        }
+        
+        Duration durationValue() {
+            int dayIndex = str.indexOf(" days ");
+            int days = 0;
+            if (dayIndex > 0) {
+                days = Integer.valueOf(str.substring(0, dayIndex));
+                dayIndex += 5;
+            }
+            // assists have no time
+            if (str.substring(dayIndex + 1).isEmpty()) {
+                return Duration.ofSeconds(0);
+            }
+            TemporalAccessor time = DateTimeFormatter.ISO_TIME.parse(str.substring(dayIndex + 1));
+            return Duration.ofSeconds(time.getLong(ChronoField.SECOND_OF_DAY)).plusDays(days);
         }
     }
 
