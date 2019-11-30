@@ -8,7 +8,7 @@ public class JSONArray implements JSONValue {
 
     private final List<JSONValue> elements;
 
-    JSONArray(List<JSONValue> elements) {
+    public JSONArray(List<JSONValue> elements) {
         this.elements = new ArrayList<>(elements.size());
         this.elements.addAll(elements);
     }

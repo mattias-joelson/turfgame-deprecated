@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class JSONObject implements JSONValue {
 
@@ -85,5 +87,24 @@ public class JSONObject implements JSONValue {
         }
         sb.append('}');
         return sb.toString();
+    }
+    
+    public static JSONObject of(Map<String, Object> members) {
+        return new JSONObject(members.entrySet().stream()
+                .map(entry -> new JSONPair(new JSONString(entry.getKey()), valueOf(entry.getValue())))
+                .collect(Collectors.toList()));
+    }
+    
+    private static JSONValue valueOf(Object obj) {
+        if (obj == null) {
+            return JSONNull.NULL;
+        }
+        if (obj instanceof String) {
+            return new JSONString((String) obj);
+        }
+        if (obj instanceof Number) {
+            return new JSONNumber(String.valueOf(obj));
+        }
+        throw new IllegalArgumentException("Unknown type " + obj.getClass());
     }
 }
