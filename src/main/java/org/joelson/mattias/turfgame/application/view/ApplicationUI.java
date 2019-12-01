@@ -47,7 +47,11 @@ public class ApplicationUI {
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(createFrameWindowListener());
         Desktop.getDesktop().disableSuddenTermination();
-        Desktop.getDesktop().setQuitStrategy(QuitStrategy.CLOSE_ALL_WINDOWS);
+        try {
+            Desktop.getDesktop().setQuitStrategy(QuitStrategy.CLOSE_ALL_WINDOWS);
+        } catch (UnsupportedOperationException e) {
+            // ignore, not available on all platforms
+        }
         return frame;
     }
     
