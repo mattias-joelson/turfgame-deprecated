@@ -6,15 +6,16 @@ import org.joelson.mattias.turfgame.application.model.ApplicationData;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
+import java.awt.desktop.QuitStrategy;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.function.Consumer;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import java.io.File;
+import java.nio.file.Path;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -45,6 +46,8 @@ public class ApplicationUI {
         frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions));
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(createFrameWindowListener());
+        Desktop.getDesktop().disableSuddenTermination();
+        Desktop.getDesktop().setQuitStrategy(QuitStrategy.CLOSE_ALL_WINDOWS);
         return frame;
     }
     
@@ -72,6 +75,43 @@ public class ApplicationUI {
     public void dispose() {
         appplicationFrame.dispose();
     }
+    
+    public Path openLoadDialog() {
+        JFileChooser fileChooser = new JFileChooser();
+        int status = fileChooser.showOpenDialog(appplicationFrame);
+        if (status == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().toPath();
+        }
+        return null;
+    }
+    
+    public Path openSaveDialog() {
+        JFileChooser fileChooser = new JFileChooser() {
+            @Override
+            public void approveSelection() {
+                File f = getSelectedFile();
+                if (f.exists()) {
+                    switch (JOptionPane.showConfirmDialog(this, "File " + f + " exists. Should it be overwritten?",
+                            "Overwrite file?", JOptionPane.YES_NO_CANCEL_OPTION)) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                        case JOptionPane.NO_OPTION:
+                        case JOptionPane.CLOSED_OPTION:
+                            return;
+                        case JOptionPane.CANCEL_OPTION:
+                            cancelSelection();
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
+        int status = fileChooser.showSaveDialog(appplicationFrame);
+        if (status == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().toPath();
+        }
+        return null;
+    }
 
     public void clearPane() {
         appplicationFrame.getContentPane().remove(currentContent);
@@ -91,11 +131,31 @@ public class ApplicationUI {
         statusLabel.setText(status);
     }
     
-    public void showMessageDialog(String message, String title) {
+    public void showMessageDialog(String title, String message) {
         JOptionPane.showMessageDialog(appplicationFrame, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void showErrorDialog(String message, String title) {
+    public void showErrorDialog(String title, String message) {
         JOptionPane.showMessageDialog(appplicationFrame, message, title, JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public Boolean showYesNoCancelDialog(String title, String message) {
+        int val = JOptionPane.showConfirmDialog(appplicationFrame, message, title, JOptionPane.YES_NO_CANCEL_OPTION);
+        switch (val) {
+            case JOptionPane.YES_OPTION:
+                return Boolean.TRUE;
+            case JOptionPane.NO_OPTION:
+                return Boolean.FALSE;
+            case JOptionPane.CANCEL_OPTION:
+            case JOptionPane.CLOSED_OPTION:
+                return null;
+            default:
+                try {
+                    throw new NullPointerException("Unknowm return type " + val);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                return null;
+        }
     }
 }
