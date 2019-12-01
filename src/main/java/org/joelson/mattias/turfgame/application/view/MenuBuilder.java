@@ -3,6 +3,7 @@ package org.joelson.mattias.turfgame.application.view;
 import org.joelson.mattias.turfgame.application.controller.ApplicationActions;
 
 import java.awt.Toolkit;
+import java.awt.event.InputEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -19,7 +20,9 @@ class MenuBuilder {
     
         JMenu fileMenu = addMenu(menuBar,"File");
         addMenuItem(fileMenu, "New User...", createMenuShortcutAccelerator('N'), applicationActions::changeUser);
-        addMenuItem(fileMenu, "Open...", createMenuShortcutAccelerator('O'), applicationActions::loadUser);
+        addMenuItem(fileMenu, "Open...", createMenuShortcutAccelerator('O'), applicationActions::loadData);
+        addMenuItem(fileMenu, "Save...", createMenuShortcutAccelerator('S'), applicationActions::saveData);
+        addMenuItem(fileMenu, "Save as...", createMenuShiftedShortcutAccelerator('S'), applicationActions::saveDataAs);
         
         return menuBar;
     }
@@ -49,4 +52,9 @@ class MenuBuilder {
     private static KeyStroke createMenuShortcutAccelerator(char ch) {
         return KeyStroke.getKeyStroke(ch, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
     }
+    
+    private static KeyStroke createMenuShiftedShortcutAccelerator(char ch) {
+        return KeyStroke.getKeyStroke(ch, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK);
+    }
+    
 }

@@ -27,17 +27,17 @@ public class UserActions {
         try {
             List<User> users = Users.getUsers(username, id);
             if (users.size() != 1) {
-                applicationUI.showErrorDialog(String.format("Found %d users matching user '%s' id '%s'!", users.size(), username, userId),
-                        "Wrong number of users found");
+                applicationUI.showErrorDialog("Wrong number of users found",
+                        String.format("Found %d users matching user '%s' id '%s'!", users.size(), username, userId));
             } else {
                 User user = users.get(0);
-                applicationUI.showMessageDialog(String.format("Found user '%s' id '%d'", user.getName(), user.getId()), "User found");
+                applicationUI.showMessageDialog("User found", String.format("Found user '%s' id '%d'", user.getName(), user.getId()));
                 applicationData.setCurrentUser(new UserData(user.getName(), user.getId()));
                 applicationUI.clearPane();
                 applicationUI.setStatus("User " + user.getName());
             }
         } catch (IOException e) {
-            applicationUI.showErrorDialog(String.format("Unable to get user '%s' id '%s'!%n%s", username, userId, e.getMessage()), "Unable to get user");
+            applicationUI.showErrorDialog("Unable to get user", String.format("Unable to get user '%s' id '%s'!%n%s", username, userId, e.getMessage()));
             e.printStackTrace();
         }
     }
