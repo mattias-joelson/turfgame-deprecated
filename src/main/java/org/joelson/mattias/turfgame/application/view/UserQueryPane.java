@@ -2,11 +2,10 @@ package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.controller.UserActions;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,25 +23,31 @@ public class UserQueryPane {
         this.userActions = userActions;
         
         pane = new JPanel();
-        pane.setLayout(new BorderLayout());
-        Container fieldPanel = new JPanel();
-        pane.add(fieldPanel, BorderLayout.CENTER);
-        fieldPanel.setLayout(new GridLayout(2,2));
-        fieldPanel.add(new JLabel("Username"));
-        fieldPanel.add(usernameField = new JTextField());
+        GroupLayout layout = new GroupLayout(pane);
+        pane.setLayout(layout);
+        JLabel usernameLabel = new JLabel("Username");
+        usernameField = new JTextField();
         usernameField.addActionListener(this::selectUser);
-        fieldPanel.add(new JLabel("User ID"));
-        fieldPanel.add(userIDField = new JTextField());
+        JLabel userIDLabel = new JLabel("User ID");
+        userIDField = new JTextField();
         userIDField.addActionListener(this::selectUser);
-        Container buttonPanel = new JPanel();
-        pane.add(buttonPanel, BorderLayout.SOUTH);
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         JButton cancelButton = new JButton("Cancel");
-        buttonPanel.add(cancelButton);
         cancelButton.addActionListener(this::cancelUserSelection);
         JButton okButton = new JButton("OK");
-        buttonPanel.add(okButton);
         okButton.addActionListener(this::selectUser);
+        
+        layout.setHorizontalGroup(
+                layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING).addComponent(usernameLabel).addComponent(userIDLabel))
+                        .addGroup(layout.createParallelGroup(Alignment.TRAILING).addComponent(usernameField).addComponent(userIDField)
+                                .addGroup(layout.createSequentialGroup().addComponent(cancelButton).addComponent(okButton)))
+        );
+        layout.setVerticalGroup(
+                layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(usernameLabel).addComponent(usernameField))
+                        .addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(userIDLabel).addComponent(userIDField))
+                        .addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(cancelButton).addComponent(okButton))
+        );
     }
     
     private void selectUser(ActionEvent actionEvent) {
