@@ -43,6 +43,8 @@ public class ApplicationUI {
         JFrame frame = new JFrame("Turf Statistics");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize(screenSize.width / 2, screenSize.height /2);
+        frame.setLocation(screenSize.width / 4, screenSize.height / 4);
+        frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions));
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(createFrameWindowListener());
