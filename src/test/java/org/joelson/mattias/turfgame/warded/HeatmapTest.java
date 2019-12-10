@@ -5,6 +5,9 @@ import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
+import org.joelson.mattias.turfgame.zundin.Monthly;
+import org.joelson.mattias.turfgame.zundin.MonthlyTest;
+import org.joelson.mattias.turfgame.zundin.MonthlyZone;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,11 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class HeatmapTest {
     
     public static final int TAKES_ENTRIES = HeatmapCategories.VIOLET.getTakes() + 1;
+    
+    private static Boolean apply(String s) {
+        return Boolean.TRUE;
+    }
     
     private enum WardedCategories {
         UNTAKEN(0),
@@ -73,22 +82,49 @@ public class HeatmapTest {
     
     @Test
     public void danderydHeatmap() throws IOException {
-        municipalityHeatmap("danderyd_heatmap.kml", MunicipalityTest.getDanderydZones());
+        municipalityHeatmap("danderyd_heatmap.kml", readTakenZones(), MunicipalityTest.getDanderydZones());
     }
 
     @Test
     public void solnaHeatmap() throws IOException {
-        municipalityHeatmap("solna_heatmap.kml", MunicipalityTest.getSolnaZones());
+        municipalityHeatmap("solna_heatmap.kml", readTakenZones(), MunicipalityTest.getSolnaZones());
     }
 
     @Test
     public void sundbybergHeatmap() throws IOException {
-        municipalityHeatmap("sundbyberg_heatmap.kml", MunicipalityTest.getSundbybergZones());
+        municipalityHeatmap("sundbyberg_heatmap.kml", readTakenZones(), MunicipalityTest.getSundbybergZones());
+    }
+    
+    @Test
+    public void leifonsSolnaHeatmap() throws IOException {
+        municipalityHeatmap("leifons_solna_heatmap.kml", readLeifonsTakenZones(), MunicipalityTest.getLeifonsSolnaZones());
     }
 
-    private void municipalityHeatmap(String filename, Map<String, Boolean> municipalityZones) throws IOException {
+    @Test
+    public void leifonsSundbybergHeatmap() throws IOException {
+        municipalityHeatmap("leifons_sundbyberg_heatmap.kml", readLeifonsTakenZones(), MunicipalityTest.getLeifonsSundbybergZones());
+    }
+    
+    @Test
+    public void monthlyHeatmap() throws IOException {
+        Monthly monthly = MonthlyTest.getMonthly();
+        Map<String, Integer> takenZones = monthly.getZones().stream()
+                .collect(Collectors.toMap(MonthlyZone::getName, monthlyZone -> monthlyZone.getTakes() + monthlyZone.getAssists()));
+        Map<String, Boolean> municipalityZones = takenZones.keySet().stream().collect(Collectors.toMap(Function.identity(), HeatmapTest::apply));
+        municipalityHeatmap("monthlyHeatmap.kml", takenZones, municipalityZones);
+    }
+    
+    @Test
+    public void monthlySolnaHeatmap() throws IOException {
+        Monthly monthly = MonthlyTest.getMonthly();
+        Map<String, Integer> takenZones = monthly.getZones().stream()
+                .collect(Collectors.toMap(MonthlyZone::getName, monthlyZone -> monthlyZone.getTakes() + monthlyZone.getAssists()));
+        Map<String, Boolean> municipalityZones = MunicipalityTest.getSolnaZones();
+        municipalityHeatmap("monthlySolnaHeatmap.kml", takenZones, municipalityZones);
+    }
+
+    private void municipalityHeatmap(String filename, Map<String, Integer> takenZones, Map<String, Boolean> municipalityZones) throws IOException {
         List<Zone> allZones = ZonesTest.getAllZones();
-        Map<String, Integer> takenZones = readTakenZones();
     
         Map<Zone, Integer>[] zoneMaps = new Map[TAKES_ENTRIES];
         initZoneMaps(zoneMaps, HeatmapCategories.UNTAKEN);
@@ -150,7 +186,7 @@ public class HeatmapTest {
         for (int i = max; i > 0; i -= 1) {
             if (i % 5 == 0) {
                 if (i + 5 == max && i > nextToMax + 5) {
-                    System.out.println(String.format("   :  %" + zoneCountArray[51][0] + "s", ":"));
+                    System.out.println(String.format("   : %" + (zoneCountArray[51][0] + 1) + "s", ":"));
                     i = nextToMax;
                 }
                 if (i >= 10) {
@@ -226,5 +262,9 @@ public class HeatmapTest {
     
     public static Map<String, Integer> readTakenZones() throws IOException {
         return URLReaderTest.readProperties("/warded.unique.php.html", TakenZones::fromHTML);
+    }
+
+    public static Map<String, Integer> readLeifonsTakenZones() throws IOException {
+        return URLReaderTest.readProperties("/Leifons-sthlm-unique.php.html", TakenZones::fromHTML);
     }
 }

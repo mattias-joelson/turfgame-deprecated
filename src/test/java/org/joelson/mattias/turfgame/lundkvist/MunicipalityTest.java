@@ -81,7 +81,23 @@ public class MunicipalityTest {
         return URLReaderTest.readProperties("/lundkvist_141_sundbyberg.html", Municipality::fromHTML);
     }
     
+    public static Map<String, Boolean> getTabyZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_taby.html", Municipality::fromHTML);
+    }
+
     public static Map<String, Boolean> getUpplandsBroZones() throws IOException {
         return URLReaderTest.readProperties("/lundkvist_141_upplands-bro.html", Municipality::fromHTML);
+    }
+    
+    public static Map<String, Boolean> getVallentunaZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_141_vallentuna.html", Municipality::fromHTML);
+    }
+
+    public static Map<String, Boolean> getLeifonsSolnaZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_leifons_141_solna.html", Municipality::fromHTML);
+    }
+    
+    public static Map<String, Boolean> getLeifonsSundbybergZones() throws IOException {
+        return URLReaderTest.readProperties("/lundkvist_leifons_141_sundbyberg.html", Municipality::fromHTML);
     }
 }
