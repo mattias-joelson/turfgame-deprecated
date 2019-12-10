@@ -4,7 +4,9 @@ import org.joelson.mattias.turfgame.util.JSONNumber;
 import org.joelson.mattias.turfgame.util.JSONObject;
 import org.joelson.mattias.turfgame.util.JSONString;
 
-public final class Zone {
+import java.io.Serializable;
+
+public final class Zone implements Serializable {
 
     private static final String NAME = "name";
     private static final String ID = "id";

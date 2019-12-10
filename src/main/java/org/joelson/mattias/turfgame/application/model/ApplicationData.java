@@ -10,6 +10,7 @@ public class ApplicationData {
     private boolean changed;
     private Path savePath;
     private UserData currentUser;
+    private ZoneData zones;
     
     public ApplicationData() {
     }
@@ -43,15 +44,32 @@ public class ApplicationData {
         changed = true;
     }
     
+    public ZoneData getZones() {
+        return zones;
+    }
+    
+    public void setZones(ZoneData zones) {
+        this.zones = zones;
+    }
+
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(1);
         currentUser.writeExternal(out);
+        zones.writeExternal(out);
     }
     
     public static ApplicationData readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         int version = in.readInt();
         ApplicationData applicationData = new ApplicationData();
         applicationData.setCurrentUser(UserData.readExternal(in));
+        applicationData.setZones(ZoneData.readExternal(in));
+        applicationData.clearChanged();
         return applicationData;
+    }
+    
+    public String getStatus() {
+        return String.format("User %s, Zones %s",
+                (getCurrentUser() != null) ? getCurrentUser().getUsername() : "<no user>",
+                (getZones() != null) ? getZones().getZones().size() : "<no zones>");
     }
 }
