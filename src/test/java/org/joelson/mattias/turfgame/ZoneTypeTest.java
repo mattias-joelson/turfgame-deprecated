@@ -78,7 +78,7 @@ public class ZoneTypeTest {
     }
     
     private List<String> getZoneNames() throws IOException {
-        String filename = TurfersRunTest.class.getResource("/oberoff_2019-11-21.txt").getFile();
+        String filename = TurfersRunTest.class.getResource("/oberoff_2019-11-26.txt").getFile();
         Path path = Paths.get(filename);
         List<String> run = Files.lines(path).collect(Collectors.toList());
         return run;

@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 public class MonthlyVisitTest {
 
     private static final String OBEROFF = "Oberoff";
-    private static final int ROUND = 113;
+    private static final int ROUND = 114;
     
     @Test
     public void visitDanderydTest() throws IOException {
@@ -70,7 +70,7 @@ public class MonthlyVisitTest {
     
     private static Monthly getMonthly() throws IOException {
         //        return readProperties("/monthly_oberoff_round96.html");
-        return readProperties("/monthly_oberoff_round113.html");
+        return readProperties("/monthly_oberoff_round114.html");
     }
     
     private static Monthly readProperties(String resource) throws IOException {
