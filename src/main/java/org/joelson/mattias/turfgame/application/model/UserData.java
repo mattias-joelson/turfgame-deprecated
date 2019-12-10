@@ -27,7 +27,7 @@ public class UserData {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(1);
         out.writeObject(username);
-        out.writeObject(userID);
+        out.writeInt(userID);
     
     }
     
