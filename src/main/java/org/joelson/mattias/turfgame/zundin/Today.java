@@ -35,7 +35,7 @@ public class Today {
     }
 
     public static Today fromZundin(String userName, String date) throws IOException {
-        String request = "http://frut.zundin.se/today.php?userid=" + userName + "&data=" + date;
+        String request = "http://frut.zundin.se/today.php?userid=" + userName + "&model=" + date;
         return fromHTML(userName, date, URLReader.getRequest(request));
     }
 
