@@ -23,6 +23,11 @@ class MenuBuilder {
         addMenuItem(fileMenu, "Open...", createMenuShortcutAccelerator('O'), applicationActions::loadData);
         addMenuItem(fileMenu, "Save...", createMenuShortcutAccelerator('S'), applicationActions::saveData);
         addMenuItem(fileMenu, "Save as...", createMenuShiftedShortcutAccelerator('S'), applicationActions::saveDataAs);
+        fileMenu.addSeparator();
+        addMenuItem(fileMenu, "Quit", createMenuShortcutAccelerator('Q'), applicationActions::closeApplication);
+        
+        JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
+        addMenuItem(turfgameMenu, "Read zones", null, applicationActions::readZones);
         
         return menuBar;
     }

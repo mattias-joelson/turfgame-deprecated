@@ -1,6 +1,8 @@
 package org.joelson.mattias.turfgame.application.controller;
 
+import org.joelson.mattias.turfgame.apiv4.Zones;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
+import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.view.ApplicationUI;
 
 import java.io.FileInputStream;
@@ -57,6 +59,7 @@ public class ApplicationActions {
             ApplicationData applicationData = ApplicationData.readExternal(in);
             this.applicationData = applicationData;
             this.applicationData.setSavePath(loadPath);
+            applicationUI.setStatus(this.applicationData.getStatus());
         } catch (IOException | ClassNotFoundException e) {
             applicationUI.showErrorDialog("Error loading data", "Unable to load user data from " + loadPath);
             e.printStackTrace();
@@ -106,6 +109,16 @@ public class ApplicationActions {
             applicationUI.showErrorDialog("Error saving data", "Unable to store user data to " + savePath);
             e.printStackTrace();
             return false;
+        }
+    }
+    
+    public void readZones() {
+        try {
+            applicationData.setZones(new ZoneData(Zones.readAllZones()));
+            applicationUI.setStatus(this.applicationData.getStatus());
+        } catch (Exception e) {
+            applicationUI.showErrorDialog("Error reading zones", "Unable to read zones through API V4 - " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

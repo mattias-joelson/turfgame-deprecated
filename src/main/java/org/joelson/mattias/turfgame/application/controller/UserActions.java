@@ -34,7 +34,7 @@ public class UserActions {
                 applicationUI.showMessageDialog("User found", String.format("Found user '%s' id '%d'", user.getName(), user.getId()));
                 applicationData.setCurrentUser(new UserData(user.getName(), user.getId()));
                 applicationUI.clearPane();
-                applicationUI.setStatus("User " + user.getName());
+                applicationUI.setStatus(applicationData.getStatus());
             }
         } catch (IOException e) {
             applicationUI.showErrorDialog("Unable to get user", String.format("Unable to get user '%s' id '%s'!%n%s", username, userId, e.getMessage()));
