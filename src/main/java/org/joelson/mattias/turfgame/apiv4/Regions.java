@@ -7,6 +7,7 @@ import org.joelson.mattias.turfgame.util.JSONValue;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,18 @@ public final class Regions {
     }
 
     public static List<Region> readRegions() throws IOException {
-        return fromHTML(URLReader.getRequest(REGIONS_REQUEST));
+        return fromHTML(getAllRegionsJSON());
+    }
+    
+    private static String getAllRegionsJSON() throws IOException {
+        return URLReader.getRequest(REGIONS_REQUEST);
+    }
+    
+    public static void main(String[] args) throws IOException {
+        String json = getAllRegionsJSON();
+        PrintWriter writer = new PrintWriter("regions-all.json", "UTF8");
+        writer.println(json);
+        writer.close();
     }
 
     static List<Region> fromHTML(String s) {
