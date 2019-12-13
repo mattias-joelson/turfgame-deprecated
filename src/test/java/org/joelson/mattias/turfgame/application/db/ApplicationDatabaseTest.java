@@ -13,14 +13,14 @@ public class ApplicationDatabaseTest {
     
     @Test
     public void testDerby() throws SQLException, ClassNotFoundException {
-        ApplicationDatabase database = new ApplicationDatabase(ApplicationDatabaseTest.CONNECTION_URL_DERBY);
+        ApplicationDatabase database = new ApplicationDatabase(CONNECTION_URL_DERBY);
         assertNotNull(database);
         System.out.println(Class.forName("org.apache.derby.jdbc.EmbeddedDriver"));
     }
     
     @Test
     public void testH2() throws SQLException, ClassNotFoundException {
-        ApplicationDatabase database = new ApplicationDatabase(ApplicationDatabaseTest.CONNECTION_URL_H2);
+        ApplicationDatabase database = new ApplicationDatabase(CONNECTION_URL_H2);
         assertNotNull(database);
         System.out.println(Class.forName("org.h2.Driver"));
     }
