@@ -6,7 +6,6 @@
 
     <persistence-unit name="turfgame-derby">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>org.joelson.mattias.turfgame.application.db.Point</class>
         <class>org.joelson.mattias.turfgame.application.db.RegionEntity</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create" />
@@ -19,7 +18,6 @@
 
     <persistence-unit name="turfgame-h2">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>org.joelson.mattias.turfgame.application.db.Point</class>
         <class>org.joelson.mattias.turfgame.application.db.RegionEntity</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create" />

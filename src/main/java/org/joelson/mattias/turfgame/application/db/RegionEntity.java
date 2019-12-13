@@ -1,6 +1,5 @@
 package org.joelson.mattias.turfgame.application.db;
 
-import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
