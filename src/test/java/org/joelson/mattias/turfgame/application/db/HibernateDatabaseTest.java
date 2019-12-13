@@ -1,12 +1,13 @@
 package org.joelson.mattias.turfgame.application.db;
 
 import org.joelson.mattias.turfgame.apiv4.RegionsTest;
+import org.joelson.mattias.turfgame.application.model.RegionData;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class HibernateDatabaseTest {
 
@@ -15,25 +16,24 @@ public class HibernateDatabaseTest {
     
     @Test
     public void hibernateDerbyTest() throws SQLException, IOException {
-        HibernateDatabase hdb = new HibernateDatabase(PERSISTANCE_DERBY);
-        testData(hdb);
+        DatabaseEntityManager databaseEntityManager = new DatabaseEntityManager(PERSISTANCE_DERBY);
+        testData(databaseEntityManager);
     }
     
     @Test
     public void hibernateH2Test() throws SQLException, IOException {
-        HibernateDatabase hdb = new HibernateDatabase(PERSISTANCE_H2);
-        testData(hdb);
+        DatabaseEntityManager databaseEntityManager = new DatabaseEntityManager(PERSISTANCE_H2);
+        testData(databaseEntityManager);
     }
     
-    private void testData(HibernateDatabase hdb) throws IOException {
-        System.out.println("Point (1): " + hdb.findPoint(1));
-        System.out.println("Points: " + hdb.getPoints());
-        
+    private void testData(DatabaseEntityManager databaseEntityManager) throws IOException {
         System.out.println("getRegions");
-        hdb.updateRegions(RegionsTest.getRegions());
-        System.out.println("current regions: " + hdb.getRegions());
+        new RegionData(databaseEntityManager).updateRegions(RegionsTest.getRegions());
+        System.out.println("current regions: " + databaseEntityManager.getRegions());
         System.out.println("getAllRegions");
-        hdb.updateRegions(RegionsTest.getAllRegions());
-        System.out.println("current regions: " + hdb.getRegions());
+        new RegionData(databaseEntityManager).updateRegions(RegionsTest.getAllRegions());
+        System.out.println("current regions: " + databaseEntityManager.getRegions());
+        
+        assertEquals(388, new RegionData(databaseEntityManager).getRegion("Maryland").getId());
     }
 }
