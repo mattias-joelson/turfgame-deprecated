@@ -15,15 +15,13 @@ public class HibernateDatabaseTest {
     
     @Test
     public void hibernateDerbyTest() throws SQLException, IOException {
-        ApplicationDatabase db = new ApplicationDatabase(ApplicationDatabaseTest.CONNECTION_URL_DERBY);
-        HibernateDatabase hdb = new HibernateDatabase(HibernateDatabaseTest.PERSISTANCE_DERBY);
+        HibernateDatabase hdb = new HibernateDatabase(PERSISTANCE_DERBY);
         testData(hdb);
     }
     
     @Test
     public void hibernateH2Test() throws SQLException, IOException {
-        ApplicationDatabase db = new ApplicationDatabase(ApplicationDatabaseTest.CONNECTION_URL_H2);
-        HibernateDatabase hdb = new HibernateDatabase(HibernateDatabaseTest.PERSISTANCE_H2);
+        HibernateDatabase hdb = new HibernateDatabase(PERSISTANCE_H2);
         testData(hdb);
     }
     
