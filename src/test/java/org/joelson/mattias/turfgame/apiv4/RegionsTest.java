@@ -19,4 +19,14 @@ public class RegionsTest {
     public static List<Region> getRegions() throws IOException {
         return URLReaderTest.readProperties("/regions.json", Regions::fromHTML);
     }
+    
+    @Test
+    public void parseAllRegions() throws IOException {
+        List<Region> regions = getAllRegions();
+        assertEquals(330, regions.size());
+    }
+    
+    public static List<Region> getAllRegions() throws IOException {
+        return URLReaderTest.readProperties("/regions-all.json", Regions::fromHTML);
+    }
 }
