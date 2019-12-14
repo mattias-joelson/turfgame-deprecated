@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-public class FilesUtil {
+public final class FilesUtil {
     
     public static final String DEFAULT_OUTPUT_DIRECTORY = "output";
     public static final OpenOption[] DEFAULT_OPEN_OPTIONS = {
@@ -19,6 +19,10 @@ public class FilesUtil {
             StandardOpenOption.TRUNCATE_EXISTING
     };
     public static final Charset DEFAULT_CHARSET = Charset.forName("UTF8");
+    
+    private FilesUtil() throws InstantiationException {
+        throw new InstantiationException("Should not be instantiated!");
+    }
     
     public static Path filenamePath(String... filenameParts) {
         if (filenameParts.length == 0) {
