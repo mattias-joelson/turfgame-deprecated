@@ -52,7 +52,7 @@ public class ApplicationData {
         this.zones = zones;
     }
 
-    public void writeExternal(ObjectOutput out) throws IOException {
+    /*public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(1);
         currentUser.writeExternal(out);
         zones.writeExternal(out);
@@ -65,7 +65,7 @@ public class ApplicationData {
         applicationData.setZones(ZoneData.readExternal(in));
         applicationData.clearChanged();
         return applicationData;
-    }
+    }*/
     
     public String getStatus() {
         return String.format("User %s, Zones %s",

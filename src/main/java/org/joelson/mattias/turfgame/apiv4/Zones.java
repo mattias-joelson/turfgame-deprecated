@@ -28,13 +28,13 @@ public final class Zones {
     }
 
     public static void main(String[] args) throws IOException {
-	    String json = getAllZonesJSON();
-	    PrintWriter writer = new PrintWriter("zones-all.json", "UTF8");
-	    writer.println(json);
-	    writer.close();
-	}
+        String json = getAllZonesJSON();
+        try (PrintWriter writer = new PrintWriter("zones-all.json", "UTF8")) {
+            writer.println(json);
+        }
+    }
 
-    static List<Zone> fromHTML(String s) {
+    public static List<Zone> fromHTML(String s) {
         JSONArray valueArray = (JSONArray) new JSONParser().parse(s);
         List<Zone> zones = new ArrayList<>();
         for (JSONValue value : valueArray.getElements()) {
