@@ -30,7 +30,7 @@ public class ApplicationActions {
     }
     
     public void closeApplication() {
-        if (applicationData.isChanged()) {
+        /*if (applicationData.isChanged()) {
             Boolean saveData = applicationUI.showYesNoCancelDialog("Save data?", "User data has changed. Should it be saved?");
             if (saveData == null) {
                 return;
@@ -41,7 +41,7 @@ public class ApplicationActions {
                     return;
                 }
             }
-        }
+        }*/
         applicationUI.dispose();
         System.exit(0);
     }
@@ -50,7 +50,7 @@ public class ApplicationActions {
         applicationUI.showUserQueryPane(new UserActions(applicationUI, applicationData));
     }
     
-    public void loadData() {
+    /*public void loadData() {
         Path loadPath = applicationUI.openLoadDialog();
         if (loadPath == null) {
             return;
@@ -120,5 +120,5 @@ public class ApplicationActions {
             applicationUI.showErrorDialog("Error reading zones", "Unable to read zones through API V4 - " + e.getMessage());
             e.printStackTrace();
         }
-    }
+    }*/
 }
