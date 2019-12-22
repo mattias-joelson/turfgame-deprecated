@@ -1,75 +1,44 @@
 package org.joelson.mattias.turfgame.application.model;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
+
 import java.nio.file.Path;
+import java.util.Map;
 
 public class ApplicationData {
     
-    private boolean changed;
-    private Path savePath;
-    private UserData currentUser;
     private ZoneData zones;
+    private Path database;
+    private DatabaseEntityManager databaseManager;
     
     public ApplicationData() {
     }
     
-    public boolean isChanged() {
-        return changed;
+    public void setDatabase(String unit, Map<String, String> properties, Path databasePath) throws RuntimeException {
+        DatabaseEntityManager newDatabaseManager = new DatabaseEntityManager(unit, properties);
+        closeDatabase();
+        databaseManager = newDatabaseManager;
+        database = databasePath;
+        zones = new ZoneData(databaseManager);
     }
     
-    public void setChanged() {
-        changed = true;
-    }
-    
-    public void clearChanged() {
-        changed = false;
-    }
-
-    public Path getSavePath() {
-        return savePath;
-    }
-    
-    public void setSavePath(Path savePath) {
-        this.savePath = savePath;
-    }
-
-    public UserData getCurrentUser() {
-        return currentUser;
-    }
-    
-    public void setCurrentUser(UserData userData) {
-        currentUser = userData;
-        changed = true;
+    public void closeDatabase() {
+        if (databaseManager != null) {
+            databaseManager.close();
+            databaseManager = null;
+            database = null;
+            zones = null;
+        }
     }
     
     public ZoneData getZones() {
         return zones;
     }
     
-    public void setZones(ZoneData zones) {
-        this.zones = zones;
-    }
-
-    /*public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(1);
-        currentUser.writeExternal(out);
-        zones.writeExternal(out);
-    }
-    
-    public static ApplicationData readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        int version = in.readInt();
-        ApplicationData applicationData = new ApplicationData();
-        applicationData.setCurrentUser(UserData.readExternal(in));
-        applicationData.setZones(ZoneData.readExternal(in));
-        applicationData.clearChanged();
-        return applicationData;
-    }*/
-    
     public String getStatus() {
-        return String.format("User %s, Zones %s",
-                (getCurrentUser() != null) ? getCurrentUser().getUsername() : "<no user>",
+        return String.format("Database %s, User %s, Zones %s",
+                (database != null) ? database : "<no database>",
+                "<no user>",
                 (getZones() != null) ? getZones().getZones().size() : "<no zones>");
     }
 }

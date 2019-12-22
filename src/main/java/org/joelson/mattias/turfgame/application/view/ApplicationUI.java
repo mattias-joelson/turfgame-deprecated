@@ -1,7 +1,6 @@
 package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.controller.ApplicationActions;
-import org.joelson.mattias.turfgame.application.controller.UserActions;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
 
 import java.awt.BorderLayout;
@@ -13,7 +12,6 @@ import java.awt.desktop.QuitStrategy;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 import java.nio.file.Path;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -23,12 +21,14 @@ import javax.swing.WindowConstants;
 
 public class ApplicationUI {
     
+    private static final String OPEN_DATABASE_TEXT = "Open Database";
     private final ApplicationActions applicationActions;
     private final ApplicationData applicationData;
     
     private final JFrame appplicationFrame;
     private final JLabel statusLabel;
     private Container currentContent;
+    private JFileChooser directoryChooser;
     
     public ApplicationUI(ApplicationActions applicationActions, ApplicationData applicationData) {
         this.applicationActions = applicationActions;
@@ -82,39 +82,21 @@ public class ApplicationUI {
         appplicationFrame.dispose();
     }
     
-    public Path openLoadDialog() {
-        JFileChooser fileChooser = new JFileChooser();
-        int status = fileChooser.showOpenDialog(appplicationFrame);
-        if (status == JFileChooser.APPROVE_OPTION) {
-            return fileChooser.getSelectedFile().toPath();
+    private JFileChooser getDirectoryChooser() {
+        if (directoryChooser == null) {
+            directoryChooser = new JFileChooser();
+            directoryChooser.setAcceptAllFileFilterUsed(false);
+            directoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            directoryChooser.setMultiSelectionEnabled(false);
         }
-        return null;
+        return directoryChooser;
     }
     
-    public Path openSaveDialog() {
-        JFileChooser fileChooser = new JFileChooser() {
-            @Override
-            public void approveSelection() {
-                File f = getSelectedFile();
-                if (f.exists()) {
-                    switch (JOptionPane.showConfirmDialog(this, "File " + f + " exists. Should it be overwritten?",
-                            "Overwrite file?", JOptionPane.YES_NO_CANCEL_OPTION)) {
-                        case JOptionPane.YES_OPTION:
-                            super.approveSelection();
-                        case JOptionPane.NO_OPTION:
-                        case JOptionPane.CLOSED_OPTION:
-                            return;
-                        case JOptionPane.CANCEL_OPTION:
-                            cancelSelection();
-                            return;
-                    }
-                }
-                super.approveSelection();
-            }
-        };
-        int status = fileChooser.showSaveDialog(appplicationFrame);
+    public Path openDatabaseDialog() {
+        getDirectoryChooser().setDialogType(JFileChooser.SAVE_DIALOG);
+        int status = getDirectoryChooser().showDialog(appplicationFrame, OPEN_DATABASE_TEXT);
         if (status == JFileChooser.APPROVE_OPTION) {
-            return fileChooser.getSelectedFile().toPath();
+            return getDirectoryChooser().getSelectedFile().toPath();
         }
         return null;
     }
@@ -123,14 +105,6 @@ public class ApplicationUI {
         appplicationFrame.getContentPane().remove(currentContent);
         appplicationFrame.getContentPane().add(currentContent = new Container(), BorderLayout.CENTER);
         appplicationFrame.getContentPane().validate();
-    }
-    
-    public void showUserQueryPane(UserActions userActions) {
-        appplicationFrame.getContentPane().remove(currentContent);
-        UserQueryPane pane = new UserQueryPane(userActions);
-        appplicationFrame.getContentPane().add(currentContent = pane.getPane(), BorderLayout.CENTER);
-        appplicationFrame.getContentPane().validate();
-        pane.requestFocus();
     }
     
     public void setStatus(String status) {
@@ -145,14 +119,13 @@ public class ApplicationUI {
         JOptionPane.showMessageDialog(appplicationFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }
     
-    public Boolean showYesNoCancelDialog(String title, String message) {
-        int val = JOptionPane.showConfirmDialog(appplicationFrame, message, title, JOptionPane.YES_NO_CANCEL_OPTION);
+    public Boolean showYesNoDialog(String title, String message) {
+        int val = JOptionPane.showConfirmDialog(appplicationFrame, message, title, JOptionPane.YES_NO_OPTION);
         switch (val) {
             case JOptionPane.YES_OPTION:
                 return Boolean.TRUE;
             case JOptionPane.NO_OPTION:
                 return Boolean.FALSE;
-            case JOptionPane.CANCEL_OPTION:
             case JOptionPane.CLOSED_OPTION:
                 return null;
             default:
