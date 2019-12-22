@@ -8,6 +8,7 @@ import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryDTO;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,6 +26,14 @@ public class DatabaseEntityManager {
     
     public DatabaseEntityManager(String unit) {
         entityManagerFactory = Persistence.createEntityManagerFactory(unit);
+    }
+    
+    public DatabaseEntityManager(String unit, Map<String, String> properties) throws RuntimeException {
+        entityManagerFactory  = Persistence.createEntityManagerFactory(unit, properties);
+    }
+    
+    public void close() {
+        entityManagerFactory.close();
     }
     
     private EntityManager createEntityManager() {

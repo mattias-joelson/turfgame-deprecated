@@ -1,20 +1,18 @@
 package org.joelson.mattias.turfgame.application.controller;
 
+import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.Zones;
+import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.view.ApplicationUI;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import javax.swing.SwingWorker;
 
 public class ApplicationActions {
     
@@ -30,95 +28,117 @@ public class ApplicationActions {
     }
     
     public void closeApplication() {
-        /*if (applicationData.isChanged()) {
-            Boolean saveData = applicationUI.showYesNoCancelDialog("Save data?", "User data has changed. Should it be saved?");
-            if (saveData == null) {
-                return;
-            }
-            if (saveData.equals(Boolean.TRUE)) {
-                saveData();
-                if (applicationData.isChanged()) {
-                    return;
-                }
-            }
-        }*/
+        applicationData.closeDatabase();
         applicationUI.dispose();
         System.exit(0);
     }
     
-    public void changeUser() {
-        applicationUI.showUserQueryPane(new UserActions(applicationUI, applicationData));
-    }
+    public void readZones() {
+        applicationUI.setStatus("Reading zones from Turfgame...");
+        new SwingWorker<Void, Void>() {
     
-    /*public void loadData() {
-        Path loadPath = applicationUI.openLoadDialog();
-        if (loadPath == null) {
-            return;
-        }
-        try (ObjectInput in = new ObjectInputStream(new FileInputStream(loadPath.toFile()))) {
-            ApplicationData applicationData = ApplicationData.readExternal(in);
-            this.applicationData = applicationData;
-            this.applicationData.setSavePath(loadPath);
-            applicationUI.setStatus(this.applicationData.getStatus());
-        } catch (IOException | ClassNotFoundException e) {
-            applicationUI.showErrorDialog("Error loading data", "Unable to load user data from " + loadPath);
-            e.printStackTrace();
-        }
-    }
-    
-    public void saveData() {
-        if (applicationData.getSavePath() != null) {
-            if (saveDataInner(applicationData.getSavePath())) {
-                applicationData.clearChanged();
-            }
-        } else {
-            saveDataAs();
-        }
-    }
-    
-    public void saveDataAs() {
-        Path savePath = applicationUI.openSaveDialog();
-        if (savePath != null && saveDataInner(savePath)) {
-            applicationData.setSavePath(savePath);
-            applicationData.clearChanged();
-        }
-    }
-    
-    public boolean saveDataInner(Path savePath) {
-        try {
-            Path saveDirectory = savePath.getParent();
-            Path saveToPath = savePath;
-            Path existingPath = null;
-            if (Files.exists(savePath)) {
-                saveToPath = Files.createTempFile(saveDirectory, "turfgame", "temp");
-                existingPath = savePath;
-            }
-
-            try (ObjectOutput out = new ObjectOutputStream(new FileOutputStream(saveToPath.toFile()))) {
-                applicationData.writeExternal(out);
+            @Override
+            protected Void doInBackground() throws IOException {
+                List<Zone> zones = Zones.readAllZones();
+                applicationData.getZones().updateZones(Instant.now(), zones);
+                return null;
             }
             
-            if (existingPath != null) {
-                Path backupPath = Files.createTempFile(saveDirectory, "turfgame", "backup");
-                Files.move(existingPath, backupPath, StandardCopyOption.REPLACE_EXISTING);
-                Files.move(saveToPath, savePath);
-                Files.delete(backupPath);
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    applicationUI.setStatus(applicationData.getStatus());
+                } catch (ExecutionException e) {
+                    applicationUI.setStatus(applicationData.getStatus());
+                    applicationUI.showErrorDialog("Error reading zones",
+                            "Unable to read zones through API V4 and update database.\n" + e.getCause());
+                } catch (InterruptedException e) {
+                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
+                    e.printStackTrace();
+                }
             }
-            return true;
-        } catch (IOException e) {
-            applicationUI.showErrorDialog("Error saving data", "Unable to store user data to " + savePath);
-            e.printStackTrace();
-            return false;
+        }.execute();
+    }
+
+    public void openDatabase() {
+        Path directoryPath = applicationUI.openDatabaseDialog();
+        if (directoryPath == null) {
+            return;
         }
+        applicationUI.setStatus("Opening database in directory " + directoryPath + " ...");
+        new SwingWorker<Void, Void>() {
+    
+            @Override
+            protected Void doInBackground() throws RuntimeException {
+                Map<String, String> persistenceMap = Map.of(
+                        "javax.persistence.jdbc.url", createJdbcURL(directoryPath, true),
+                        "javax.persistence.schema-generation.database.action","none");
+                applicationData.setDatabase(DatabaseEntityManager.PERSISTANCE_H2, persistenceMap, directoryPath);
+                return null;
+            }
+    
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    applicationUI.setStatus(applicationData.getStatus());
+                } catch (ExecutionException e) {
+                    applicationUI.setStatus(applicationData.getStatus());
+                    Boolean createDatebase = applicationUI.showYesNoDialog("Create Database?",
+                            String.format("No database could be found in directory %s.\nDo you want to create a new database here?\n%s",
+                                    directoryPath, e.getCause()));
+                    if (createDatebase.equals(Boolean.TRUE)) {
+                        createDatabase(directoryPath);
+                    } else {
+                        applicationUI.setStatus(applicationData.getStatus());
+                    }
+                } catch (InterruptedException e) {
+                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+    }
+
+    private void createDatabase(Path directoryPath) {
+        applicationUI.setStatus("Creating database in directory " + directoryPath + " ...");
+        new SwingWorker<Void, Void>() {
+    
+            @Override
+            protected Void doInBackground() throws RuntimeException {
+                Map<String, String> persistenceMap = Map.of(
+                        "javax.persistence.jdbc.url", createJdbcURL(directoryPath, false),
+                        "javax.persistence.schema-generation.database.action","drop-and-create");
+                applicationData.setDatabase(DatabaseEntityManager.PERSISTANCE_H2, persistenceMap, directoryPath);
+                return null;
+            }
+    
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    applicationUI.setStatus(applicationData.getStatus());
+                } catch (ExecutionException e) {
+                    applicationUI.setStatus(applicationData.getStatus());
+                    applicationUI.showErrorDialog("Error Creating Database",
+                            String.format("Unable to create a database in directory %s\n%s", directoryPath, e.getCause()));
+                } catch (InterruptedException e) {
+                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
     }
     
-    public void readZones() {
-        try {
-            applicationData.setZones(new ZoneData(Zones.readAllZones()));
-            applicationUI.setStatus(this.applicationData.getStatus());
-        } catch (Exception e) {
-            applicationUI.showErrorDialog("Error reading zones", "Unable to read zones through API V4 - " + e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
+    public void closeDatabase() {
+        applicationData.closeDatabase();
+        applicationUI.setStatus(applicationData.getStatus());
+    }
+    
+    private static String createJdbcURL(Path directoryPath, boolean openExisting) {
+        return String.format("jdbc:h2:%s/turfgame_h2;IFEXISTS=%s;",
+                directoryPath,
+                (openExisting) ? "TRUE" : "FALSE");
+    }
 }

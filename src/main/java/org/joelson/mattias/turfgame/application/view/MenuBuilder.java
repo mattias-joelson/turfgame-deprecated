@@ -19,15 +19,13 @@ class MenuBuilder {
         JMenuBar menuBar = new JMenuBar();
     
         JMenu fileMenu = addMenu(menuBar,"File");
-        addMenuItem(fileMenu, "New User...", createMenuShortcutAccelerator('N'), applicationActions::changeUser);
-//        addMenuItem(fileMenu, "Open...", createMenuShortcutAccelerator('O'), applicationActions::loadData);
-//        addMenuItem(fileMenu, "Save...", createMenuShortcutAccelerator('S'), applicationActions::saveData);
-//        addMenuItem(fileMenu, "Save as...", createMenuShiftedShortcutAccelerator('S'), applicationActions::saveDataAs);
+        addMenuItem(fileMenu, "Open DB...", createMenuShortcutAccelerator('O'), applicationActions::openDatabase);
+        addMenuItem(fileMenu, "Close DB", createMenuShortcutAccelerator('W'), applicationActions::closeDatabase);
         fileMenu.addSeparator();
         addMenuItem(fileMenu, "Quit", createMenuShortcutAccelerator('Q'), applicationActions::closeApplication);
         
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
-//        addMenuItem(turfgameMenu, "Read zones", null, applicationActions::readZones);
+        addMenuItem(turfgameMenu, "Read zones", null, applicationActions::readZones);
         
         return menuBar;
     }
