@@ -3,6 +3,7 @@ package org.joelson.mattias.turfgame.application.model;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.Map;
 
 public class ApplicationData {
@@ -20,6 +21,19 @@ public class ApplicationData {
         databaseManager = newDatabaseManager;
         database = databasePath;
         zones = new ZoneData(databaseManager);
+    }
+    
+    public void importDatabase(Path importFile, String unit, Map<String, String> properties, Path databasePath) throws SQLException {
+        DatabaseEntityManager newDatabaseManager = new DatabaseEntityManager(unit, properties);
+        newDatabaseManager.importDatabase(importFile);
+        closeDatabase();
+        databaseManager = newDatabaseManager;
+        database = databasePath;
+        zones = new ZoneData(databaseManager);
+    }
+    
+    public void exportDatabase(Path exportFile) throws SQLException {
+        databaseManager.exportDatabase(exportFile);
     }
     
     public void closeDatabase() {
