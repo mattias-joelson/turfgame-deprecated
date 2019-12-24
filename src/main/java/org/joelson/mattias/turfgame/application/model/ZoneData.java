@@ -77,6 +77,7 @@ public class ZoneData {
         for (Zone zone : zones) {
             if (zone.getDateCreated() == null) {
                 System.err.println("Skipping zone " + zone.getName() + " - no date created");
+                continue;
             }
             ZoneDTO storedZone = storedZonesMap.get(zone.getId());
             if (storedZone == null) {
