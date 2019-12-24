@@ -21,11 +21,14 @@ class MenuBuilder {
         JMenu fileMenu = addMenu(menuBar,"File");
         addMenuItem(fileMenu, "Open DB...", createMenuShortcutAccelerator('O'), applicationActions::openDatabase);
         addMenuItem(fileMenu, "Close DB", createMenuShortcutAccelerator('W'), applicationActions::closeDatabase);
+        addMenuItem(fileMenu, "Export DB ...", null, applicationActions::exportDatabase);
+        addMenuItem(fileMenu, "Import DB ...", null, applicationActions::importDatabase);
         fileMenu.addSeparator();
         addMenuItem(fileMenu, "Quit", createMenuShortcutAccelerator('Q'), applicationActions::closeApplication);
         
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
         addMenuItem(turfgameMenu, "Read zones", null, applicationActions::readZones);
+        addMenuItem(turfgameMenu, "Read zones from JSON file ...", createMenuShortcutAccelerator('J'), applicationActions::readZonesFromFile);
         
         return menuBar;
     }

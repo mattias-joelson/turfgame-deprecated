@@ -29,6 +29,7 @@ public class ApplicationUI {
     private final JLabel statusLabel;
     private Container currentContent;
     private JFileChooser directoryChooser;
+    private JFileChooser fileChooser;
     
     public ApplicationUI(ApplicationActions applicationActions, ApplicationData applicationData) {
         this.applicationActions = applicationActions;
@@ -101,6 +102,32 @@ public class ApplicationUI {
         return null;
     }
 
+    private JFileChooser getFileChooser() {
+        if (fileChooser == null) {
+            fileChooser = new JFileChooser();
+            fileChooser.setMultiSelectionEnabled(false);
+        }
+        return fileChooser;
+    }
+    
+    public Path openFileDialog(String approveButtonText) {
+        return showFileDialog(JFileChooser.OPEN_DIALOG, approveButtonText);
+    }
+    
+    public Path saveFileDialog(String approveButtonText) {
+        return showFileDialog(JFileChooser.SAVE_DIALOG, approveButtonText);
+    }
+    
+    private Path showFileDialog(int dialogType, String approveButtonText) {
+        JFileChooser fileChooser = getFileChooser();
+        fileChooser.setDialogType(dialogType);
+        int status = fileChooser.showDialog(appplicationFrame, approveButtonText);
+        if (status == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().toPath();
+        }
+        return null;
+    }
+    
     public void clearPane() {
         appplicationFrame.getContentPane().remove(currentContent);
         appplicationFrame.getContentPane().add(currentContent = new Container(), BorderLayout.CENTER);
@@ -136,5 +163,16 @@ public class ApplicationUI {
                 }
                 return null;
         }
+    }
+    
+    public String showInputDialog(String title, String message, String initialValue) {
+        if (initialValue == null) {
+            initialValue = "";
+        }
+        Object result = JOptionPane.showInputDialog(appplicationFrame, message, title, JOptionPane.PLAIN_MESSAGE, null, null, initialValue);
+        if (result == null) {
+            return null;
+        }
+        return result.toString();
     }
 }

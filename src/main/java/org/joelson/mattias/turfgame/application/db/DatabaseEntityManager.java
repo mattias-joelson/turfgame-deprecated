@@ -6,6 +6,11 @@ import org.joelson.mattias.turfgame.application.model.ZoneDTO;
 import org.joelson.mattias.turfgame.application.model.ZoneDataHistoryDTO;
 import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryDTO;
 
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +35,26 @@ public class DatabaseEntityManager {
     
     public DatabaseEntityManager(String unit, Map<String, String> properties) throws RuntimeException {
         entityManagerFactory  = Persistence.createEntityManagerFactory(unit, properties);
+    }
+    
+    public void importDatabase(Path importFile) throws SQLException {
+        Map<String, Object> properties = entityManagerFactory.getProperties();
+        String jdbcURL = String.valueOf(properties.get("javax.persistence.jdbc.url"));
+        Connection connection = DriverManager.getConnection(jdbcURL);
+        Statement statement = connection.createStatement();
+        statement.execute("RUNSCRIPT FROM '" + importFile + "'");
+        connection.close();
+    }
+    
+    public void exportDatabase(Path exportFile) throws SQLException {
+        System.out.println(exportFile);
+        Map<String, Object> properties = entityManagerFactory.getProperties();
+        properties.keySet().stream().sorted().forEach(key -> System.out.println(key + " -> " + properties.get(key)));
+        String jdbcURL = String.valueOf(properties.get("javax.persistence.jdbc.url"));
+        Connection connection = DriverManager.getConnection(jdbcURL);
+        Statement statement = connection.createStatement();
+        statement.execute("SCRIPT TO '" + exportFile + "'");
+        connection.close();
     }
     
     public void close() {
