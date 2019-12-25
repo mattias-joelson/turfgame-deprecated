@@ -11,13 +11,7 @@ import static org.junit.Assert.*;
 
 public class RegionDataTest {
     
-    public static final String PERSISTANCE_DERBY = "turfgame-test-derby";
     public static final String PERSISTANCE_H2 = "turfgame-test-h2";
-    
-    @Test
-    public void regionDataDerbyTest() throws IOException {
-        testData(new RegionData(new DatabaseEntityManager(PERSISTANCE_DERBY)));
-    }
     
     @Test
     public void regionDataH2Test() throws IOException {

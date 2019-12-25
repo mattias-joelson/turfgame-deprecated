@@ -20,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 public class ZoneDataTest {
     
-    private static final String PERSISTANCE_DERBY = "turfgame-test-derby";
     private static final String PERSISTANCE_H2 = "turfgame-test-h2";
     
     @Test
@@ -33,11 +32,6 @@ public class ZoneDataTest {
         assertTrue(i1.isAfter(i3));
         Instant i4 = toInstant("2019-11-30T12:12:00+01:00");
         assertTrue(i4.equals(i3));
-    }
-    
-    @Test
-    public void zoneDataDerbyTest() throws IOException {
-        testData(new ZoneData(new DatabaseEntityManager(PERSISTANCE_DERBY)));
     }
     
     @Test
