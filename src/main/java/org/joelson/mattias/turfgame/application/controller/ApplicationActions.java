@@ -76,7 +76,7 @@ public class ApplicationActions {
     
             @Override
             protected Void doInBackground() throws IOException {
-                List<Zone> zones = Zones.fromHTML(Files.readString(zonesFile));
+                List<Zone> zones = Zones.fromJSON(Files.readString(zonesFile));
                 Instant instant = null;
                 try {
                     String filename = zonesFile.getFileName().toString();

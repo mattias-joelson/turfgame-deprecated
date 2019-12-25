@@ -55,7 +55,7 @@ public class ZoneDataTest {
     }
     
     private static List<Zone> getZones(String filename) throws IOException {
-        return URLReaderTest.readProperties(String.format("/%s", filename), Zones::fromHTML);
+        return URLReaderTest.readProperties(String.format("/%s", filename), Zones::fromJSON);
     }
     
     private static Instant toInstant(String s) {

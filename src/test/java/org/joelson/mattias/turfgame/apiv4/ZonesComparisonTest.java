@@ -76,7 +76,7 @@ public class ZonesComparisonTest {
 
     private List<Zone> getZones(String filename, Set<String> zonesToTest) throws IOException {
         List<Zone> zones = new ArrayList<>();
-        URLReaderTest.readProperties("/" + filename, Zones::fromHTML).forEach(zone -> {
+        URLReaderTest.readProperties("/" + filename, Zones::fromJSON).forEach(zone -> {
             if (zonesToTest.contains(zone.getName())) {
                 zones.add(zone);
             }
@@ -114,7 +114,7 @@ public class ZonesComparisonTest {
     
     private Map<String, Zone> getZones(String filename) throws IOException {
         Map<String, Zone> zones = new HashMap<>();
-        URLReaderTest.readProperties("/" + filename, Zones::fromHTML).forEach(zone -> {
+        URLReaderTest.readProperties("/" + filename, Zones::fromJSON).forEach(zone -> {
            zones.put(zone.getName(), zone);
         });
         return zones;

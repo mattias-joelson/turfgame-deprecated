@@ -16,6 +16,6 @@ public class RoundsTest {
     }
 
     private static List<Round> getRounds() throws IOException {
-        return URLReaderTest.readProperties("/rounds.json", Rounds::fromHTML);
+        return URLReaderTest.readProperties("/rounds.json", Rounds::fromJSON);
     }
 }
