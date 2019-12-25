@@ -26,7 +26,7 @@
           <release>11</release>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
-          <!--<failOnWarning>true</failOnWarning>-->
+          <failOnWarning>true</failOnWarning>
           <failOnError>true</failOnError>
           <compilerArgs>
             <arg>-Xlint:all</arg>

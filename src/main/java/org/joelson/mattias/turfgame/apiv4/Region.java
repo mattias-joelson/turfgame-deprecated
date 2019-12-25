@@ -4,9 +4,7 @@ import org.joelson.mattias.turfgame.util.JSONNumber;
 import org.joelson.mattias.turfgame.util.JSONObject;
 import org.joelson.mattias.turfgame.util.JSONString;
 
-import java.io.Serializable;
-
-public final class Region implements Serializable {
+public final class Region {
 
     private static final String COUNTRY = "country";
     private static final String NAME = "name";

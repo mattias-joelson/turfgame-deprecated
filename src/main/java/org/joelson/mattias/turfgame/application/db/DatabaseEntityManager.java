@@ -77,6 +77,7 @@ public class DatabaseEntityManager {
     public List<RegionDTO> getRegions() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT r from RegionEntity r");
+        @SuppressWarnings("unchecked")
         List<RegionDTO> regions = ((Stream<RegionEntity>) query.getResultStream())
                 .map(RegionEntity::toDTO)
                 .collect(Collectors.toList());
@@ -87,6 +88,7 @@ public class DatabaseEntityManager {
     public List<RegionHistoryDTO> getRegionHistory() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT r FROM RegionHistoryEntity r");
+        @SuppressWarnings("unchecked")
         List<RegionHistoryDTO> regionHistory = ((Stream<RegionHistoryEntity>) query.getResultStream())
                 .map(RegionHistoryEntity::toDTO)
                 .collect(Collectors.toList());
@@ -134,6 +136,7 @@ public class DatabaseEntityManager {
     public List<ZoneDTO> getZones() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT z FROM ZoneEntity z");
+        @SuppressWarnings("unchecked")
         List<ZoneDTO> zones = ((Stream<ZoneEntity>) query.getResultStream())
                 .map(ZoneEntity::toDTO)
                 .collect(Collectors.toList());
@@ -144,6 +147,7 @@ public class DatabaseEntityManager {
     public List<ZoneDataHistoryDTO> getZoneDataHistory() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT z FROM ZoneDataHistoryEntity z");
+        @SuppressWarnings("unchecked")
         List<ZoneDataHistoryDTO> zones = ((Stream<ZoneDataHistoryEntity>) query.getResultStream())
                 .map(ZoneDataHistoryEntity::toDTO)
                 .collect(Collectors.toList());
@@ -154,6 +158,7 @@ public class DatabaseEntityManager {
     public List<ZonePointsHistoryDTO> getZonePointsHistory() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT z FROM ZonePointsHistoryEntity z");
+        @SuppressWarnings("unchecked")
         List<ZonePointsHistoryDTO> zones = ((Stream<ZonePointsHistoryEntity>) query.getResultStream())
                 .map(ZonePointsHistoryEntity::toDTO)
                 .collect(Collectors.toList());
