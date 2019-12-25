@@ -1,6 +1,6 @@
 package org.joelson.mattias.turfgame.application.view;
 
-import org.joelson.mattias.turfgame.application.controller.UserActions;
+/*import org.joelson.mattias.turfgame.application.controller.UserActions;
 
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -65,4 +65,4 @@ public class UserQueryPane {
     public void requestFocus() {
         usernameField.requestFocus();
     }
-}
+}*/
