@@ -1,6 +1,6 @@
 package org.joelson.mattias.turfgame.application.controller;
 
-import org.joelson.mattias.turfgame.apiv4.User;
+/*import org.joelson.mattias.turfgame.apiv4.User;
 import org.joelson.mattias.turfgame.apiv4.Users;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
 import org.joelson.mattias.turfgame.application.model.UserData;
@@ -45,4 +45,4 @@ public class UserActions {
     public void cancelUserSelecton() {
         applicationUI.clearPane();
     }
-}
+}*/
