@@ -11,6 +11,7 @@ import org.joelson.mattias.turfgame.zundin.MonthlyZone;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.stream.IntStream;
 
 public class HeatmapTest {
     
-    public static final int TAKES_ENTRIES = HeatmapCategories.VIOLET.getTakes() + 1;
+    private static final int TAKES_ENTRIES = HeatmapCategories.VIOLET.getTakes() + 1;
     
     private static Boolean apply(String s) {
         return Boolean.TRUE;
@@ -125,8 +126,8 @@ public class HeatmapTest {
 
     private void municipalityHeatmap(String filename, Map<String, Integer> takenZones, Map<String, Boolean> municipalityZones) throws IOException {
         List<Zone> allZones = ZonesTest.getAllZones();
-    
-        Map<Zone, Integer>[] zoneMaps = new Map[TAKES_ENTRIES];
+
+        List<Map<Zone, Integer>> zoneMaps = new ArrayList<>(TAKES_ENTRIES);
         initZoneMaps(zoneMaps, HeatmapCategories.UNTAKEN);
         initZoneMaps(zoneMaps, HeatmapCategories.GREEN);
         initZoneMaps(zoneMaps, HeatmapCategories.YELLOW, HeatmapCategories.ORANGE);
@@ -147,7 +148,7 @@ public class HeatmapTest {
             for (Zone zone : allZones) {
                 if (zone.getName().equals(zoneName)) {
                     int cappedTakes = Math.min(takes, 51);
-                    zoneMaps[cappedTakes].put(zone, takes);
+                    zoneMaps.get(cappedTakes).put(zone, takes);
                     zoneTakes[cappedTakes] += 1;
                     break;
                 }
@@ -162,19 +163,20 @@ public class HeatmapTest {
         int toVioletZones = countZones(zoneTakes, WardedCategories.VIOLET);
 
         KMLWriter out = new KMLWriter(filename);
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.UNTAKEN.getTakes()], "untaken");
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.GREEN.getTakes()], "green");
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.YELLOW.getTakes()], "yellow");
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.ORANGE.getTakes()], "orange");
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.RED_21.getTakes()], "red 21-26");
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.RED_27.getTakes()], "red 27-32");
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.RED_33.getTakes()], "red 33-38");
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.RED_39.getTakes()], "red 39-44");
-        writeHeatmapFolder(out, zoneMaps[HeatmapCategories.RED_45.getTakes()], "red 45-50");
-        writeHeatmapFolder(out, zoneMaps[WardedCategories.VIOLET.getTakes()], "violet");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.UNTAKEN.getTakes()), "untaken");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.GREEN.getTakes()), "green");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.YELLOW.getTakes()), "yellow");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.ORANGE.getTakes()), "orange");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.RED_21.getTakes()), "red 21-26");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.RED_27.getTakes()), "red 27-32");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.RED_33.getTakes()), "red 33-38");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.RED_39.getTakes()), "red 39-44");
+        writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.RED_45.getTakes()), "red 45-50");
+        writeHeatmapFolder(out, zoneMaps.get(WardedCategories.VIOLET.getTakes()), "violet");
         out.close();
         
-        int[][] zoneCountArray = IntStream.range(0, zoneTakes.length).mapToObj(i -> new int[] { i, zoneTakes[i]}).sorted(Comparator.comparingInt(a -> a[1])).toArray(int[][]::new);
+        int[][] zoneCountArray = IntStream.range(0, zoneTakes.length)
+                .mapToObj(i -> new int[] { i, zoneTakes[i]}).sorted(Comparator.comparingInt(a -> a[1])).toArray(int[][]::new);
         int max = zoneCountArray[51][1];
         if (max % 5 != 0) {
             max = ((max / 5) + 1) * 5;
@@ -186,7 +188,7 @@ public class HeatmapTest {
         for (int i = max; i > 0; i -= 1) {
             if (i % 5 == 0) {
                 if (i + 5 == max && i > nextToMax + 5) {
-                    System.out.println(String.format("   : %" + (zoneCountArray[51][0] + 1) + "s", ":"));
+                    System.out.println(String.format("   : %" + (zoneCountArray[51][0] + 1) + 's', ":"));
                     i = nextToMax;
                 }
                 if (i >= 10) {
@@ -211,18 +213,18 @@ public class HeatmapTest {
         System.out.println("Takes to violet: " + toViolet + " (" + toVioletZones + " zones)");
     }
     
-    private void initZoneMaps(Map<Zone, Integer>[] zoneMaps, HeatmapCategories category) {
+    private void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, HeatmapCategories category) {
         initZoneMaps(zoneMaps, category.takes);
     }
     
-    private void initZoneMaps(Map<Zone, Integer>[] zoneMaps, HeatmapCategories category, HeatmapCategories nextCategory) {
+    private void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, HeatmapCategories category, HeatmapCategories nextCategory) {
         initZoneMaps(zoneMaps, IntStream.range(category.getTakes(), nextCategory.getTakes()).toArray());
     }
     
-    private void initZoneMaps(Map<Zone, Integer>[] zoneMaps, int... takes) {
+    private void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, int... takes) {
         Map<Zone, Integer> map = new HashMap<>();
         for (int take : takes) {
-            zoneMaps[take] = map;
+            zoneMaps.add(map);
         }
     }
     

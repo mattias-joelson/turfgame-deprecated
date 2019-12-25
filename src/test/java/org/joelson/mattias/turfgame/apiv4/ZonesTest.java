@@ -65,7 +65,7 @@ public class ZonesTest {
                 7, 95,
                 8, 80,
                 9, 65);
-        zones.stream().forEach(zone -> assertEquals(zone.getName(), (Integer) points.get(zone.getPointsPerHour()), (Integer) zone.getTakeoverPoints()));
+        zones.stream().forEach(zone -> assertEquals(zone.getName(), (long) points.get(zone.getPointsPerHour()), (long) zone.getTakeoverPoints()));
     }
 
     public static List<Zone> getAllZones() throws IOException {
