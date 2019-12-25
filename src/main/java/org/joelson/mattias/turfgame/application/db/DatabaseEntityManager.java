@@ -1,5 +1,6 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import org.h2.jdbcx.JdbcDataSource;
 import org.joelson.mattias.turfgame.application.model.RegionDTO;
 import org.joelson.mattias.turfgame.application.model.RegionHistoryDTO;
 import org.joelson.mattias.turfgame.application.model.ZoneDTO;
@@ -21,11 +22,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.sql.DataSource;
 
 public class DatabaseEntityManager {
     
-    public static final String PERSISTANCE_DERBY = "turfgame-derby";
     public static final String PERSISTANCE_H2 = "turfgame-h2";
+    private static final String JAVAX_PERSISTENCE_JDBC_URL_PROPERTY = "javax.persistence.jdbc.url";
     
     private EntityManagerFactory entityManagerFactory;
     
@@ -38,23 +40,24 @@ public class DatabaseEntityManager {
     }
     
     public void importDatabase(Path importFile) throws SQLException {
-        Map<String, Object> properties = entityManagerFactory.getProperties();
-        String jdbcURL = String.valueOf(properties.get("javax.persistence.jdbc.url"));
-        Connection connection = DriverManager.getConnection(jdbcURL);
-        Statement statement = connection.createStatement();
-        statement.execute("RUNSCRIPT FROM '" + importFile + "'");
-        connection.close();
+        executeSQL(String.format("RUNSCRIPT FROM '%s'", importFile));
     }
     
     public void exportDatabase(Path exportFile) throws SQLException {
-        System.out.println(exportFile);
+        executeSQL(String.format("SCRIPT TO '%s'", exportFile));
+    }
+    
+    private void executeSQL(String sql) throws SQLException {
         Map<String, Object> properties = entityManagerFactory.getProperties();
-        properties.keySet().stream().sorted().forEach(key -> System.out.println(key + " -> " + properties.get(key)));
-        String jdbcURL = String.valueOf(properties.get("javax.persistence.jdbc.url"));
-        Connection connection = DriverManager.getConnection(jdbcURL);
-        Statement statement = connection.createStatement();
-        statement.execute("SCRIPT TO '" + exportFile + "'");
-        connection.close();
+        String jdbcURL = String.valueOf(properties.get(JAVAX_PERSISTENCE_JDBC_URL_PROPERTY));
+        DataSource ds = new JdbcDataSource();
+        ((JdbcDataSource) ds).setUrl(jdbcURL);
+        Connection c = ds.getConnection();
+        try (Connection connection = DriverManager.getConnection(jdbcURL);
+                Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        }
+    
     }
     
     public void close() {
