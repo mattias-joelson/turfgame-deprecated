@@ -50,9 +50,6 @@ public class DatabaseEntityManager {
     private void executeSQL(String sql) throws SQLException {
         Map<String, Object> properties = entityManagerFactory.getProperties();
         String jdbcURL = String.valueOf(properties.get(JAVAX_PERSISTENCE_JDBC_URL_PROPERTY));
-        DataSource ds = new JdbcDataSource();
-        ((JdbcDataSource) ds).setUrl(jdbcURL);
-        Connection c = ds.getConnection();
         try (Connection connection = DriverManager.getConnection(jdbcURL);
                 Statement statement = connection.createStatement()) {
             statement.execute(sql);
