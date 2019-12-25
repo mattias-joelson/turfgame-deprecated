@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public final class URLReader {
 
@@ -54,14 +56,14 @@ public final class URLReader {
     }
 
     static String readStream(InputStream inputStream) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF8"))) {
-            StringBuilder htmlBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+            StringBuilder builder = new StringBuilder();
             String line = reader.readLine();
             while (line != null) {
-                htmlBuilder.append(line).append('\n');
+                builder.append(line).append('\n');
                 line = reader.readLine();
             }
-            return htmlBuilder.toString();
+            return builder.toString();
         }
     }
 }

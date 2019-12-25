@@ -17,7 +17,7 @@ public class RegionsTest {
     }
 
     public static List<Region> getRegions() throws IOException {
-        return URLReaderTest.readProperties("/regions.json", Regions::fromHTML);
+        return URLReaderTest.readProperties("/regions.json", Regions::fromJSON);
     }
     
     @Test
@@ -27,6 +27,6 @@ public class RegionsTest {
     }
     
     public static List<Region> getAllRegions() throws IOException {
-        return URLReaderTest.readProperties("/regions-all.json", Regions::fromHTML);
+        return URLReaderTest.readProperties("/regions-all.json", Regions::fromJSON);
     }
 }

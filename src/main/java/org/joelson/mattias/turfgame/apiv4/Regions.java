@@ -8,6 +8,7 @@ import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public final class Regions {
     }
 
     public static List<Region> readRegions() throws IOException {
-        return fromHTML(getAllRegionsJSON());
+        return fromJSON(getAllRegionsJSON());
     }
     
     private static String getAllRegionsJSON() throws IOException {
@@ -29,12 +30,12 @@ public final class Regions {
     
     public static void main(String[] args) throws IOException {
         String json = getAllRegionsJSON();
-        PrintWriter writer = new PrintWriter("regions-all.json", "UTF8");
-        writer.println(json);
-        writer.close();
+        try (PrintWriter writer = new PrintWriter("regions-all.json", StandardCharsets.UTF_8)) {
+            writer.println(json);
+        }
     }
 
-    static List<Region> fromHTML(String s) {
+    static List<Region> fromJSON(String s) {
         JSONArray valueArray = (JSONArray) new JSONParser().parse(s);
 
         List<Region> regions = new ArrayList<>();

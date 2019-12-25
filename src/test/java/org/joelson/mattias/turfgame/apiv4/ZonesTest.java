@@ -65,11 +65,11 @@ public class ZonesTest {
                 7, 95,
                 8, 80,
                 9, 65);
-        zones.stream().forEach(zone -> assertEquals(zone.getName(), (long) points.get(zone.getPointsPerHour()), (long) zone.getTakeoverPoints()));
+        zones.forEach(zone -> assertEquals(zone.getName(), (long) points.get(zone.getPointsPerHour()), (long) zone.getTakeoverPoints()));
     }
 
     public static List<Zone> getAllZones() throws IOException {
-        return URLReaderTest.readProperties("/zones-all.json", Zones::fromHTML);
+        return URLReaderTest.readProperties("/zones-all.json", Zones::fromJSON);
     }
     
     @Test

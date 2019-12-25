@@ -25,15 +25,15 @@ public class Users {
         if (name != null && !name.isEmpty()) {
             params.put("name", name);
         }
-        if (id != null && id.intValue() > 0) {
+        if (id != null && id > 0) {
             params.put("id", id);
         }
         JSONArray array = new JSONArray(List.of(JSONObject.of(params)));
         String json = array.toString();
-        return fromHTML(URLReader.postRequest(USERS_REQUEST, json));
+        return fromJSON(URLReader.postRequest(USERS_REQUEST, json));
     }
 
-    static List<User> fromHTML(String s) {
+    static List<User> fromJSON(String s) {
         JSONArray valueArray = (JSONArray) new JSONParser().parse(s);
         List<User> users = new ArrayList<>();
         for (JSONValue value : valueArray.getElements()) {

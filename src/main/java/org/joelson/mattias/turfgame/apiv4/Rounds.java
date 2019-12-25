@@ -19,10 +19,10 @@ public final class Rounds {
     }
 
     public static List<Round> readRounds() throws IOException {
-        return fromHTML(URLReader.getRequest(ROUNDS_REQUEST));
+        return fromJSON(URLReader.getRequest(ROUNDS_REQUEST));
     }
 
-    static List<Round> fromHTML(String s) {
+    static List<Round> fromJSON(String s) {
         JSONArray valueArray = (JSONArray) new JSONParser().parse(s);
         List<Round> regions = new ArrayList<>();
         for (JSONValue value : valueArray.getElements()) {
