@@ -2,25 +2,26 @@ package org.joelson.mattias.turfgame.apiv4;
 
 import org.joelson.mattias.turfgame.util.JSONArray;
 import org.joelson.mattias.turfgame.util.JSONObject;
-import org.joelson.mattias.turfgame.util.JSONParser;
-import org.joelson.mattias.turfgame.util.JSONValue;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class Regions {
 
-    private static final String REGIONS_REQUEST = "http://api.turfgame.com/v4/regions";
+    private static final String REGIONS_REQUEST = "http://api.turfgame.com/v4/regions"; //NON-NLS
+    private static final String DEFAULT_REGIONS_FILENAME = "regions-all.json"; //NON-NLS
 
     private Regions() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");
     }
 
-    public static List<Region> readRegions() throws IOException {
+    public static List<Region> readRegions() throws IOException, ParseException {
         return fromJSON(getAllRegionsJSON());
     }
     
@@ -29,20 +30,13 @@ public final class Regions {
     }
     
     public static void main(String[] args) throws IOException {
-        String json = getAllRegionsJSON();
-        try (PrintWriter writer = new PrintWriter("regions-all.json", StandardCharsets.UTF_8)) {
-            writer.println(json);
-        }
+        Files.writeString(Path.of(DEFAULT_REGIONS_FILENAME), getAllRegionsJSON(), StandardCharsets.UTF_8);
     }
 
-    static List<Region> fromJSON(String s) {
-        JSONArray valueArray = (JSONArray) new JSONParser().parse(s);
-
-        List<Region> regions = new ArrayList<>();
-        for (JSONValue value : valueArray.getElements()) {
-            regions.add(Region.fromJSON((JSONObject) value));
-        }
-
-        return regions;
+    static List<Region> fromJSON(String s) throws ParseException {
+        return JSONArray.parseArray(s).stream()
+                .map(JSONObject.class::cast)
+                .map(Region::fromJSON)
+                .collect(Collectors.toList());
     }
 }

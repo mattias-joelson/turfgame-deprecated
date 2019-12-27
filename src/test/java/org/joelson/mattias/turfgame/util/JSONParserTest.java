@@ -2,8 +2,11 @@ package org.joelson.mattias.turfgame.util;
 
 import org.junit.Test;
 
+import java.text.ParseException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 public class JSONParserTest {
 
     private static final String COUNTRY = "country";
@@ -12,9 +15,9 @@ public class JSONParserTest {
     private static final String REGION_LORD = "regionLord";
 
     @Test
-    public void parseRegionTest() {
-        JSONValue value = new JSONParser().parse("{\"country\":\"nl\",\"name\":\"Utrecht\",\"id\":95,"
-                + "\"regionLord\":{\"name\":\"Mellanfetisen\",\"id\":210311}}");
+    public void parseRegionTest() throws ParseException {
+        JSONValue value = new JSONParser("{\"country\":\"nl\",\"name\":\"Utrecht\",\"id\":95,"
+                + "\"regionLord\":{\"name\":\"Mellanfetisen\\u00c4\",\"id\":210311}}").parse();
         assertTrue(value instanceof JSONObject);
 
         JSONObject object = (JSONObject) value;
@@ -36,7 +39,7 @@ public class JSONParserTest {
 
         assertTrue(regionLord.containsName(NAME));
         assertTrue(regionLord.getValue(NAME) instanceof JSONString);
-        assertEquals("Mellanfetisen", ((JSONString) regionLord.getValue(NAME)).stringValue());
+        assertEquals("MellanfetisenÄ", ((JSONString) regionLord.getValue(NAME)).stringValue());
 
         assertTrue(regionLord.containsName(ID));
         assertTrue(regionLord.getValue(ID) instanceof JSONNumber);

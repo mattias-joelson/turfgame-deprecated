@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -12,19 +13,19 @@ import java.nio.file.StandardOpenOption;
 
 public final class FilesUtil {
     
-    public static final String DEFAULT_OUTPUT_DIRECTORY = "output";
-    public static final OpenOption[] DEFAULT_OPEN_OPTIONS = {
+    private static final String DEFAULT_OUTPUT_DIRECTORY = "output"; //NON-NLS
+    private static final OpenOption[] DEFAULT_OPEN_OPTIONS = {
             StandardOpenOption.WRITE,
             StandardOpenOption.CREATE,
             StandardOpenOption.TRUNCATE_EXISTING
     };
-    public static final Charset DEFAULT_CHARSET = Charset.forName("UTF8");
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     
     private FilesUtil() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");
     }
     
-    public static Path filenamePath(String... filenameParts) {
+    private static Path filenamePath(String... filenameParts) {
         if (filenameParts.length == 0) {
             throw new IllegalArgumentException("At least one filename part must be specified.");
         }

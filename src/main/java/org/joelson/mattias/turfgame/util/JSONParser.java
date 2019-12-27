@@ -1,33 +1,47 @@
 package org.joelson.mattias.turfgame.util;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple JSON parser based on https://www.json.org/ and https://tools.ietf.org/pdf/rfc7159.pdf
  */
-public class JSONParser {
+class JSONParser {
 
-    private static final String TRUE_VALUE = "true";
-    private static final String FALSE_VALUE = "false";
-    private static final String NULL_VALUE = "null";
-
-    private String json = "";
+    private static final String TRUE_VALUE = "true"; //NON-NLS
+    private static final String FALSE_VALUE = "false"; //NON-NLS
+    private static final String NULL_VALUE = "null"; //NON-NLS
+    private static final char OBJECT_START_BRACE = '{';
+    private static final char OBJECT_END_BRACE = '}';
+    private static final char ARRAY_START_BRACE = '[';
+    private static final char ARRAY_END_BRACE = ']';
+    private static final char STRING_CITATION = '"';
+    private static final char NEGATIVE_CHAR = '-';
+    private static final char PAIR_COLON = ':';
+    private static final char COMMA_CHAR = ',';
+    private static final char ESCAPE_CHAR = '\\';
+    
+    private final String json;
     private int pos;
 
     /**
-     *
      * @param jsonString the string to parse
-     * @return a JSON value
-     * @throws JSONParseException if JSON is incorrect
      */
-    public JSONValue parse(String jsonString) {
+    JSONParser(String jsonString) {
         json = jsonString;
         pos = 0;
+    }
+
+    /**
+     * @return a JSON value
+     * @throws ParseException if JSON is incorrect
+     */
+    JSONValue parse() throws ParseException {
         return nextValue();
     }
 
-    private JSONValue nextValue() {
+    private JSONValue nextValue() throws ParseException {
         consumeWhitespaces();
         if (matches(TRUE_VALUE)) {
             pos += TRUE_VALUE.length();
@@ -41,93 +55,77 @@ public class JSONParser {
             pos += NULL_VALUE.length();
             return new JSONNull();
         }
-        switch (nextChar()) {
-            case '{':
-                return nextObject();
-            case '[':
-                return nextArray();
-            case '"':
-                return nextString();
-            case '-':
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                return nextNumber();
-            default:
-                throw new JSONParseException(createExceptionMessage());
+        char next = nextChar();
+        if (next == OBJECT_START_BRACE) {
+            return nextObject();
         }
+        if (next == ARRAY_START_BRACE) {
+            return nextArray();
+        }
+        if (next == STRING_CITATION) {
+            return nextString();
+        }
+        if (Character.isDigit(next) || next == NEGATIVE_CHAR) {
+            return nextNumber();
+        }
+        throw new ParseException(createExceptionMessage(), pos);
     }
     
     private void consumeWhitespaces() {
-        for (;;) {
-            switch (nextChar()) {
-                case ' ':
-                case '\t':
-                case '\n':
-                    pos += 1;
-                    break;
-                default:
-                    return;
-            }
+        while (Character.isWhitespace(nextChar())) {
+            pos += 1;
         }
     }
     
-    private JSONObject nextObject() {
-        expect('{');
+    private JSONObject nextObject() throws ParseException {
+        expect(OBJECT_START_BRACE);
         List<JSONPair> pairs = new ArrayList<>();
-        boolean hasPair = !matches('}');
+        boolean hasPair = !matches(OBJECT_END_BRACE);
         while (hasPair) {
             pairs.add(nextPair());
-            hasPair = containsAnother();
+            hasPair = hasAnother();
         }
         consumeWhitespaces();
-        expect('}');
+        expect(OBJECT_END_BRACE);
         return new JSONObject(pairs);
     }
 
-    private JSONPair nextPair() {
+    private JSONPair nextPair() throws ParseException {
         JSONString name = nextString();
-        expect(':');
+        expect(PAIR_COLON);
         JSONValue value = nextValue();
         return new JSONPair(name, value);
     }
 
-    private JSONArray nextArray() {
-        expect('[');
+    private JSONArray nextArray() throws ParseException {
+        expect(ARRAY_START_BRACE);
         List<JSONValue> elements = new ArrayList<>();
-        boolean hasElement = !matches(']');
+        boolean hasElement = !matches(ARRAY_END_BRACE);
         while (hasElement) {
             elements.add(nextValue());
-            hasElement = containsAnother();
+            hasElement = hasAnother();
         }
         consumeWhitespaces();
-        expect(']');
+        expect(ARRAY_END_BRACE);
         return new JSONArray(elements);
     }
 
-    private boolean containsAnother() {
-        if (matches(',')) {
+    private boolean hasAnother() {
+        if (matches(COMMA_CHAR)) {
             pos += 1;
             return true;
         }
         return false;
     }
 
-    private void expect(char c) {
+    private void expect(char c) throws ParseException {
         if (nextChar() != c) {
-            throw new JSONParseException("Expected '" + c + "' at position " + pos + '!');
+            throw new ParseException(String.format("Expected '%c'", c), pos);
         }
         pos += 1;
     }
 
-    private JSONString nextString() {
+    private JSONString nextString() throws ParseException {
         consumeWhitespaces();
         expect('"');
         int startPos = pos;
@@ -145,8 +143,7 @@ public class JSONParser {
                 if (ch >= ' ' && ch != '"' && ch != '\\' && (ch <= '~' || ch >= '¡')) {
                     pos += 1;
                 } else {
-                    throw new JSONParseException("Invalid char '" + ch + "' (" + (int) ch + ") at position "
-                            + pos + '!');
+                    throw new ParseException(String.format("Invalid char '%c' (%d)", ch, (int) ch), pos);
                 }
             }
         } while (hasMore);
@@ -155,7 +152,7 @@ public class JSONParser {
         return new JSONString(value);
     }
 
-    private void nextStringEscape() {
+    private void nextStringEscape() throws ParseException {
         pos += 1;
         switch(nextChar()) {
         case '"':
@@ -172,20 +169,19 @@ public class JSONParser {
             pos += 1;
             for (int i = 0; i < 4; i += 1) {
                 if (!matchesHexDigit()) {
-                    throw new JSONParseException("Invalid hex digit '" + nextChar() + "' at postion " + pos + '!');
+                    throw new ParseException(String.format("Invalid hex digit '%c'", nextChar()), pos);
                 }
                 pos += 1;
             }
             break;
         default:
-            throw new JSONParseException("Invalid char '" + nextChar() + "' after escape at position "
-                    + (pos - 1) + '!');
+            throw new ParseException(String.format("Invalid char '%c' after escape", nextChar()), pos);
         }
     }
 
     private JSONNumber nextNumber() {
         int startPos = pos;
-        if (matches('-')) {
+        if (matches(NEGATIVE_CHAR)) {
             pos += 1;
         }
         if (matches('0')) {
@@ -241,6 +237,6 @@ public class JSONParser {
         if (jsonStr.length() > 8) {
             jsonStr = jsonStr.substring(0, 8) + "...";
         }
-        return "Can not parse JSON \"" + jsonStr + "\" at position " + pos + '!';
+        return String.format("Can not parse JSON \"%s\"", jsonStr); //NON-NLS
     }
 }

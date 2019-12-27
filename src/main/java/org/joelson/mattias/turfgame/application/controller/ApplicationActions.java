@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,6 +22,9 @@ import javax.swing.SwingWorker;
 
 public class ApplicationActions {
     
+    private static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url"; //NON-NLS
+    private static final String JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION = "javax.persistence.schema-generation.database.action"; //NON-NLS
+
     private ApplicationUI applicationUI;
     private ApplicationData applicationData;
     
@@ -43,7 +47,7 @@ public class ApplicationActions {
         new SwingWorker<Void, Void>() {
     
             @Override
-            protected Void doInBackground() throws IOException {
+            protected Void doInBackground() throws IOException, ParseException {
                 List<Zone> zones = Zones.readAllZones();
                 applicationData.getZones().updateZones(Instant.now(), zones);
                 return null;
@@ -57,10 +61,9 @@ public class ApplicationActions {
                     applicationUI.showErrorDialog("Error reading zones",
                             "Unable to read zones through API V4 and update database.\n" + e.getCause());
                 } catch (InterruptedException e) {
-                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
-                    e.printStackTrace();
+                    showUnexpectedInteruptionError(e);
                 } finally {
-                    applicationUI.setStatus(applicationData.getStatus());
+                    setApplicationDataStatus();
                 }
             }
         }.execute();
@@ -75,7 +78,7 @@ public class ApplicationActions {
         new SwingWorker<Void, Void>() {
     
             @Override
-            protected Void doInBackground() throws IOException {
+            protected Void doInBackground() throws IOException, ParseException {
                 List<Zone> zones = Zones.fromJSON(Files.readString(zonesFile));
                 Instant instant = null;
                 try {
@@ -113,10 +116,9 @@ public class ApplicationActions {
                             String.format("There was an error updating the zones with file %s\n%s", zonesFile, e.getCause()));
                     e.printStackTrace();
                 } catch (InterruptedException e) {
-                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
-                    e.printStackTrace();
+                    showUnexpectedInteruptionError(e);
                 } finally {
-                    applicationUI.setStatus(applicationData.getStatus());
+                    setApplicationDataStatus();
                 }
             }
         }.execute();
@@ -133,8 +135,8 @@ public class ApplicationActions {
             @Override
             protected Void doInBackground() throws RuntimeException {
                 Map<String, String> persistenceMap = Map.of(
-                        "javax.persistence.jdbc.url", createJdbcURL(directoryPath, true),
-                        "javax.persistence.schema-generation.database.action","none");
+                        JAVAX_PERSISTENCE_JDBC_URL, createJdbcURL(directoryPath, true),
+                        JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION,"none"); //NON-NLS
                 applicationData.setDatabase(DatabaseEntityManager.PERSISTANCE_H2, persistenceMap, directoryPath);
                 return null;
             }
@@ -151,10 +153,9 @@ public class ApplicationActions {
                         createDatabase(directoryPath);
                     }
                 } catch (InterruptedException e) {
-                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
-                    e.printStackTrace();
+                    showUnexpectedInteruptionError(e);
                 } finally {
-                    applicationUI.setStatus(applicationData.getStatus());
+                    setApplicationDataStatus();
                 }
             }
         }.execute();
@@ -167,8 +168,8 @@ public class ApplicationActions {
             @Override
             protected Void doInBackground() throws RuntimeException {
                 Map<String, String> persistenceMap = Map.of(
-                        "javax.persistence.jdbc.url", createJdbcURL(directoryPath, false),
-                        "javax.persistence.schema-generation.database.action","drop-and-create");
+                        JAVAX_PERSISTENCE_JDBC_URL, createJdbcURL(directoryPath, false),
+                        JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION,"drop-and-create"); //NON-NLS
                 applicationData.setDatabase(DatabaseEntityManager.PERSISTANCE_H2, persistenceMap, directoryPath);
                 return null;
             }
@@ -181,10 +182,9 @@ public class ApplicationActions {
                     applicationUI.showErrorDialog("Error Creating Database",
                             String.format("Unable to create a database in directory %s\n%s", directoryPath, e.getCause()));
                 } catch (InterruptedException e) {
-                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
-                    e.printStackTrace();
+                    showUnexpectedInteruptionError(e);
                 } finally {
-                    applicationUI.setStatus(applicationData.getStatus());
+                    setApplicationDataStatus();
                 }
             }
         }.execute();
@@ -218,10 +218,9 @@ public class ApplicationActions {
                             String.format("Unable to export database to file %s\n%s", saveFile, e.getCause()));
                     e.printStackTrace();
                 } catch (InterruptedException e) {
-                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
-                    e.printStackTrace();
+                    showUnexpectedInteruptionError(e);
                 } finally {
-                    applicationUI.setStatus(applicationData.getStatus());
+                    setApplicationDataStatus();
                 }
             }
         }.execute();
@@ -242,8 +241,8 @@ public class ApplicationActions {
             @Override
             protected Void doInBackground() throws SQLException {
                 Map<String, String> persistenceMap = Map.of(
-                        "javax.persistence.jdbc.url", createJdbcURL(directoryPath, false),
-                        "javax.persistence.schema-generation.database.action","none");
+                        JAVAX_PERSISTENCE_JDBC_URL, createJdbcURL(directoryPath, false),
+                        JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION,"none"); //NON-NLS
                 applicationData.importDatabase(loadFile, DatabaseEntityManager.PERSISTANCE_H2, persistenceMap, directoryPath);
                 return null;
             }
@@ -257,18 +256,26 @@ public class ApplicationActions {
                             String.format("Unable to import file %s into directory %s\n%s", loadFile, directoryPath, e.getCause()));
                     e.printStackTrace();
                 } catch (InterruptedException e) {
-                    applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
-                    e.printStackTrace();
+                    showUnexpectedInteruptionError(e);
                 } finally {
-                    applicationUI.setStatus(applicationData.getStatus());
+                    setApplicationDataStatus();
                 }
             }
         }.execute();
     }
     
+    private void setApplicationDataStatus() {
+        applicationUI.setStatus(applicationData.getStatus());
+    }
+    
+    private void showUnexpectedInteruptionError(InterruptedException e) {
+        applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
+        e.printStackTrace();
+    }
+
     private static String createJdbcURL(Path directoryPath, boolean openExisting) {
-        return String.format("jdbc:h2:%s/turfgame_h2;IFEXISTS=%s;",
+        return String.format("jdbc:h2:%s/turfgame_h2;IFEXISTS=%s;", //NON-NLS
                 directoryPath,
-                (openExisting) ? "TRUE" : "FALSE");
+                (openExisting) ? "TRUE" : "FALSE"); //NON-NLS
     }
 }

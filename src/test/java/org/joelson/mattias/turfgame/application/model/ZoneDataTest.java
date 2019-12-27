@@ -6,7 +6,6 @@ import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -35,11 +34,11 @@ public class ZoneDataTest {
     }
     
     @Test
-    public void zoneDataH2Test() throws IOException {
+    public void zoneDataH2Test() throws Exception {
         testData(new ZoneData(new DatabaseEntityManager(PERSISTANCE_H2)));
     }
     
-    private static void testData(ZoneData zoneData) throws IOException {
+    private static void testData(ZoneData zoneData) throws Exception {
         zoneData.updateZones(toInstant("2019-11-30T12:12:00.00+01:00"), getZones("zones-all.2019-11-30.json"));
         
         assertEquals(71, zoneData.getZone("FolkeFilbyter").getId());
@@ -54,8 +53,8 @@ public class ZoneDataTest {
         assertEquals(77344, zoneData.getZonePointsHistory().size());
     }
     
-    private static List<Zone> getZones(String filename) throws IOException {
-        return URLReaderTest.readProperties(String.format("/%s", filename), Zones::fromJSON);
+    private static List<Zone> getZones(String filename) throws Exception {
+        return URLReaderTest.readProperties(filename, Zones::fromJSON);
     }
     
     private static Instant toInstant(String s) {
