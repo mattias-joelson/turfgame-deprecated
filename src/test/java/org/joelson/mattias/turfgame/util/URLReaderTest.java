@@ -3,7 +3,7 @@ package org.joelson.mattias.turfgame.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.function.Function;
+import java.text.ParseException;
 
 public final class URLReaderTest {
 
@@ -11,8 +11,8 @@ public final class URLReaderTest {
         throw new InstantiationException("Should not be instantiated!");
     }
 
-    public static <R> R readProperties(String resource, Function<String, R> function) throws IOException {
-        File file = new File(URLReaderTest.class.getResource(resource).getFile());
+    public static <R> R readProperties(String resource, ThrowingFunction<String, R, ParseException> function) throws IOException, ParseException {
+        File file = new File(URLReaderTest.class.getResource(File.separator + resource).getFile());
         try (FileInputStream input = new FileInputStream(file)) {
             return function.apply(URLReader.readStream(input));
         }

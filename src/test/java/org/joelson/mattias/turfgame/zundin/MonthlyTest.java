@@ -10,14 +10,13 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,7 +27,7 @@ public class MonthlyTest {
     private static final int ROUND = 113;
 
     @Test
-    public void parseStatisticsPartFile() throws IOException {
+    public void parseStatisticsPartFile() throws Exception {
         Monthly monthly = getPartMonthly();
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
@@ -36,31 +35,34 @@ public class MonthlyTest {
         assertEquals(423, (monthly.getZones()).size());
         int takes = monthly.getZones().stream()
                 .map(MonthlyZone::getTakes)
-                .collect(Collectors.summingInt(Integer::intValue));
+                .mapToInt(Integer::intValue)
+                .sum();
         assertEquals(872, takes);
         int sumPoints = monthly.getZones().stream()
                 .map(MonthlyZone::getPoints)
-                .collect(Collectors.summingInt(Integer::intValue));
+                .mapToInt(Integer::intValue)
+                .sum();
         assertEquals(159616, sumPoints);
         long totalDuration = monthly.getZones().stream()
-                .collect(Collectors.summingLong(zone -> zone.getTakes() * zone.getAverageDuration().toSeconds()));
+                .mapToLong(zone -> zone.getTakes() * zone.getAverageDuration().toSeconds())
+                .sum();
         long averageDuration = totalDuration / takes;
         assertEquals(Duration.ofSeconds(13 * 3600 + 43 * 60 + 25), Duration.ofSeconds(averageDuration));
     }
 
     @Test
-    public void testAddPartToStatistics() throws  IOException {
+    public void testAddPartToStatistics() throws Exception {
         Monthly monthly = getPartMonthly();
         Statistics statistics = StatisticsInitializer.initialize();
         Monthly.addToStatistics(monthly, statistics);
     }
 
-    private static Monthly getPartMonthly() throws IOException {
-        return readProperties("/monthly_oberoff_round113_part.html");
+    private static Monthly getPartMonthly() throws Exception {
+        return readProperties("monthly_oberoff_round113_part.html");
     }
 
     @Test
-    public void parseStatisticsFile() throws IOException {
+    public void parseStatisticsFile() throws Exception {
         Monthly monthly = getMonthly();
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
@@ -69,36 +71,36 @@ public class MonthlyTest {
     }
 
     @Test
-    public void testAddToStatistics() throws  IOException {
+    public void testAddToStatistics() throws Exception {
         Monthly monthly = getMonthly();
         Statistics statistics = StatisticsInitializer.initialize();
         Monthly.addToStatistics(monthly, statistics);
     }
 
-    public static Monthly getMonthly() throws IOException {
-        return readProperties("/monthly_oberoff_round114.html");
+    public static Monthly getMonthly() throws Exception {
+        return readProperties("monthly_oberoff_round114.html");
     }
 
-    private static Monthly readProperties(String resource) throws IOException {
+    private static Monthly readProperties(String resource) throws Exception {
         return URLReaderTest.readProperties(resource, s -> Monthly.fromHTML(OBEROFF, ROUND, s));
     }
 
     @Test
-    public void createYearly() throws IOException {
+    public void createYearly() throws Exception {
         File outFile = new File(URLReaderTest.class.getResource("/yearly.html").getFile());
-        //File outFile = new File("/Users/mattias.joelson/src/turfgame-statistics/src/test/resources/yearly.html");
-        try (FileOutputStream output = new FileOutputStream(outFile)) {
-            File startFile = new File(URLReaderTest.class.getResource("/yearly_start.html").getFile());
-            try (FileInputStream input = new FileInputStream(startFile)) {
-                int ch;
-                while ((ch = input.read()) != -1) {
-                    output.write(ch);
-                }
+        File startFile = new File(URLReaderTest.class.getResource("/yearly_start.html").getFile());
+        File endFile = new File(URLReaderTest.class.getResource("/yearly_end.html").getFile());
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8));
+                FileInputStream startInput = new FileInputStream(startFile);
+                FileInputStream endInput = new FileInputStream(endFile)) {
+            
+            int ch;
+            while ((ch = startInput.read()) != -1) {
+                writer.write(ch);
             }
 
             Monthly monthly = getMonthly();
             Map<String, Zone> zones = getZones();
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(output));
             boolean comma = false;
             for (MonthlyZone zone : monthly.getZones()) {
                 Zone turfZone = zones.get(zone.getName());
@@ -126,19 +128,14 @@ public class MonthlyTest {
                 writer.print("\t\t}");
             }
             writer.println();
-            writer.flush();
 
-            File endFile = new File(URLReaderTest.class.getResource("/yearly_end.html").getFile());
-            try (FileInputStream input = new FileInputStream(endFile)) {
-                int ch;
-                while ((ch = input.read()) != -1) {
-                    output.write(ch);
-                }
+            while ((ch = endInput.read()) != -1) {
+                writer.write(ch);
             }
         }
     }
 
-    private Map<String,Zone> getZones() throws IOException {
+    private static Map<String,Zone> getZones() throws Exception {
         List<Zone> z = ZonesTest.getAllZones();
         Map<String, Zone> zones = new HashMap<>(z.size());
         for (Zone zone : z) {

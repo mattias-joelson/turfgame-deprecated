@@ -10,7 +10,6 @@ import org.joelson.mattias.turfgame.zundin.MonthlyTest;
 import org.joelson.mattias.turfgame.zundin.MonthlyZone;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class HeatmapTest {
     
     private static final int TAKES_ENTRIES = HeatmapCategories.VIOLET.getTakes() + 1;
     
-    private static Boolean apply(String s) {
+    private static Boolean alwaysTrue(String s) {
         return Boolean.TRUE;
     }
     
@@ -82,41 +81,41 @@ public class HeatmapTest {
     }
     
     @Test
-    public void danderydHeatmap() throws IOException {
+    public void danderydHeatmap() throws Exception {
         municipalityHeatmap("danderyd_heatmap.kml", readTakenZones(), MunicipalityTest.getDanderydZones());
     }
 
     @Test
-    public void solnaHeatmap() throws IOException {
+    public void solnaHeatmap() throws Exception {
         municipalityHeatmap("solna_heatmap.kml", readTakenZones(), MunicipalityTest.getSolnaZones());
     }
 
     @Test
-    public void sundbybergHeatmap() throws IOException {
+    public void sundbybergHeatmap() throws Exception {
         municipalityHeatmap("sundbyberg_heatmap.kml", readTakenZones(), MunicipalityTest.getSundbybergZones());
     }
     
     @Test
-    public void leifonsSolnaHeatmap() throws IOException {
+    public void leifonsSolnaHeatmap() throws Exception {
         municipalityHeatmap("leifons_solna_heatmap.kml", readLeifonsTakenZones(), MunicipalityTest.getLeifonsSolnaZones());
     }
 
     @Test
-    public void leifonsSundbybergHeatmap() throws IOException {
+    public void leifonsSundbybergHeatmap() throws Exception {
         municipalityHeatmap("leifons_sundbyberg_heatmap.kml", readLeifonsTakenZones(), MunicipalityTest.getLeifonsSundbybergZones());
     }
     
     @Test
-    public void monthlyHeatmap() throws IOException {
+    public void monthlyHeatmap() throws Exception {
         Monthly monthly = MonthlyTest.getMonthly();
         Map<String, Integer> takenZones = monthly.getZones().stream()
                 .collect(Collectors.toMap(MonthlyZone::getName, monthlyZone -> monthlyZone.getTakes() + monthlyZone.getAssists()));
-        Map<String, Boolean> municipalityZones = takenZones.keySet().stream().collect(Collectors.toMap(Function.identity(), HeatmapTest::apply));
+        Map<String, Boolean> municipalityZones = takenZones.keySet().stream().collect(Collectors.toMap(Function.identity(), HeatmapTest::alwaysTrue));
         municipalityHeatmap("monthlyHeatmap.kml", takenZones, municipalityZones);
     }
     
     @Test
-    public void monthlySolnaHeatmap() throws IOException {
+    public void monthlySolnaHeatmap() throws Exception {
         Monthly monthly = MonthlyTest.getMonthly();
         Map<String, Integer> takenZones = monthly.getZones().stream()
                 .collect(Collectors.toMap(MonthlyZone::getName, monthlyZone -> monthlyZone.getTakes() + monthlyZone.getAssists()));
@@ -124,7 +123,8 @@ public class HeatmapTest {
         municipalityHeatmap("monthlySolnaHeatmap.kml", takenZones, municipalityZones);
     }
 
-    private void municipalityHeatmap(String filename, Map<String, Integer> takenZones, Map<String, Boolean> municipalityZones) throws IOException {
+    private void municipalityHeatmap(String filename, Map<String, Integer> takenZones, Map<String, Boolean> municipalityZones)
+            throws Exception {
         List<Zone> allZones = ZonesTest.getAllZones();
 
         List<Map<Zone, Integer>> zoneMaps = new ArrayList<>(TAKES_ENTRIES);
@@ -199,8 +199,8 @@ public class HeatmapTest {
             } else {
                 System.out.print("   | ");
             }
-            for (int c = 0; c < zoneTakes.length; c += 1) {
-                System.out.print((zoneTakes[c] >= i) ? "*" : " ");
+            for (int zoneTake : zoneTakes) {
+                System.out.print((zoneTake >= i) ? "*" : " ");
             }
             System.out.println();
         }
@@ -213,15 +213,15 @@ public class HeatmapTest {
         System.out.println("Takes to violet: " + toViolet + " (" + toVioletZones + " zones)");
     }
     
-    private void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, HeatmapCategories category) {
+    private static void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, HeatmapCategories category) {
         initZoneMaps(zoneMaps, category.takes);
     }
     
-    private void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, HeatmapCategories category, HeatmapCategories nextCategory) {
+    private static void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, HeatmapCategories category, HeatmapCategories nextCategory) {
         initZoneMaps(zoneMaps, IntStream.range(category.getTakes(), nextCategory.getTakes()).toArray());
     }
     
-    private void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, int... takes) {
+    private static void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, int... takes) {
         Map<Zone, Integer> map = new HashMap<>();
         for (int take : takes) {
             zoneMaps.add(map);
@@ -234,19 +234,17 @@ public class HeatmapTest {
         }
         out.writeFolder(folderName);
         zoneCounts.entrySet().stream()
-                .sorted(getEntryComparator())
+                .sorted(HeatmapTest::compareEntries)
                 .forEach(zoneCountEntry -> out.writePlacemark(String.format("%d - %s", zoneCountEntry.getValue(), zoneCountEntry.getKey().getName()),
                         "", zoneCountEntry.getKey().getLongitude(), zoneCountEntry.getKey().getLatitude()));
     }
     
-    private Comparator<Entry<Zone, Integer>> getEntryComparator() {
-        return (o1, o2) -> {
-            int countDiff = o1.getValue() - o2.getValue();
-            if (countDiff != 0) {
-                return  countDiff;
-            }
-            return o1.getKey().getName().compareTo(o2.getKey().getName());
-        };
+    private static int compareEntries(Entry<Zone, Integer> o1, Entry<Zone, Integer> o2) {
+        int countDiff = o1.getValue() - o2.getValue();
+        if (countDiff != 0) {
+            return  countDiff;
+        }
+        return o1.getKey().getName().compareTo(o2.getKey().getName());
     }
 
     private int countZones(int[] zoneTakes, WardedCategories limit) {
@@ -262,11 +260,11 @@ public class HeatmapTest {
                 .sum();
     }
     
-    public static Map<String, Integer> readTakenZones() throws IOException {
-        return URLReaderTest.readProperties("/warded.unique.php.html", TakenZones::fromHTML);
+    public static Map<String, Integer> readTakenZones() throws Exception {
+        return URLReaderTest.readProperties("warded.unique.php.html", TakenZones::fromHTML);
     }
 
-    public static Map<String, Integer> readLeifonsTakenZones() throws IOException {
-        return URLReaderTest.readProperties("/Leifons-sthlm-unique.php.html", TakenZones::fromHTML);
+    public static Map<String, Integer> readLeifonsTakenZones() throws Exception {
+        return URLReaderTest.readProperties("Leifons-sthlm-unique.php.html", TakenZones::fromHTML);
     }
 }

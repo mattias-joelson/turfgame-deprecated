@@ -2,25 +2,27 @@ package org.joelson.mattias.turfgame.apiv4;
 
 import org.joelson.mattias.turfgame.util.JSONArray;
 import org.joelson.mattias.turfgame.util.JSONObject;
-import org.joelson.mattias.turfgame.util.JSONParser;
-import org.joelson.mattias.turfgame.util.JSONValue;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class Zones {
 
-    private static final String ALL_ZONES_REQUEST = "http://api.turfgame.com/v4/zones/all";
-
+    private static final String ALL_ZONES_REQUEST = "http://api.turfgame.com/v4/zones/all"; //NON-NLS
+    private static final String DEFAULT_ZONES_FILENAME = "zones-all.json"; //NON-NLS
+    
     private Zones() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");
     }
 
-    public static List<Zone> readAllZones() throws IOException {
+    public static List<Zone> readAllZones() throws IOException, ParseException {
         return fromJSON(getAllZonesJSON());
     }
 
@@ -29,18 +31,13 @@ public final class Zones {
     }
 
     public static void main(String[] args) throws IOException {
-        String json = getAllZonesJSON();
-        try (PrintWriter writer = new PrintWriter("zones-all.json", StandardCharsets.UTF_8)) {
-            writer.println(json);
-        }
+        Files.writeString(Path.of(DEFAULT_ZONES_FILENAME), getAllZonesJSON(), StandardCharsets.UTF_8);
     }
 
-    public static List<Zone> fromJSON(String s) {
-        JSONArray valueArray = (JSONArray) new JSONParser().parse(s);
-        List<Zone> zones = new ArrayList<>();
-        for (JSONValue value : valueArray.getElements()) {
-            zones.add(Zone.fromJSON((JSONObject) value));
-        }
-        return zones;
+    public static List<Zone> fromJSON(String s) throws ParseException {
+        return JSONArray.parseArray(s).stream()
+                .map(JSONObject.class::cast)
+                .map(Zone::fromJSON)
+                .collect(Collectors.toList());
     }
 }
