@@ -1,6 +1,5 @@
 package org.joelson.mattias.turfgame.application.db;
 
-import org.h2.jdbcx.JdbcDataSource;
 import org.joelson.mattias.turfgame.application.model.RegionDTO;
 import org.joelson.mattias.turfgame.application.model.RegionHistoryDTO;
 import org.joelson.mattias.turfgame.application.model.ZoneDTO;
@@ -22,12 +21,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.sql.DataSource;
 
 public class DatabaseEntityManager {
     
-    public static final String PERSISTANCE_H2 = "turfgame-h2";
-    private static final String JAVAX_PERSISTENCE_JDBC_URL_PROPERTY = "javax.persistence.jdbc.url";
+    private static final String JAVAX_PERSISTENCE_JDBC_URL_PROPERTY = "javax.persistence.jdbc.url"; //NON-NLS
+    private static final String JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY = "javax.persistence.schema-generation.database.action"; //NON-NLS
+
+    public static final String PERSISTANCE_NAME = "turfgame-h2"; //NON-NLS
+    private static final String DATABASE_NAME = "turfgame_h2"; //NON-NLS
     
     private EntityManagerFactory entityManagerFactory;
     
@@ -40,11 +41,11 @@ public class DatabaseEntityManager {
     }
     
     public void importDatabase(Path importFile) throws SQLException {
-        executeSQL(String.format("RUNSCRIPT FROM '%s'", importFile));
+        executeSQL(String.format("RUNSCRIPT FROM '%s'", importFile)); //NON-NLS
     }
     
     public void exportDatabase(Path exportFile) throws SQLException {
-        executeSQL(String.format("SCRIPT TO '%s'", exportFile));
+        executeSQL(String.format("SCRIPT TO '%s'", exportFile)); //NON-NLS
     }
     
     private void executeSQL(String sql) throws SQLException {
@@ -67,8 +68,8 @@ public class DatabaseEntityManager {
     
     public RegionDTO getRegion(String name) {
         EntityManager entityManager = createEntityManager();
-        Query query = entityManager.createQuery("SELECT r FROM RegionEntity r WHERE r.name = :name");
-        query.setParameter("name", name);
+        Query query = entityManager.createQuery("SELECT r FROM RegionEntity r WHERE r.name = :name"); //NON-NLS
+        query.setParameter("name", name); //NON-NLS
         RegionDTO region = ((RegionEntity) query.getSingleResult()).toDTO();
         entityManager.close();
         return region;
@@ -76,7 +77,7 @@ public class DatabaseEntityManager {
 
     public List<RegionDTO> getRegions() {
         EntityManager entityManager = createEntityManager();
-        Query query = entityManager.createQuery("SELECT r from RegionEntity r");
+        Query query = entityManager.createQuery("SELECT r from RegionEntity r"); //NON-NLS
         @SuppressWarnings("unchecked")
         List<RegionDTO> regions = ((Stream<RegionEntity>) query.getResultStream())
                 .map(RegionEntity::toDTO)
@@ -87,7 +88,7 @@ public class DatabaseEntityManager {
     
     public List<RegionHistoryDTO> getRegionHistory() {
         EntityManager entityManager = createEntityManager();
-        Query query = entityManager.createQuery("SELECT r FROM RegionHistoryEntity r");
+        Query query = entityManager.createQuery("SELECT r FROM RegionHistoryEntity r"); //NON-NLS
         @SuppressWarnings("unchecked")
         List<RegionHistoryDTO> regionHistory = ((Stream<RegionHistoryEntity>) query.getResultStream())
                 .map(RegionHistoryEntity::toDTO)
@@ -126,8 +127,8 @@ public class DatabaseEntityManager {
     
     public ZoneDTO getZone(String name) {
         EntityManager entityManager = createEntityManager();
-        Query query = entityManager.createQuery("SELECT z FROM ZoneEntity z WHERE z.name = :name");
-        query.setParameter("name", name);
+        Query query = entityManager.createQuery("SELECT z FROM ZoneEntity z WHERE z.name = :name"); //NON-NLS
+        query.setParameter("name", name); //NON-NLS
         ZoneDTO zone = ((ZoneEntity) query.getSingleResult()).toDTO();
         entityManager.close();
         return zone;
@@ -135,7 +136,7 @@ public class DatabaseEntityManager {
     
     public List<ZoneDTO> getZones() {
         EntityManager entityManager = createEntityManager();
-        Query query = entityManager.createQuery("SELECT z FROM ZoneEntity z");
+        Query query = entityManager.createQuery("SELECT z FROM ZoneEntity z"); //NON-NLS
         @SuppressWarnings("unchecked")
         List<ZoneDTO> zones = ((Stream<ZoneEntity>) query.getResultStream())
                 .map(ZoneEntity::toDTO)
@@ -146,7 +147,7 @@ public class DatabaseEntityManager {
     
     public List<ZoneDataHistoryDTO> getZoneDataHistory() {
         EntityManager entityManager = createEntityManager();
-        Query query = entityManager.createQuery("SELECT z FROM ZoneDataHistoryEntity z");
+        Query query = entityManager.createQuery("SELECT z FROM ZoneDataHistoryEntity z"); //NON-NLS
         @SuppressWarnings("unchecked")
         List<ZoneDataHistoryDTO> zones = ((Stream<ZoneDataHistoryEntity>) query.getResultStream())
                 .map(ZoneDataHistoryEntity::toDTO)
@@ -157,7 +158,7 @@ public class DatabaseEntityManager {
     
     public List<ZonePointsHistoryDTO> getZonePointsHistory() {
         EntityManager entityManager = createEntityManager();
-        Query query = entityManager.createQuery("SELECT z FROM ZonePointsHistoryEntity z");
+        Query query = entityManager.createQuery("SELECT z FROM ZonePointsHistoryEntity z"); //NON-NLS
         @SuppressWarnings("unchecked")
         List<ZonePointsHistoryDTO> zones = ((Stream<ZonePointsHistoryEntity>) query.getResultStream())
                 .map(ZonePointsHistoryEntity::toDTO)
@@ -226,5 +227,16 @@ public class DatabaseEntityManager {
     private static void persistZonePointsHistory(EntityManager entityManager, ZoneEntity zone, Instant from, ZoneDTO zoneDTO) {
         ZonePointsHistoryEntity zonePointsHistory = ZonePointsHistoryEntity.build(zone, from, zoneDTO.getTp(), zoneDTO.getPph());
         entityManager.persist(zonePointsHistory);
+    }
+    
+    public static Map<String, String> createPersistancePropertyMap(Path directoryPath, boolean openExisting, boolean dropAndCreateTables) {
+        return Map.of(
+                JAVAX_PERSISTENCE_JDBC_URL_PROPERTY, createJdbcURL(directoryPath, openExisting),
+                JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY, (dropAndCreateTables) ? "drop-and-create" : "none"); //NON-NLS
+    }
+    
+    private static String createJdbcURL(Path directoryPath, boolean openExisting) {
+        return String.format("jdbc:h2:%s/%s;IFEXISTS=%s;", //NON-NLS
+                directoryPath, DATABASE_NAME, (openExisting) ? "TRUE" : "FALSE"); //NON-NLS
     }
 }
