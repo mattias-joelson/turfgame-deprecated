@@ -1,28 +1,31 @@
 package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.controller.ApplicationActions;
+import org.joelson.mattias.turfgame.application.controller.ImportDatabaseAction;
+import org.joelson.mattias.turfgame.application.model.ApplicationData;
 
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
+import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-class MenuBuilder {
+final class MenuBuilder {
     
     private MenuBuilder() throws IllegalAccessException {
         throw new IllegalAccessException("Should not be instantiated!");
     }
     
-    public static JMenuBar createApplicationMenu(ApplicationActions applicationActions) {
+    static JMenuBar createApplicationMenu(ApplicationActions applicationActions, ApplicationData applicationData, ApplicationUI applicationUI) {
         JMenuBar menuBar = new JMenuBar();
     
         JMenu fileMenu = addMenu(menuBar,"File");
         addMenuItem(fileMenu, "Open DB...", createMenuShortcutAccelerator('O'), applicationActions::openDatabase);
         addMenuItem(fileMenu, "Close DB", createMenuShortcutAccelerator('W'), applicationActions::closeDatabase);
         addMenuItem(fileMenu, "Export DB ...", null, applicationActions::exportDatabase);
-        addMenuItem(fileMenu, "Import DB ...", null, applicationActions::importDatabase);
+        addMenuItem(fileMenu, ImportDatabaseAction.create(applicationUI, applicationData));
         fileMenu.addSeparator();
         addMenuItem(fileMenu, "Quit", createMenuShortcutAccelerator('Q'), applicationActions::closeApplication);
         
@@ -37,6 +40,12 @@ class MenuBuilder {
         JMenu menu = new JMenu(caption);
         menuBar.add(menu);
         return menu;
+    }
+    
+    private static JMenuItem addMenuItem(JMenu menu, Action action) {
+        JMenuItem menuItem = new JMenuItem(action);
+        menu.add(menuItem);
+        return menuItem;
     }
     
     private static JMenuItem addMenuItem(JMenu menu, String caption) {

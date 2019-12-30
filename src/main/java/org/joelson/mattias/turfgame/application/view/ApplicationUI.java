@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.desktop.QuitStrategy;
 import java.awt.event.WindowAdapter;
@@ -22,6 +23,7 @@ import javax.swing.WindowConstants;
 public class ApplicationUI {
     
     private static final String OPEN_DATABASE_TEXT = "Open Database";
+    private static final String APPLICATION_TITLE = "Turf Statistics";
     private final ApplicationActions applicationActions;
     private final ApplicationData applicationData;
     
@@ -41,12 +43,12 @@ public class ApplicationUI {
     }
     
     private JFrame createApplicationFrame() {
-        JFrame frame = new JFrame("Turf Statistics");
+        JFrame frame = new JFrame(APPLICATION_TITLE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize(screenSize.width / 2, screenSize.height /2);
         frame.setLocation(screenSize.width / 4, screenSize.height / 4);
-        frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions));
+        frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
+        frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions, applicationData, this));
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(createFrameWindowListener());
         Desktop.getDesktop().disableSuddenTermination();
@@ -69,9 +71,10 @@ public class ApplicationUI {
     private JLabel createContent(Container contentPane) {
         contentPane.setLayout(new BorderLayout());
         Container emptyContainer = new Container();
-        contentPane.add(currentContent = emptyContainer, BorderLayout.CENTER);
+        contentPane.add(emptyContainer, BorderLayout.CENTER);
+        currentContent = emptyContainer;
         JLabel statusLabel = new JLabel("<no user>");
-        contentPane.add(statusLabel, BorderLayout.SOUTH);
+        contentPane.add(statusLabel, BorderLayout.PAGE_END);
         return statusLabel;
     }
     
@@ -157,7 +160,7 @@ public class ApplicationUI {
                 return null;
             default:
                 try {
-                    throw new NullPointerException("Unknowm return type " + val);
+                    throw new NullPointerException("Unknown return type " + val);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }

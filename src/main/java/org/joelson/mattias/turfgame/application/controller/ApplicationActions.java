@@ -16,15 +16,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
 public class ApplicationActions {
     
-    private static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url"; //NON-NLS
-    private static final String JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION = "javax.persistence.schema-generation.database.action"; //NON-NLS
-
     private ApplicationUI applicationUI;
     private ApplicationData applicationData;
     
@@ -134,10 +130,8 @@ public class ApplicationActions {
     
             @Override
             protected Void doInBackground() throws RuntimeException {
-                Map<String, String> persistenceMap = Map.of(
-                        JAVAX_PERSISTENCE_JDBC_URL, createJdbcURL(directoryPath, true),
-                        JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION,"none"); //NON-NLS
-                applicationData.setDatabase(DatabaseEntityManager.PERSISTANCE_H2, persistenceMap, directoryPath);
+                applicationData.openDatabase(DatabaseEntityManager.PERSISTANCE_NAME, directoryPath,
+                        DatabaseEntityManager.createPersistancePropertyMap(directoryPath, true, false));
                 return null;
             }
     
@@ -167,10 +161,8 @@ public class ApplicationActions {
     
             @Override
             protected Void doInBackground() throws RuntimeException {
-                Map<String, String> persistenceMap = Map.of(
-                        JAVAX_PERSISTENCE_JDBC_URL, createJdbcURL(directoryPath, false),
-                        JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION,"drop-and-create"); //NON-NLS
-                applicationData.setDatabase(DatabaseEntityManager.PERSISTANCE_H2, persistenceMap, directoryPath);
+                applicationData.openDatabase(DatabaseEntityManager.PERSISTANCE_NAME, directoryPath,
+                        DatabaseEntityManager.createPersistancePropertyMap(directoryPath, false, true));
                 return null;
             }
     
@@ -226,56 +218,12 @@ public class ApplicationActions {
         }.execute();
     }
     
-    public void importDatabase() {
-        Path loadFile = applicationUI.openFileDialog(null);
-        if (loadFile == null) {
-            return;
-        }
-        Path directoryPath = applicationUI.openDatabaseDialog();
-        if (directoryPath == null) {
-            return;
-        }
-        applicationUI.setStatus("Importing database from file " + loadFile + " to database in directory " + directoryPath + " ...");
-        new SwingWorker<Void, Void>() {
-    
-            @Override
-            protected Void doInBackground() throws SQLException {
-                Map<String, String> persistenceMap = Map.of(
-                        JAVAX_PERSISTENCE_JDBC_URL, createJdbcURL(directoryPath, false),
-                        JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION,"none"); //NON-NLS
-                applicationData.importDatabase(loadFile, DatabaseEntityManager.PERSISTANCE_H2, persistenceMap, directoryPath);
-                return null;
-            }
-    
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (ExecutionException e) {
-                    applicationUI.showErrorDialog("Error Importing Database",
-                            String.format("Unable to import file %s into directory %s\n%s", loadFile, directoryPath, e.getCause()));
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    showUnexpectedInteruptionError(e);
-                } finally {
-                    setApplicationDataStatus();
-                }
-            }
-        }.execute();
-    }
-    
     private void setApplicationDataStatus() {
         applicationUI.setStatus(applicationData.getStatus());
     }
     
     private void showUnexpectedInteruptionError(InterruptedException e) {
-        applicationUI.showErrorDialog("Unexpected Interrupted Exception", e.getMessage());
+        applicationUI.showErrorDialog("Unexpected Interrupted Exception", String.valueOf(e));
         e.printStackTrace();
-    }
-
-    private static String createJdbcURL(Path directoryPath, boolean openExisting) {
-        return String.format("jdbc:h2:%s/turfgame_h2;IFEXISTS=%s;", //NON-NLS
-                directoryPath,
-                (openExisting) ? "TRUE" : "FALSE"); //NON-NLS
     }
 }
