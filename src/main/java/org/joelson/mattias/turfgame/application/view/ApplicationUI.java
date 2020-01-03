@@ -194,6 +194,8 @@ public class ApplicationUI {
     
     private static class ApplicationJFileChooser extends JFileChooser {
         
+        private static final long serialVersionUID = 1L;
+        
         @Override
         public void approveSelection() {
             if (getDialogType() == JFileChooser.SAVE_DIALOG && getSelectedFile().exists()) {
