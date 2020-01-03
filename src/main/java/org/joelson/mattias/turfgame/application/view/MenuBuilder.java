@@ -1,8 +1,6 @@
 package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.controller.ApplicationActions;
-import org.joelson.mattias.turfgame.application.controller.ImportDatabaseAction;
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
 
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
@@ -18,20 +16,20 @@ final class MenuBuilder {
         throw new IllegalAccessException("Should not be instantiated!");
     }
     
-    static JMenuBar createApplicationMenu(ApplicationActions applicationActions, ApplicationData applicationData, ApplicationUI applicationUI) {
+    static JMenuBar createApplicationMenu(ApplicationActions applicationActions) {
         JMenuBar menuBar = new JMenuBar();
     
         JMenu fileMenu = addMenu(menuBar,"File");
-        addMenuItem(fileMenu, "Open DB...", createMenuShortcutAccelerator('O'), applicationActions::openDatabase);
+        addMenuItem(fileMenu, applicationActions.openDatabaseAction());
         addMenuItem(fileMenu, "Close DB", createMenuShortcutAccelerator('W'), applicationActions::closeDatabase);
-        addMenuItem(fileMenu, "Export DB ...", null, applicationActions::exportDatabase);
-        addMenuItem(fileMenu, ImportDatabaseAction.create(applicationUI, applicationData));
+        addMenuItem(fileMenu, applicationActions.exportDatabaseAction());
+        addMenuItem(fileMenu, applicationActions.importDatabaseAction());
         fileMenu.addSeparator();
         addMenuItem(fileMenu, "Quit", createMenuShortcutAccelerator('Q'), applicationActions::closeApplication);
         
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
-        addMenuItem(turfgameMenu, "Read zones", null, applicationActions::readZones);
-        addMenuItem(turfgameMenu, "Read zones from JSON file ...", createMenuShortcutAccelerator('J'), applicationActions::readZonesFromFile);
+        addMenuItem(turfgameMenu, applicationActions.readZonesAction());
+        addMenuItem(turfgameMenu, applicationActions.readZonesFromFileAction());
         
         return menuBar;
     }
