@@ -48,7 +48,7 @@ public class ApplicationUI {
         frame.setSize(screenSize.width / 2, screenSize.height /2);
         frame.setLocation(screenSize.width / 4, screenSize.height / 4);
         frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
-        frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions, applicationData, this));
+        frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions));
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(createFrameWindowListener());
         Desktop.getDesktop().disableSuddenTermination();
@@ -107,12 +107,16 @@ public class ApplicationUI {
 
     private JFileChooser getFileChooser() {
         if (fileChooser == null) {
-            fileChooser = new JFileChooser();
+            fileChooser = new ApplicationJFileChooser();
             fileChooser.setMultiSelectionEnabled(false);
         }
         return fileChooser;
     }
     
+    public Path openFileDialog() {
+        return showFileDialog(JFileChooser.OPEN_DIALOG, null);
+    }
+
     public Path openFileDialog(String approveButtonText) {
         return showFileDialog(JFileChooser.OPEN_DIALOG, approveButtonText);
     }
@@ -139,6 +143,15 @@ public class ApplicationUI {
     
     public void setStatus(String status) {
         statusLabel.setText(status);
+    }
+    
+    public void setApplicationDataStatus() {
+        setStatus(applicationData.getStatus());
+    }
+    
+    public void showUnexpectedInteruptionError(InterruptedException e) {
+        showErrorDialog("Unexpected Interrupted Exception", String.valueOf(e));
+        e.printStackTrace();
     }
     
     public void showMessageDialog(String title, String message) {
@@ -177,5 +190,21 @@ public class ApplicationUI {
             return null;
         }
         return result.toString();
+    }
+    
+    private static class ApplicationJFileChooser extends JFileChooser {
+        
+        @Override
+        public void approveSelection() {
+            if (getDialogType() == JFileChooser.SAVE_DIALOG && getSelectedFile().exists()) {
+                int option = JOptionPane.showConfirmDialog(this,
+                        String.format("The file %s already exists. Do you want to overwrite?", getSelectedFile()),
+                        "Overwrite Existing File?", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION) {
+                    return;
+                }
+            }
+            super.approveSelection();
+        }
     }
 }

@@ -1,23 +1,9 @@
 package org.joelson.mattias.turfgame.application.controller;
 
-import org.joelson.mattias.turfgame.apiv4.Zone;
-import org.joelson.mattias.turfgame.apiv4.Zones;
-import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
 import org.joelson.mattias.turfgame.application.view.ApplicationUI;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import javax.swing.SwingWorker;
+import javax.swing.Action;
 
 public class ApplicationActions {
     
@@ -32,154 +18,30 @@ public class ApplicationActions {
         this.applicationUI = applicationUI;
     }
     
+    ApplicationData getApplicationData() {
+        return applicationData;
+    }
+    
+    ApplicationUI getApplicationUI() {
+        return applicationUI;
+    }
+    
     public void closeApplication() {
         applicationData.closeDatabase();
         applicationUI.dispose();
         System.exit(0);
     }
     
-    public void readZones() {
-        applicationUI.setStatus("Reading zones from Turfgame...");
-        new SwingWorker<Void, Void>() {
-    
-            @Override
-            protected Void doInBackground() throws IOException, ParseException {
-                List<Zone> zones = Zones.readAllZones();
-                applicationData.getZones().updateZones(Instant.now(), zones);
-                return null;
-            }
-            
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (ExecutionException e) {
-                    applicationUI.showErrorDialog("Error reading zones",
-                            "Unable to read zones through API V4 and update database.\n" + e.getCause());
-                } catch (InterruptedException e) {
-                    showUnexpectedInteruptionError(e);
-                } finally {
-                    setApplicationDataStatus();
-                }
-            }
-        }.execute();
+    public Action readZonesAction() {
+        return ReadZonesActionCreator.create(this);
     }
     
-    public void readZonesFromFile() {
-        Path zonesFile = applicationUI.openFileDialog(null);
-        if (zonesFile == null) {
-            return;
-        }
-        applicationUI.setStatus("Reading zones from file " + zonesFile + " ...");
-        new SwingWorker<Void, Void>() {
-    
-            @Override
-            protected Void doInBackground() throws IOException, ParseException {
-                List<Zone> zones = Zones.fromJSON(Files.readString(zonesFile));
-                Instant instant = null;
-                try {
-                    String filename = zonesFile.getFileName().toString();
-                    int year = Integer.parseInt(filename.substring(6, 10));
-                    int month = Integer.parseInt(filename.substring(11, 13));
-                    int day = Integer.parseInt(filename.substring(14, 16));
-                    int hour = Integer.parseInt(filename.substring(17, 19));
-                    int minutes = Integer.parseInt(filename.substring(20, 22));
-                    LocalDateTime localDateTime = LocalDateTime.of(year, month, day, hour, minutes);
-                    ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
-                    instant = Instant.from(zonedDateTime);
-                } catch (NumberFormatException e) {
-                    // ignore
-                }
-                if (instant == null) {
-                    instant = Instant.now();
-                }
-                String input = applicationUI.showInputDialog("Instant of Zone Data",
-                        "Input instant zone data in file " + zonesFile.getFileName() + " was retrieved:", String.valueOf(instant));
-                if (input == null) {
-                    return null;
-                }
-                instant = Instant.parse(input);
-                applicationData.getZones().updateZones(instant, zones);
-                return null;
-            }
-    
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (ExecutionException e) {
-                    applicationUI.showErrorDialog("Error Updating Zones",
-                            String.format("There was an error updating the zones with file %s\n%s", zonesFile, e.getCause()));
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    showUnexpectedInteruptionError(e);
-                } finally {
-                    setApplicationDataStatus();
-                }
-            }
-        }.execute();
+    public Action readZonesFromFileAction() {
+        return ReadZonesFromFileActionCreator.create(this);
     }
 
-    public void openDatabase() {
-        Path directoryPath = applicationUI.openDatabaseDialog();
-        if (directoryPath == null) {
-            return;
-        }
-        applicationUI.setStatus("Opening database in directory " + directoryPath + " ...");
-        new SwingWorker<Void, Void>() {
-    
-            @Override
-            protected Void doInBackground() throws RuntimeException {
-                applicationData.openDatabase(DatabaseEntityManager.PERSISTANCE_NAME, directoryPath,
-                        DatabaseEntityManager.createPersistancePropertyMap(directoryPath, true, false));
-                return null;
-            }
-    
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (ExecutionException e) {
-                    Boolean createDatebase = applicationUI.showYesNoDialog("Create Database?",
-                            String.format("No database could be found in directory %s.\nDo you want to create a new database here?\n%s",
-                                    directoryPath, e.getCause()));
-                    if (createDatebase.equals(Boolean.TRUE)) {
-                        createDatabase(directoryPath);
-                    }
-                } catch (InterruptedException e) {
-                    showUnexpectedInteruptionError(e);
-                } finally {
-                    setApplicationDataStatus();
-                }
-            }
-        }.execute();
-    }
-
-    private void createDatabase(Path directoryPath) {
-        applicationUI.setStatus("Creating database in directory " + directoryPath + " ...");
-        new SwingWorker<Void, Void>() {
-    
-            @Override
-            protected Void doInBackground() throws RuntimeException {
-                applicationData.openDatabase(DatabaseEntityManager.PERSISTANCE_NAME, directoryPath,
-                        DatabaseEntityManager.createPersistancePropertyMap(directoryPath, false, true));
-                return null;
-            }
-    
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (ExecutionException e) {
-                    applicationUI.showErrorDialog("Error Creating Database",
-                            String.format("Unable to create a database in directory %s\n%s", directoryPath, e.getCause()));
-                } catch (InterruptedException e) {
-                    showUnexpectedInteruptionError(e);
-                } finally {
-                    setApplicationDataStatus();
-                }
-            }
-        }.execute();
+    public Action openDatabaseAction() {
+        return OpenDatabaseActionCreator.create(this);
     }
     
     public void closeDatabase() {
@@ -187,43 +49,12 @@ public class ApplicationActions {
         applicationUI.setStatus(applicationData.getStatus());
     }
     
-    public void exportDatabase() {
-        Path saveFile = applicationUI.saveFileDialog(null);
-        if (saveFile == null) {
-            return;
-        }
-        applicationUI.setStatus("Exporting database to file " + saveFile + " ...");
-        new SwingWorker<Void, Void>() {
-    
-            @Override
-            protected Void doInBackground() throws SQLException {
-                applicationData.exportDatabase(saveFile);
-                return null;
-            }
-    
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (ExecutionException e) {
-                    applicationUI.showErrorDialog("Error Exporting Database",
-                            String.format("Unable to export database to file %s\n%s", saveFile, e.getCause()));
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    showUnexpectedInteruptionError(e);
-                } finally {
-                    setApplicationDataStatus();
-                }
-            }
-        }.execute();
+    public Action importDatabaseAction() {
+        return ImportDatabaseActionCreator.create(this);
     }
     
-    private void setApplicationDataStatus() {
-        applicationUI.setStatus(applicationData.getStatus());
-    }
     
-    private void showUnexpectedInteruptionError(InterruptedException e) {
-        applicationUI.showErrorDialog("Unexpected Interrupted Exception", String.valueOf(e));
-        e.printStackTrace();
+    public Action exportDatabaseAction() {
+        return ExportDatabaseActionCreator.create(this);
     }
 }
