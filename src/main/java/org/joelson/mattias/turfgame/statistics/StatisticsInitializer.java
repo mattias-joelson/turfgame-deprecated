@@ -34,6 +34,10 @@ public final class StatisticsInitializer {
         statistics.addRegion(uppsala);
         addMunicipality(statistics, stockholm, "Knivsta kommun");
         addMunicipality(statistics, uppsala, "Uppsala kommun");
+    
+        Region orebro = new Region(131, "Örebro", sweden);
+        statistics.addRegion(uppsala);
+        addMunicipality(statistics, stockholm, "Lindesbergs kommun");
 
         Region spainRegion = new Region(211, "Spain", spain);
         statistics.addRegion(spainRegion);
