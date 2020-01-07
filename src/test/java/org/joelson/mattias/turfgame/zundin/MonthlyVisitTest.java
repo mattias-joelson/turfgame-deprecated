@@ -71,7 +71,7 @@ public class MonthlyVisitTest {
     
     private static Monthly getMonthly() throws Exception {
         //return readProperties("monthly_oberoff_round96.html");
-        return readProperties("monthly_oberoff_round114.html");
+        return readProperties("monthly_oberoff_round115.html");
     }
     
     private static Monthly readProperties(String resource) throws Exception {
