@@ -1,14 +1,8 @@
-package org.joelson.mattias.turfgame.application.controller;
+package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.view.ActionBuilder;
-import org.joelson.mattias.turfgame.application.view.ApplicationUI;
-import org.joelson.mattias.turfgame.application.view.SwingWorkerBuilder;
 
-import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import javax.swing.Action;
@@ -19,35 +13,24 @@ final class ExportDatabaseActionCreator {
         throw new InstantiationException("Should not be instantiated!");
     }
     
-    public static Action create(ApplicationActions applicationActions) {
-        Action action = new ActionBuilder(actionEvent -> exportDatabase(applicationActions.getApplicationUI(), applicationActions.getApplicationData()))
+    public static Action create(ApplicationUI applicationUI) {
+        Action action = new ActionBuilder(actionEvent -> exportDatabase(applicationUI))
                 .withName("Export DB ...")
                 .build();
         action.setEnabled(false);
-        applicationActions.getApplicationData().addPropertyChangeListener(ApplicationData.HAS_DATABASE, evt -> propertyChange(evt, action));
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
         return action;
     }
     
-    private static void propertyChange(PropertyChangeEvent evt, Action action) {
-        if (Objects.equals(evt.getPropertyName(), ApplicationData.HAS_DATABASE)) {
-            action.setEnabled(Objects.equals(evt.getNewValue(), true));
-        }
-    }
-    
-    private static void exportDatabase(ApplicationUI applicationUI, ApplicationData applicationData) {
+    private static void exportDatabase(ApplicationUI applicationUI) {
         Path saveFile = applicationUI.saveFileDialog(null);
         if (saveFile != null) {
             applicationUI.setStatus(String.format("Exporting database to file %s ...", saveFile));
-            new SwingWorkerBuilder<Void, Void>(() -> exportDatabaseInBackground(applicationData, saveFile))
+            new SwingWorkerBuilder<Void, Void>(() -> applicationUI.getApplicationActions().exportDatabase(saveFile))
                     .withDone(finishedWorker -> done(finishedWorker, applicationUI, saveFile))
                     .build()
                     .execute();
         }
-    }
-    
-    private static Void exportDatabaseInBackground(ApplicationData applicationData, Path saveFile) throws SQLException {
-        applicationData.exportDatabase(saveFile);
-        return null;
     }
     
     private static void done(Future<Void> finishedWorker, ApplicationUI applicationUI, Path saveFile) {

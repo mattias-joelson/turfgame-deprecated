@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.nio.file.Path;
+import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -42,13 +43,41 @@ public class ApplicationUI {
         clearPane();
     }
     
+    ApplicationActions getApplicationActions() {
+        return applicationActions;
+    }
+    
+    ApplicationData getApplicationData() {
+        return applicationData;
+    }
+    
+    Action readZonesAction() {
+        return ReadZonesActionCreator.create(this);
+    }
+
+    Action readZonesFromFileAction() {
+        return ReadZonesFromFileActionCreator.create(this);
+    }
+    
+    Action openDatabaseAction() {
+        return OpenDatabaseActionCreator.create(this);
+    }
+
+    Action exportDatabaseAction() {
+        return ExportDatabaseActionCreator.create(this);
+    }
+    
+    Action importDatabaseAction() {
+        return ImportDatabaseActionCreator.create(this);
+    }
+    
     private JFrame createApplicationFrame() {
         JFrame frame = new JFrame(APPLICATION_TITLE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize(screenSize.width / 2, screenSize.height /2);
         frame.setLocation(screenSize.width / 4, screenSize.height / 4);
         frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
-        frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions));
+        frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions, this));
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(createFrameWindowListener());
         Desktop.getDesktop().disableSuddenTermination();

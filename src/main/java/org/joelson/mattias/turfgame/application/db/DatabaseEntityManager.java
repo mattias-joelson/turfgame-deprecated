@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 public class DatabaseEntityManager {
@@ -36,7 +37,7 @@ public class DatabaseEntityManager {
         entityManagerFactory = Persistence.createEntityManagerFactory(unit);
     }
     
-    public DatabaseEntityManager(String unit, Map<String, String> properties) throws RuntimeException {
+    public DatabaseEntityManager(String unit, Map<String, String> properties) throws PersistenceException {
         entityManagerFactory  = Persistence.createEntityManagerFactory(unit, properties);
     }
     

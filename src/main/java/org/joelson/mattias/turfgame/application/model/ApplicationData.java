@@ -7,6 +7,7 @@ import java.beans.PropertyChangeSupport;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Map;
+import javax.persistence.PersistenceException;
 
 public class ApplicationData {
     
@@ -45,7 +46,7 @@ public class ApplicationData {
         throw new IllegalArgumentException("Unknown property " + propertyName);
     }
     
-    public void openDatabase(String unit, Path databasePath, Map<String, String> properties) throws RuntimeException {
+    public void openDatabase(String unit, Path databasePath, Map<String, String> properties) throws PersistenceException {
         DatabaseEntityManager newDatabaseManager = new DatabaseEntityManager(unit, properties);
         closeDatabase();
         setDatabase(newDatabaseManager, databasePath);

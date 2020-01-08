@@ -16,20 +16,20 @@ final class MenuBuilder {
         throw new IllegalAccessException("Should not be instantiated!");
     }
     
-    static JMenuBar createApplicationMenu(ApplicationActions applicationActions) {
+    static JMenuBar createApplicationMenu(ApplicationActions applicationActions, ApplicationUI applicationUI) {
         JMenuBar menuBar = new JMenuBar();
     
         JMenu fileMenu = addMenu(menuBar,"File");
-        addMenuItem(fileMenu, applicationActions.openDatabaseAction());
+        addMenuItem(fileMenu, applicationUI.openDatabaseAction());
         addMenuItem(fileMenu, "Close DB", createMenuShortcutAccelerator('W'), applicationActions::closeDatabase);
-        addMenuItem(fileMenu, applicationActions.exportDatabaseAction());
-        addMenuItem(fileMenu, applicationActions.importDatabaseAction());
+        addMenuItem(fileMenu, applicationUI.exportDatabaseAction());
+        addMenuItem(fileMenu, applicationUI.importDatabaseAction());
         fileMenu.addSeparator();
         addMenuItem(fileMenu, "Quit", createMenuShortcutAccelerator('Q'), applicationActions::closeApplication);
         
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
-        addMenuItem(turfgameMenu, applicationActions.readZonesAction());
-        addMenuItem(turfgameMenu, applicationActions.readZonesFromFileAction());
+        addMenuItem(turfgameMenu, applicationUI.readZonesAction());
+        addMenuItem(turfgameMenu, applicationUI.readZonesFromFileAction());
         
         return menuBar;
     }
