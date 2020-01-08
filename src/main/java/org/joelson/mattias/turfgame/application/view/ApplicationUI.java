@@ -59,10 +59,19 @@ public class ApplicationUI {
         return ReadZonesFromFileActionCreator.create(this);
     }
     
+    Action zoneTableAction() {
+        return ZoneTableActionCreator.create(this);
+    }
+    
     Action openDatabaseAction() {
         return OpenDatabaseActionCreator.create(this);
     }
 
+    public void closeDatabase() {
+        applicationActions.closeDatabase();
+        clearPane();
+    }
+    
     Action exportDatabaseAction() {
         return ExportDatabaseActionCreator.create(this);
     }
@@ -125,7 +134,7 @@ public class ApplicationUI {
         return directoryChooser;
     }
     
-    public Path openDatabaseDialog() {
+    Path openDatabaseDialog() {
         getDirectoryChooser().setDialogType(JFileChooser.SAVE_DIALOG);
         int status = getDirectoryChooser().showDialog(appplicationFrame, OPEN_DATABASE_TEXT);
         if (status == JFileChooser.APPROVE_OPTION) {
@@ -142,15 +151,15 @@ public class ApplicationUI {
         return fileChooser;
     }
     
-    public Path openFileDialog() {
+    Path openFileDialog() {
         return showFileDialog(JFileChooser.OPEN_DIALOG, null);
     }
 
-    public Path openFileDialog(String approveButtonText) {
+    Path openFileDialog(String approveButtonText) {
         return showFileDialog(JFileChooser.OPEN_DIALOG, approveButtonText);
     }
     
-    public Path saveFileDialog(String approveButtonText) {
+    Path saveFileDialog(String approveButtonText) {
         return showFileDialog(JFileChooser.SAVE_DIALOG, approveButtonText);
     }
     
@@ -164,9 +173,13 @@ public class ApplicationUI {
         return null;
     }
     
-    public void clearPane() {
+    private void clearPane() {
+        setPane(new Container());
+    }
+    
+    void setPane(Container container) {
         appplicationFrame.getContentPane().remove(currentContent);
-        appplicationFrame.getContentPane().add(currentContent = new Container(), BorderLayout.CENTER);
+        appplicationFrame.getContentPane().add(currentContent = container, BorderLayout.CENTER);
         appplicationFrame.getContentPane().validate();
     }
     
@@ -174,11 +187,11 @@ public class ApplicationUI {
         statusLabel.setText(status);
     }
     
-    public void setApplicationDataStatus() {
+    void setApplicationDataStatus() {
         setStatus(applicationData.getStatus());
     }
     
-    public void showUnexpectedInteruptionError(InterruptedException e) {
+    void showUnexpectedInteruptionError(InterruptedException e) {
         showErrorDialog("Unexpected Interrupted Exception", String.valueOf(e));
         e.printStackTrace();
     }
@@ -187,11 +200,11 @@ public class ApplicationUI {
         JOptionPane.showMessageDialog(appplicationFrame, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void showErrorDialog(String title, String message) {
+    void showErrorDialog(String title, String message) {
         JOptionPane.showMessageDialog(appplicationFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }
     
-    public Boolean showYesNoDialog(String title, String message) {
+    Boolean showYesNoDialog(String title, String message) {
         int val = JOptionPane.showConfirmDialog(appplicationFrame, message, title, JOptionPane.YES_NO_OPTION);
         switch (val) {
             case JOptionPane.YES_OPTION:

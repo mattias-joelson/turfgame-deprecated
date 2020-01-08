@@ -21,7 +21,7 @@ final class MenuBuilder {
     
         JMenu fileMenu = addMenu(menuBar,"File");
         addMenuItem(fileMenu, applicationUI.openDatabaseAction());
-        addMenuItem(fileMenu, "Close DB", createMenuShortcutAccelerator('W'), applicationActions::closeDatabase);
+        addMenuItem(fileMenu, "Close DB", createMenuShortcutAccelerator('W'), applicationUI::closeDatabase);
         addMenuItem(fileMenu, applicationUI.exportDatabaseAction());
         addMenuItem(fileMenu, applicationUI.importDatabaseAction());
         fileMenu.addSeparator();
@@ -30,6 +30,7 @@ final class MenuBuilder {
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
         addMenuItem(turfgameMenu, applicationUI.readZonesAction());
         addMenuItem(turfgameMenu, applicationUI.readZonesFromFileAction());
+        addMenuItem(turfgameMenu, applicationUI.zoneTableAction());
         
         return menuBar;
     }
