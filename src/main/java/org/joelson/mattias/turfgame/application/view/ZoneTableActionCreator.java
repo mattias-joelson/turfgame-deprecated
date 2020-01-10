@@ -3,11 +3,21 @@ package org.joelson.mattias.turfgame.application.view;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
 import org.joelson.mattias.turfgame.application.model.ZoneDTO;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.Action;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public final class ZoneTableActionCreator {
     
@@ -26,26 +36,81 @@ public final class ZoneTableActionCreator {
     }
     
     private static void showZoneTable(ApplicationUI applicationUI) {
-        JTable table = new JTable(createTableData(applicationUI.getApplicationData()), createTableColumns());
-        JScrollPane scrollPane = new JScrollPane(table);
+        JTable table = createZoneTable(applicationUI.getApplicationData().getZones().getZones());
+    
+        applicationUI.setPane(createTableContainer(table, createFilterContainer(createTableSorter(table))));
+    }
+    
+    private static Container createTableContainer(JTable table, Container filterContainer) {
+        Container tableContainer = new Container();
+        tableContainer.setLayout(new BorderLayout());
+        tableContainer.add(filterContainer, BorderLayout.PAGE_START);
+        tableContainer.add(new JScrollPane(table), BorderLayout.CENTER);
+        return tableContainer;
+    }
+    
+    private static JTable createZoneTable(List<ZoneDTO> zones) {
+        JTable table = new JTable(new ZoneTableModel(zones));
         table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);
         table.setDefaultEditor(Object.class, null); // disable edit
-        applicationUI.setPane(scrollPane);
+        return table;
     }
     
-    private static Object[][] createTableData(ApplicationData applicationData) {
-        List<ZoneDTO> zones = applicationData.getZones().getZones();
-        List<Object[]> tableRows = zones.stream().map(ZoneTableActionCreator::toArray).collect(Collectors.toList());
-        return tableRows.toArray(new Object[tableRows.size()][]);
+    private static TableRowSorter<TableModel> createTableSorter(JTable table) {
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sorter);
+        return sorter;
     }
     
-    private static Object[] toArray(ZoneDTO zoneDTO) {
-        return new Object[] { zoneDTO.getName(), zoneDTO.getId(), zoneDTO.getRegion().getName(), zoneDTO.getRegion().getCountry(), zoneDTO.getLatitude(),
-                zoneDTO.getLongitude(), zoneDTO.getDateCreated(), zoneDTO.getTp(), zoneDTO.getPph() };
+    private static Container createFilterContainer(TableRowSorter<TableModel> sorter) {
+        Container filterContainer = new Container();
+        GroupLayout groupLayout = new GroupLayout(filterContainer);
+        filterContainer.setLayout(groupLayout);
+        JLabel zoneFilterLabel = new JLabel("Zone Filter");
+        JTextField zoneFilterField = new JTextField("");
+        zoneFilterField.getDocument().addDocumentListener(new ZoneFilterDocumentListener(sorter, zoneFilterField));
+    
+        filterContainer.add(zoneFilterLabel);
+        filterContainer.add(zoneFilterField);
+        groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
+                .addComponent(zoneFilterLabel)
+                .addComponent(zoneFilterField));
+        groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                .addComponent(zoneFilterLabel)
+                .addComponent(zoneFilterField));
+    
+        return filterContainer;
     }
     
-    private static Object[] createTableColumns() {
-        return new Object[] { "Name", "ID", "Region Name", "Country", "Latitude", "Longitude", "Date Created", "TP", "PPH"};
+    private static void newFilter(TableRowSorter<TableModel> rowSorter, String filterText) {
+        RowFilter<TableModel, Object> rf = RowFilter.regexFilter(filterText, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+        rowSorter.setRowFilter(rf);
+    }
+    
+    private static class ZoneFilterDocumentListener implements DocumentListener {
+        
+        private final TableRowSorter<TableModel> sorter;
+        private final JTextField zoneFilterField;
+        
+        public ZoneFilterDocumentListener(TableRowSorter<TableModel> sorter, JTextField zoneFilterField) {
+            this.sorter = sorter;
+            this.zoneFilterField = zoneFilterField;
+        }
+        
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            newFilter(sorter, zoneFilterField.getText());
+        }
+        
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            newFilter(sorter, zoneFilterField.getText());
+        }
+        
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            newFilter(sorter, zoneFilterField.getText());
+        }
     }
 }
