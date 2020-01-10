@@ -11,11 +11,11 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class RegionData {
+public class RegionCollection {
     
     private final DatabaseEntityManager dbEntity;
     
-    public RegionData(DatabaseEntityManager dbEntity) {
+    public RegionCollection(DatabaseEntityManager dbEntity) {
         this.dbEntity = dbEntity;
     }
     
