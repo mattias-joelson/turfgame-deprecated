@@ -2,6 +2,7 @@ package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.model.ZoneDTO;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -9,10 +10,12 @@ import javax.swing.table.AbstractTableModel;
 class ZoneTableModel extends AbstractTableModel {
     
     private static final String[] COLUMN_NAMES = { "Name", "ID", "Region Name", "Country", "Latitude", "Longitude", "Date Created", "TP", "PPH"};
+    private static final long serialVersionUID = 1L;
+
     private final List<ZoneDTO> zones;
     
     ZoneTableModel(List<ZoneDTO> zones) {
-        this.zones = zones;
+        this.zones = new ArrayList<>(zones);
         zones.sort(Comparator.comparing(ZoneDTO::getName));
     }
     

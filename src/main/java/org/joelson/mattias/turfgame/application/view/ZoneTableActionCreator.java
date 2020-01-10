@@ -83,34 +83,35 @@ public final class ZoneTableActionCreator {
         return filterContainer;
     }
     
-    private static void newFilter(TableRowSorter<TableModel> rowSorter, String filterText) {
-        RowFilter<TableModel, Object> rf = RowFilter.regexFilter(filterText, 0, 1, 2, 3, 4, 5, 6, 7, 8);
-        rowSorter.setRowFilter(rf);
-    }
-    
-    private static class ZoneFilterDocumentListener implements DocumentListener {
+    private static final class ZoneFilterDocumentListener implements DocumentListener {
         
         private final TableRowSorter<TableModel> sorter;
         private final JTextField zoneFilterField;
         
-        public ZoneFilterDocumentListener(TableRowSorter<TableModel> sorter, JTextField zoneFilterField) {
+        private ZoneFilterDocumentListener(TableRowSorter<TableModel> sorter, JTextField zoneFilterField) {
             this.sorter = sorter;
             this.zoneFilterField = zoneFilterField;
         }
         
         @Override
         public void insertUpdate(DocumentEvent e) {
-            newFilter(sorter, zoneFilterField.getText());
+            updateFilter();
         }
         
         @Override
         public void removeUpdate(DocumentEvent e) {
-            newFilter(sorter, zoneFilterField.getText());
+            updateFilter();
         }
         
         @Override
         public void changedUpdate(DocumentEvent e) {
-            newFilter(sorter, zoneFilterField.getText());
+            updateFilter();
+        }
+
+        private void updateFilter() {
+            String filterText = zoneFilterField.getText();
+            RowFilter<TableModel, Object> rf = RowFilter.regexFilter(filterText, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+            sorter.setRowFilter(rf);
         }
     }
 }
