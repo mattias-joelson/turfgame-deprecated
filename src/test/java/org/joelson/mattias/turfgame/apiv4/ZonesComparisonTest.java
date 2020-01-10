@@ -90,11 +90,8 @@ public class ZonesComparisonTest {
     public void zoneCompareAllTest() throws Exception {
 //        Map<String, Zone> oldScores = getZones("zones-all.pre-tomtesv.json");
 //        Map<String, Zone> oldScores = getZones("zones-all.2019-11-18.json");
-//        Map<String, Zone> oldScores = getZones("zones-all.2019-11-19.json");
-//        Map<String, Zone> oldScores = getZones("zones-all.2019-11-20.json");
-//        Map<String, Zone> oldScores = getZones("zones-all.2019-11-21.json");
-        Map<String, Zone> oldScores = getZones("zones-all.2019-11-22.json");
-        Map<String, Zone> newScores = getZones("zones-all.2019-11-23.json");
+        Map<String, Zone> oldScores = getZones("zones-all.2019-11-30.json");
+        Map<String, Zone> newScores = getZones("zones-all.2019-12-01.json");
         
         int[] changed = { 0, 0 };
         
