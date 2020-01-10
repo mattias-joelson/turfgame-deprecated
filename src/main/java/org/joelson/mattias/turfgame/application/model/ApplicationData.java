@@ -15,7 +15,7 @@ public class ApplicationData {
     
     private final PropertyChangeSupport propertyChangeSupport;
 
-    private ZoneData zones;
+    private ZoneCollection zones;
     private Path database;
     private DatabaseEntityManager databaseManager;
     
@@ -67,7 +67,7 @@ public class ApplicationData {
     private void setDatabase(DatabaseEntityManager newDatabaseManager, Path databasePath) {
         databaseManager = newDatabaseManager;
         database = databasePath;
-        zones = new ZoneData(databaseManager);
+        zones = new ZoneCollection(databaseManager);
         propertyChangeSupport.firePropertyChange(HAS_DATABASE, false, true);
     }
     
@@ -85,7 +85,7 @@ public class ApplicationData {
         }
     }
     
-    public ZoneData getZones() {
+    public ZoneCollection getZones() {
         return zones;
     }
     

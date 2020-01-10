@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ZoneDataTest {
+public class ZoneCollectionTest {
     
     private static final String PERSISTANCE_H2 = "turfgame-test-h2";
     
@@ -35,10 +35,10 @@ public class ZoneDataTest {
     
     @Test
     public void zoneDataH2Test() throws Exception {
-        testData(new ZoneData(new DatabaseEntityManager(PERSISTANCE_H2)));
+        testData(new ZoneCollection(new DatabaseEntityManager(PERSISTANCE_H2)));
     }
     
-    private static void testData(ZoneData zoneData) throws Exception {
+    private static void testData(ZoneCollection zoneData) throws Exception {
         zoneData.updateZones(toInstant("2019-11-30T12:12:00.00+01:00"), getZones("zones-all.2019-11-30.json"));
         
         assertEquals(71, zoneData.getZone("FolkeFilbyter").getId());

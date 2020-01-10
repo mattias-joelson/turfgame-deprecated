@@ -8,16 +8,16 @@ import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
 
-public class RegionDataTest {
+public class RegionCollectionTest {
     
     public static final String PERSISTANCE_H2 = "turfgame-test-h2";
     
     @Test
     public void regionDataH2Test() throws Exception {
-        testData(new RegionData(new DatabaseEntityManager(PERSISTANCE_H2)));
+        testData(new RegionCollection(new DatabaseEntityManager(PERSISTANCE_H2)));
     }
     
-    private static void testData(RegionData regionData) throws Exception {
+    private static void testData(RegionCollection regionData) throws Exception {
         regionData.updateRegions(Instant.parse("2019-06-30T22:20:00.00Z"), RegionsTest.getRegions());
         regionData.updateRegions(Instant.parse("2019-12-11T18:42:00.00Z"), RegionsTest.getAllRegions());
         

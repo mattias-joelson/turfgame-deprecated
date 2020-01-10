@@ -18,11 +18,11 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ZoneData {
+public class ZoneCollection {
     
     private final DatabaseEntityManager dbEntity;
     
-    public ZoneData(DatabaseEntityManager dbEntity) {
+    public ZoneCollection(DatabaseEntityManager dbEntity) {
         this.dbEntity = dbEntity;
     }
 
