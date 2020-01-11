@@ -1,10 +1,10 @@
 package org.joelson.mattias.turfgame.application.db;
 
-import org.joelson.mattias.turfgame.application.model.RegionDTO;
-import org.joelson.mattias.turfgame.application.model.RegionHistoryDTO;
-import org.joelson.mattias.turfgame.application.model.ZoneDTO;
-import org.joelson.mattias.turfgame.application.model.ZoneDataHistoryDTO;
-import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryDTO;
+import org.joelson.mattias.turfgame.application.model.RegionData;
+import org.joelson.mattias.turfgame.application.model.RegionHistoryData;
+import org.joelson.mattias.turfgame.application.model.ZoneData;
+import org.joelson.mattias.turfgame.application.model.ZoneHistoryData;
+import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryData;
 
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -67,166 +67,166 @@ public class DatabaseEntityManager {
         return entityManagerFactory.createEntityManager();
     }
     
-    public RegionDTO getRegion(String name) {
+    public RegionData getRegion(String name) {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT r FROM RegionEntity r WHERE r.name = :name"); //NON-NLS
         query.setParameter("name", name); //NON-NLS
-        RegionDTO region = ((RegionEntity) query.getSingleResult()).toDTO();
+        RegionData region = ((RegionEntity) query.getSingleResult()).toData();
         entityManager.close();
         return region;
     }
 
-    public List<RegionDTO> getRegions() {
+    public List<RegionData> getRegions() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT r from RegionEntity r"); //NON-NLS
         @SuppressWarnings("unchecked")
-        List<RegionDTO> regions = ((Stream<RegionEntity>) query.getResultStream())
-                .map(RegionEntity::toDTO)
+        List<RegionData> regions = ((Stream<RegionEntity>) query.getResultStream())
+                .map(RegionEntity::toData)
                 .collect(Collectors.toList());
         entityManager.close();
         return regions;
     }
     
-    public List<RegionHistoryDTO> getRegionHistory() {
+    public List<RegionHistoryData> getRegionHistory() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT r FROM RegionHistoryEntity r"); //NON-NLS
         @SuppressWarnings("unchecked")
-        List<RegionHistoryDTO> regionHistory = ((Stream<RegionHistoryEntity>) query.getResultStream())
-                .map(RegionHistoryEntity::toDTO)
+        List<RegionHistoryData> regionHistory = ((Stream<RegionHistoryEntity>) query.getResultStream())
+                .map(RegionHistoryEntity::toData)
                 .collect(Collectors.toList());
         entityManager.close();
         return regionHistory;
     }
     
-    public void updateRegions(Instant from, Iterable<RegionDTO> newRegions, Iterable<RegionDTO> changedRegions) {
+    public void updateRegions(Instant from, Iterable<RegionData> newRegions, Iterable<RegionData> changedRegions) {
         EntityManager entityManager = createEntityManager();
         entityManager.getTransaction().begin();
-        newRegions.forEach(regionDTO -> createRegion(entityManager, from, regionDTO));
-        changedRegions.forEach(regionDTO -> updateRegion(entityManager, from, regionDTO));
+        newRegions.forEach(regionData -> createRegion(entityManager, from, regionData));
+        changedRegions.forEach(regionData -> updateRegion(entityManager, from, regionData));
         entityManager.getTransaction().commit();
         entityManager.close();
     }
     
-    private static void createRegion(EntityManager entityManager, Instant from, RegionDTO regionDTO) {
-        RegionEntity region = RegionEntity.build(regionDTO);
+    private static void createRegion(EntityManager entityManager, Instant from, RegionData regionData) {
+        RegionEntity region = RegionEntity.build(regionData.getId(), regionData.getName(), regionData.getCountry());
         entityManager.persist(region);
-        persistRegionHistory(entityManager, region, from, regionDTO);
+        persistRegionHistory(entityManager, region, from, regionData);
     }
     
-    private static void updateRegion(EntityManager entityManager, Instant from, RegionDTO regionDTO) {
-        RegionEntity region = entityManager.find(RegionEntity.class, regionDTO.getId());
-        region.setName(regionDTO.getName());
-        region.setCountry(regionDTO.getCountry());
+    private static void updateRegion(EntityManager entityManager, Instant from, RegionData regionData) {
+        RegionEntity region = entityManager.find(RegionEntity.class, regionData.getId());
+        region.setName(regionData.getName());
+        region.setCountry(regionData.getCountry());
         entityManager.persist(region);
-        persistRegionHistory(entityManager, region, from, regionDTO);
+        persistRegionHistory(entityManager, region, from, regionData);
     }
     
-    private static void persistRegionHistory(EntityManager entityManager, RegionEntity region, Instant from, RegionDTO regionDTO) {
-        RegionHistoryEntity regionHistory = RegionHistoryEntity.build(region, from, regionDTO.getName(), regionDTO.getCountry());
+    private static void persistRegionHistory(EntityManager entityManager, RegionEntity region, Instant from, RegionData regionData) {
+        RegionHistoryEntity regionHistory = RegionHistoryEntity.build(region, from, regionData.getName(), regionData.getCountry());
         entityManager.persist(regionHistory);
     }
     
-    public ZoneDTO getZone(String name) {
+    public ZoneData getZone(String name) {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT z FROM ZoneEntity z WHERE z.name = :name"); //NON-NLS
         query.setParameter("name", name); //NON-NLS
-        ZoneDTO zone = ((ZoneEntity) query.getSingleResult()).toDTO();
+        ZoneData zone = ((ZoneEntity) query.getSingleResult()).toData();
         entityManager.close();
         return zone;
     }
     
-    public List<ZoneDTO> getZones() {
+    public List<ZoneData> getZones() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT z FROM ZoneEntity z"); //NON-NLS
         @SuppressWarnings("unchecked")
-        List<ZoneDTO> zones = ((Stream<ZoneEntity>) query.getResultStream())
-                .map(ZoneEntity::toDTO)
+        List<ZoneData> zones = ((Stream<ZoneEntity>) query.getResultStream())
+                .map(ZoneEntity::toData)
                 .collect(Collectors.toList());
         entityManager.close();
         return zones;
     }
     
-    public List<ZoneDataHistoryDTO> getZoneDataHistory() {
+    public List<ZoneHistoryData> getZoneDataHistory() {
         EntityManager entityManager = createEntityManager();
-        Query query = entityManager.createQuery("SELECT z FROM ZoneDataHistoryEntity z"); //NON-NLS
+        Query query = entityManager.createQuery("SELECT z FROM ZoneHistoryEntity z"); //NON-NLS
         @SuppressWarnings("unchecked")
-        List<ZoneDataHistoryDTO> zones = ((Stream<ZoneDataHistoryEntity>) query.getResultStream())
-                .map(ZoneDataHistoryEntity::toDTO)
+        List<ZoneHistoryData> zones = ((Stream<ZoneHistoryEntity>) query.getResultStream())
+                .map(ZoneHistoryEntity::toData)
                 .collect(Collectors.toList());
         entityManager.close();
         return zones;
     }
     
-    public List<ZonePointsHistoryDTO> getZonePointsHistory() {
+    public List<ZonePointsHistoryData> getZonePointsHistory() {
         EntityManager entityManager = createEntityManager();
         Query query = entityManager.createQuery("SELECT z FROM ZonePointsHistoryEntity z"); //NON-NLS
         @SuppressWarnings("unchecked")
-        List<ZonePointsHistoryDTO> zones = ((Stream<ZonePointsHistoryEntity>) query.getResultStream())
-                .map(ZonePointsHistoryEntity::toDTO)
+        List<ZonePointsHistoryData> zones = ((Stream<ZonePointsHistoryEntity>) query.getResultStream())
+                .map(ZonePointsHistoryEntity::toData)
                 .collect(Collectors.toList());
         entityManager.close();
         return zones;
     }
     
-    public void updateZones(Instant from, Iterable<ZoneDTO> newZones, Iterable<ZoneDTO> changedZones) {
+    public void updateZones(Instant from, Iterable<ZoneData> newZones, Iterable<ZoneData> changedZones) {
         EntityManager entityManager = createEntityManager();
         entityManager.getTransaction().begin();
-        newZones.forEach(zoneDTO -> createZone(entityManager, from, zoneDTO));
-        changedZones.forEach(zoneDTO -> updateZone(entityManager, from, zoneDTO));
+        newZones.forEach(zoneData -> createZone(entityManager, from, zoneData));
+        changedZones.forEach(zoneData -> updateZone(entityManager, from, zoneData));
         entityManager.getTransaction().commit();
         entityManager.close();
     }
     
-    private static void createZone(EntityManager entityManager, Instant from, ZoneDTO zoneDTO) {
-        RegionEntity region = entityManager.find(RegionEntity.class, zoneDTO.getRegion().getId());
-        ZoneEntity zone = ZoneEntity.build(zoneDTO.getId(), zoneDTO.getName(), region, zoneDTO.getDateCreated(), zoneDTO.getLatitude(), zoneDTO.getLongitude(),
-                zoneDTO.getTp(), zoneDTO.getPph());
+    private static void createZone(EntityManager entityManager, Instant from, ZoneData zoneData) {
+        RegionEntity region = entityManager.find(RegionEntity.class, zoneData.getRegion().getId());
+        ZoneEntity zone = ZoneEntity.build(zoneData.getId(), zoneData.getName(), region, zoneData.getDateCreated(), zoneData.getLatitude(),
+                zoneData.getLongitude(), zoneData.getTp(), zoneData.getPph());
         entityManager.persist(zone);
-        persistZoneDataHistory(entityManager, zone, from, zoneDTO);
-        persistZonePointsHistory(entityManager, zone, from, zoneDTO);
+        persistZoneDataHistory(entityManager, zone, from, zoneData);
+        persistZonePointsHistory(entityManager, zone, from, zoneData);
     }
     
-    private static void updateZone(EntityManager entityManager, Instant from, ZoneDTO zoneDTO) {
-        ZoneEntity zone = entityManager.find(ZoneEntity.class, zoneDTO.getId());
-        RegionEntity region = entityManager.find(RegionEntity.class, zoneDTO.getRegion().getId());
-        if (hasChangedData(zone, zoneDTO)) {
-            persistZoneDataHistory(entityManager, zone, from, zoneDTO);
+    private static void updateZone(EntityManager entityManager, Instant from, ZoneData zoneData) {
+        ZoneEntity zone = entityManager.find(ZoneEntity.class, zoneData.getId());
+        RegionEntity region = entityManager.find(RegionEntity.class, zoneData.getRegion().getId());
+        if (hasChangedData(zone, zoneData)) {
+            persistZoneDataHistory(entityManager, zone, from, zoneData);
         }
-        if (hasChangedPoints(zone, zoneDTO)) {
-            persistZonePointsHistory(entityManager, zone, from, zoneDTO);
+        if (hasChangedPoints(zone, zoneData)) {
+            persistZonePointsHistory(entityManager, zone, from, zoneData);
         }
-        zone.setName(zoneDTO.getName());
+        zone.setName(zoneData.getName());
         zone.setRegion(region);
-        zone.setDateCreated(zoneDTO.getDateCreated());
-        zone.setLatitude(zoneDTO.getLatitude());
-        zone.setLongitude(zoneDTO.getLongitude());
-        zone.setTp(zoneDTO.getTp());
-        zone.setPph(zoneDTO.getPph());
+        zone.setDateCreated(zoneData.getDateCreated());
+        zone.setLatitude(zoneData.getLatitude());
+        zone.setLongitude(zoneData.getLongitude());
+        zone.setTp(zoneData.getTp());
+        zone.setPph(zoneData.getPph());
         entityManager.persist(zone);
     }
     
-    private static boolean hasChangedData(ZoneEntity storedZone, ZoneDTO zoneDTO) {
-        return !Objects.equals(storedZone.getName(), zoneDTO.getName())
-                || storedZone.getRegion().getId() != zoneDTO.getRegion().getId()
-                || !Objects.equals(storedZone.getDateCreated(), zoneDTO.getDateCreated())
-                || storedZone.getLatitude() != zoneDTO.getLatitude()
-                || storedZone.getLongitude() != zoneDTO.getLongitude();
+    private static boolean hasChangedData(ZoneEntity storedZone, ZoneData zoneData) {
+        return !Objects.equals(storedZone.getName(), zoneData.getName())
+                || storedZone.getRegion().getId() != zoneData.getRegion().getId()
+                || !Objects.equals(storedZone.getDateCreated(), zoneData.getDateCreated())
+                || storedZone.getLatitude() != zoneData.getLatitude()
+                || storedZone.getLongitude() != zoneData.getLongitude();
     }
     
-    private static boolean hasChangedPoints(ZoneEntity storedZone, ZoneDTO zoneDTO) {
-        return storedZone.getTp() != zoneDTO.getTp()
-                || storedZone.getPph() != zoneDTO.getPph();
+    private static boolean hasChangedPoints(ZoneEntity storedZone, ZoneData zoneData) {
+        return storedZone.getTp() != zoneData.getTp()
+                || storedZone.getPph() != zoneData.getPph();
     }
     
-    private static void persistZoneDataHistory(EntityManager entityManager, ZoneEntity zone, Instant from, ZoneDTO zoneDTO) {
-        RegionEntity region = entityManager.find(RegionEntity.class, zoneDTO.getRegion().getId());
-        ZoneDataHistoryEntity zoneDataHistory = ZoneDataHistoryEntity.build(zone, from, zoneDTO.getName(), region, zoneDTO.getDateCreated(),
-                zoneDTO.getLatitude(), zoneDTO.getLongitude());
-        entityManager.persist(zoneDataHistory);
+    private static void persistZoneDataHistory(EntityManager entityManager, ZoneEntity zone, Instant from, ZoneData zoneData) {
+        RegionEntity region = entityManager.find(RegionEntity.class, zoneData.getRegion().getId());
+        ZoneHistoryEntity zoneHistory = ZoneHistoryEntity.build(zone, from, zoneData.getName(), region, zoneData.getDateCreated(),
+                zoneData.getLatitude(), zoneData.getLongitude());
+        entityManager.persist(zoneHistory);
     }
 
-    private static void persistZonePointsHistory(EntityManager entityManager, ZoneEntity zone, Instant from, ZoneDTO zoneDTO) {
-        ZonePointsHistoryEntity zonePointsHistory = ZonePointsHistoryEntity.build(zone, from, zoneDTO.getTp(), zoneDTO.getPph());
+    private static void persistZonePointsHistory(EntityManager entityManager, ZoneEntity zone, Instant from, ZoneData zoneData) {
+        ZonePointsHistoryEntity zonePointsHistory = ZonePointsHistoryEntity.build(zone, from, zoneData.getTp(), zoneData.getPph());
         entityManager.persist(zonePointsHistory);
     }
     

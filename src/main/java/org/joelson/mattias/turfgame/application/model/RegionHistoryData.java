@@ -1,23 +1,25 @@
 package org.joelson.mattias.turfgame.application.model;
 
-import com.sun.istack.NotNull;
 import org.joelson.mattias.turfgame.util.StringUtils;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-public class RegionHistoryDTO {
+public class RegionHistoryData implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final int id;
     private final Instant from;
     private final String name;
     private final String country;
     
-    public RegionHistoryDTO(int id, Instant from, String name, String country) {
+    public RegionHistoryData(int id, Instant from, String name, String country) {
         this.id = id;
-        this.from = Objects.requireNonNull(from, "From can not be null");
-        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
-        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty");
+        this.from = Objects.requireNonNull(from, "From can not be null"); //NON-NLS
+        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
+        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty"); //NON-NLS
     }
     
     public int getId() {
@@ -38,8 +40,8 @@ public class RegionHistoryDTO {
     
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof RegionHistoryDTO) {
-            RegionHistoryDTO that = (RegionHistoryDTO) obj;
+        if (obj instanceof RegionHistoryData) {
+            RegionHistoryData that = (RegionHistoryData) obj;
             return id == that.id && Objects.equals(from, that.from) && Objects.equals(name, that.name) && Objects.equals(country, that.country);
         }
         return super.equals(obj);
@@ -52,6 +54,6 @@ public class RegionHistoryDTO {
     
     @Override
     public String toString() {
-        return String.format("RegionHistoryDTO{id %d, from %s, name %s, country %s", id, from, name, country);
+        return String.format("RegionHistoryData{id %d, from %s, name %s, country %s", id, from, name, country); //NON-NLS
     }
 }

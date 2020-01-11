@@ -2,7 +2,7 @@ package org.joelson.mattias.turfgame.application.db;
 
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
-import org.joelson.mattias.turfgame.application.model.RegionDTO;
+import org.joelson.mattias.turfgame.application.model.RegionData;
 import org.joelson.mattias.turfgame.util.StringUtils;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "regions")
+@Table(name = "regions") //NON-NLS
 public class RegionEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -46,7 +46,7 @@ public class RegionEntity implements Serializable {
     }
     
     public void setName(@NotNull String name) {
-        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
+        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
     }
     
     @Nullable
@@ -55,7 +55,7 @@ public class RegionEntity implements Serializable {
     }
     
     public void setCountry(@Nullable String country) {
-        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty");
+        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty"); //NON-NLS
     }
     
     @Override
@@ -74,12 +74,11 @@ public class RegionEntity implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("RegionEntity[id %d, name %s, country %s]",
-                id, name, country);
+        return String.format("RegionEntity[id %d, name %s, country %s]", id, name, country); //NON-NLS
     }
     
-    public RegionDTO toDTO() {
-        return new RegionDTO(id, name, country);
+    public RegionData toData() {
+        return new RegionData(id, name, country);
     }
     
     static RegionEntity build(int id, @NotNull String name, @Nullable String country) {
@@ -88,9 +87,5 @@ public class RegionEntity implements Serializable {
         region.setName(name);
         region.setCountry(country);
         return region;
-    }
-    
-    static RegionEntity build(RegionDTO regionDTO) {
-        return build(regionDTO.getId(), regionDTO.getName(), regionDTO.getCountry());
     }
 }

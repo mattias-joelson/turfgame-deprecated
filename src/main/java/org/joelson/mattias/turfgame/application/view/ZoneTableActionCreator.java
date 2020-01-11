@@ -1,7 +1,7 @@
 package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.ZoneDTO;
+import org.joelson.mattias.turfgame.application.model.ZoneData;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -49,7 +49,7 @@ public final class ZoneTableActionCreator {
         return tableContainer;
     }
     
-    private static JTable createZoneTable(List<ZoneDTO> zones) {
+    private static JTable createZoneTable(List<ZoneData> zones) {
         JTable table = new JTable(new ZoneTableModel(zones));
         table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);

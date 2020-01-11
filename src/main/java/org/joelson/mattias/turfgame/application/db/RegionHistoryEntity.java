@@ -2,7 +2,7 @@ package org.joelson.mattias.turfgame.application.db;
 
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
-import org.joelson.mattias.turfgame.application.model.RegionHistoryDTO;
+import org.joelson.mattias.turfgame.application.model.RegionHistoryData;
 import org.joelson.mattias.turfgame.util.StringUtils;
 
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "region_history")
+@Table(name = "region_history") //NON-NLS
 public class RegionHistoryEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -27,7 +27,7 @@ public class RegionHistoryEntity implements Serializable {
 
     @NotNull
     @Id
-    @Column(name = "from_timestamp", nullable = false)
+    @Column(name = "from_timestamp", nullable = false) //NON-NLS
     private Instant from;
 
     @NotNull
@@ -46,7 +46,7 @@ public class RegionHistoryEntity implements Serializable {
     }
     
     public void setRegion(@NotNull RegionEntity region) {
-        this.region = Objects.requireNonNull(region, "Region can not be null");
+        this.region = Objects.requireNonNull(region, "Region can not be null"); //NON-NLS
     }
     
     @NotNull
@@ -55,7 +55,7 @@ public class RegionHistoryEntity implements Serializable {
     }
     
     public void setFrom(@NotNull Instant from) {
-        this.from = Objects.requireNonNull(from, "From can not be null");
+        this.from = Objects.requireNonNull(from, "From can not be null"); //NON-NLS
     }
     
     @NotNull
@@ -64,7 +64,7 @@ public class RegionHistoryEntity implements Serializable {
     }
     
     public void setName(@NotNull String name) {
-        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
+        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
     }
     
     @Nullable
@@ -73,14 +73,15 @@ public class RegionHistoryEntity implements Serializable {
     }
     
     public void setCountry(@Nullable String country) {
-        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty");
+        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty"); //NON-NLS
     }
     
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof RegionHistoryEntity) {
             RegionHistoryEntity that = (RegionHistoryEntity) obj;
-            return Objects.equals(region, that.region) && Objects.equals(from, that.from) && Objects.equals(name, that.name) && Objects.equals(country, that.country);
+            return Objects.equals(region, that.region) && Objects.equals(from, that.from) && Objects.equals(name, that.name)
+                    && Objects.equals(country, that.country);
         }
         return super.equals(obj);
     }
@@ -92,12 +93,11 @@ public class RegionHistoryEntity implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("RegionEntity[region %s, from %s, name %s, country %s]",
-                region, from, name, country);
+        return String.format("RegionHistoryEntity[region %s, from %s, name %s, country %s]", region, from, name, country); //NON-NLS
     }
     
-    public RegionHistoryDTO toDTO() {
-        return new RegionHistoryDTO(region.getId(), from, name, country);
+    public RegionHistoryData toData() {
+        return new RegionHistoryData(region.getId(), from, name, country);
     }
     
     static RegionHistoryEntity build(@NotNull RegionEntity region, @NotNull Instant from, @NotNull String name, @Nullable String country) {

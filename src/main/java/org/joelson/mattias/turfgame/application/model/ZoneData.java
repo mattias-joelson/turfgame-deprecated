@@ -1,20 +1,23 @@
 package org.joelson.mattias.turfgame.application.model;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-public class ZoneDTO {
+public class ZoneData implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final int id;
     private final String name;
-    private final RegionDTO region;
+    private final RegionData region;
     private final Instant dateCreated;
     private final double latitude;
     private final double longitude;
     private final int tp;
     private final int pph;
     
-    public ZoneDTO(int id, String name, RegionDTO region, Instant dateCreated, double latitude, double longitude, int tp, int pph) {
+    public ZoneData(int id, String name, RegionData region, Instant dateCreated, double latitude, double longitude, int tp, int pph) {
         this.id = id;
         this.name = name;
         this.region = region;
@@ -33,7 +36,7 @@ public class ZoneDTO {
         return name;
     }
     
-    public RegionDTO getRegion() {
+    public RegionData getRegion() {
         return region;
     }
     
@@ -59,8 +62,8 @@ public class ZoneDTO {
     
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ZoneDTO) {
-            ZoneDTO that = (ZoneDTO) obj;
+        if (obj instanceof ZoneData) {
+            ZoneData that = (ZoneData) obj;
             return id == that.id && Objects.equals(name, that.name) && Objects.equals(region, that.region) && Objects.equals(dateCreated, that.dateCreated)
                     && latitude == that.latitude && longitude == that.longitude && tp == that.tp && pph == that.pph;
         }
@@ -74,7 +77,7 @@ public class ZoneDTO {
     
     @Override
     public String toString() {
-        return String.format("ZoneDTO[id %d, name %s, region %s, dateCreated %s, latitude %f, longitude %f, tp %d, pph %d]",
+        return String.format("ZoneData[id %d, name %s, region %s, dateCreated %s, latitude %f, longitude %f, tp %d, pph %d]", //NON-NLS
                 id, name, region, dateCreated, latitude, longitude, tp, pph);
     }
 }

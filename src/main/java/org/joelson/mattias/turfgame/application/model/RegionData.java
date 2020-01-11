@@ -2,18 +2,21 @@ package org.joelson.mattias.turfgame.application.model;
 
 import org.joelson.mattias.turfgame.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class RegionDTO {
+public class RegionData implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final int id;
     private final String name;
     private final String country;
     
-    public RegionDTO(int id, String name, String country) {
+    public RegionData(int id, String name, String country) {
         this.id = id;
-        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
-        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty");
+        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
+        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty"); //NON-NLS
     }
     
     public int getId() {
@@ -30,8 +33,8 @@ public class RegionDTO {
     
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof RegionDTO) {
-            RegionDTO that = (RegionDTO) obj;
+        if (obj instanceof RegionData) {
+            RegionData that = (RegionData) obj;
             return id == that.id && Objects.equals(name, that.name) && Objects.equals(country, that.country);
         }
         return super.equals(obj);
@@ -44,6 +47,6 @@ public class RegionDTO {
     
     @Override
     public String toString() {
-        return String.format("RegionDTO{id %d, name %s, country %s", id, name, country);
+        return String.format("RegionData{id %d, name %s, country %s", id, name, country); //NON-NLS
     }
 }

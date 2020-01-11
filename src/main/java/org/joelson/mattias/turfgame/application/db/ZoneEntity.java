@@ -1,8 +1,7 @@
 package org.joelson.mattias.turfgame.application.db;
 
 import com.sun.istack.NotNull;
-import org.joelson.mattias.turfgame.application.model.RegionDTO;
-import org.joelson.mattias.turfgame.application.model.ZoneDTO;
+import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.util.StringUtils;
 
 import java.io.Serializable;
@@ -15,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "zones")
+@Table(name = "zones") //NON-NLS
 public class ZoneEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -65,7 +64,7 @@ public class ZoneEntity implements Serializable {
     }
     
     public void setName(@NotNull String name) {
-        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
+        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
     }
     
     @NotNull
@@ -74,7 +73,7 @@ public class ZoneEntity implements Serializable {
     }
     
     public void setRegion(RegionEntity region) {
-        this.region = Objects.requireNonNull(region, "Region can not be null");
+        this.region = Objects.requireNonNull(region, "Region can not be null"); //NON-NLS
     }
     
     @NotNull
@@ -83,7 +82,7 @@ public class ZoneEntity implements Serializable {
     }
     
     public void setDateCreated(@NotNull Instant dateCreated) {
-        this.dateCreated = Objects.requireNonNull(dateCreated, "Date created can not be null");
+        this.dateCreated = Objects.requireNonNull(dateCreated, "Date created can not be null"); //NON-NLS
     }
     
     public double getLatitude() {
@@ -135,12 +134,12 @@ public class ZoneEntity implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("ZoneEntity[id %d, name %s, region %s, dateCreated %s, latitude %f, longitude %f, tp %d, pph %d]",
+        return String.format("ZoneEntity[id %d, name %s, region %s, dateCreated %s, latitude %f, longitude %f, tp %d, pph %d]", //NON-NLS
                 id, name, region, dateCreated, latitude, longitude, tp, pph);
     }
     
-    public ZoneDTO toDTO() {
-        return new ZoneDTO(id, name, region.toDTO(), dateCreated, latitude, longitude, tp, pph);
+    public ZoneData toData() {
+        return new ZoneData(id, name, region.toData(), dateCreated, latitude, longitude, tp, pph);
     }
     
     static ZoneEntity build(int id, @NotNull String name, @NotNull RegionEntity region, @NotNull Instant dateCreated, double latitude, double longitude,

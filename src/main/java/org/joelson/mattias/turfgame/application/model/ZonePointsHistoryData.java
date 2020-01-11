@@ -1,16 +1,19 @@
 package org.joelson.mattias.turfgame.application.model;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-public class ZonePointsHistoryDTO {
+public class ZonePointsHistoryData implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final int id;
     private final Instant from;
     private final int tp;
     private final int pph;
     
-    public ZonePointsHistoryDTO(int id, Instant from, int tp, int pph) {
+    public ZonePointsHistoryData(int id, Instant from, int tp, int pph) {
         this.id = id;
         this.from = from;
         this.tp = tp;
@@ -35,8 +38,8 @@ public class ZonePointsHistoryDTO {
     
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ZonePointsHistoryDTO) {
-            ZonePointsHistoryDTO that = (ZonePointsHistoryDTO) obj;
+        if (obj instanceof ZonePointsHistoryData) {
+            ZonePointsHistoryData that = (ZonePointsHistoryData) obj;
             return id == that.id && Objects.equals(from, that.from) && tp == that.tp && pph == that.pph;
         }
         return super.equals(obj);
@@ -49,7 +52,6 @@ public class ZonePointsHistoryDTO {
     
     @Override
     public String toString() {
-        return String.format("ZonePointsHistoryDTO[id %d, from %s, tp %d, pph %d]",
-                id, from, tp, pph);
+        return String.format("ZonePointsHistoryData[id %d, from %s, tp %d, pph %d]", id, from, tp, pph);  //NON-NLS
     }
 }
