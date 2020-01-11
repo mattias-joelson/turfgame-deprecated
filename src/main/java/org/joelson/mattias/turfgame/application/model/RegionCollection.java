@@ -19,25 +19,25 @@ public class RegionCollection {
         this.dbEntity = dbEntity;
     }
     
-    public RegionDTO getRegion(String name) {
+    public RegionData getRegion(String name) {
         return dbEntity.getRegion(name);
     }
 
-    public List<RegionDTO> getRegions() {
+    public List<RegionData> getRegions() {
         return dbEntity.getRegions();
     }
     
-    public List<RegionHistoryDTO> getRegionHistory() {
+    public List<RegionHistoryData> getRegionHistory() {
         return dbEntity.getRegionHistory();
     }
 
     public void updateRegions(Instant from, Iterable<Region> regions) {
-        List<RegionDTO> storedRegions = dbEntity.getRegions();
-        Map<Integer, RegionDTO> storedRegionsMap = storedRegions.stream().collect(Collectors.toMap(RegionDTO::getId, Function.identity()));
-        List<RegionDTO> newRegions = new ArrayList<>();
-        List<RegionDTO> changedRegions = new ArrayList<>();
+        List<RegionData> storedRegions = dbEntity.getRegions();
+        Map<Integer, RegionData> storedRegionsMap = storedRegions.stream().collect(Collectors.toMap(RegionData::getId, Function.identity()));
+        List<RegionData> newRegions = new ArrayList<>();
+        List<RegionData> changedRegions = new ArrayList<>();
         for (Region region : regions) {
-            RegionDTO storedRegion = storedRegionsMap.get(region.getId());
+            RegionData storedRegion = storedRegionsMap.get(region.getId());
             if (storedRegion == null) {
                 newRegions.add(toDTO(region));
             } else if (hasChanged(region, storedRegion)) {
@@ -47,12 +47,12 @@ public class RegionCollection {
         dbEntity.updateRegions(from, newRegions, changedRegions);
     }
     
-    private static boolean hasChanged(Region region, RegionDTO storedRegion) {
+    private static boolean hasChanged(Region region, RegionData storedRegion) {
         return !Objects.equals(region.getName(), storedRegion.getName())
                 || !Objects.equals(region.getCountry(), storedRegion.getCountry());
     }
     
-    private static RegionDTO toDTO(Region region) {
-        return new RegionDTO(region.getId(), region.getName(), region.getCountry());
+    private static RegionData toDTO(Region region) {
+        return new RegionData(region.getId(), region.getName(), region.getCountry());
     }
 }

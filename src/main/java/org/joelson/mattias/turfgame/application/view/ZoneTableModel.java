@@ -1,6 +1,6 @@
 package org.joelson.mattias.turfgame.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ZoneDTO;
+import org.joelson.mattias.turfgame.application.model.ZoneData;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,14 +9,14 @@ import javax.swing.table.AbstractTableModel;
 
 class ZoneTableModel extends AbstractTableModel {
     
-    private static final String[] COLUMN_NAMES = { "Name", "ID", "Region Name", "Country", "Latitude", "Longitude", "Date Created", "TP", "PPH"};
+    private static final String[] COLUMN_NAMES = { "Name", "ID", "Region Name", "Country", "Latitude", "Longitude", "Date Created", "TP", "PPH" }; //NON-NLS
     private static final long serialVersionUID = 1L;
 
-    private final List<ZoneDTO> zones;
+    private final List<ZoneData> zones;
     
-    ZoneTableModel(List<ZoneDTO> zones) {
+    ZoneTableModel(List<ZoneData> zones) {
         this.zones = new ArrayList<>(zones);
-        zones.sort(Comparator.comparing(ZoneDTO::getName));
+        zones.sort(Comparator.comparing(ZoneData::getName));
     }
     
     @Override
@@ -31,7 +31,7 @@ class ZoneTableModel extends AbstractTableModel {
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ZoneDTO zone = zones.get(rowIndex);
+        ZoneData zone = zones.get(rowIndex);
         switch (columnIndex) {
         case 0:
             return zone.getName();

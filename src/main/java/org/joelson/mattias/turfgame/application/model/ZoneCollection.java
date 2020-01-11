@@ -26,29 +26,29 @@ public class ZoneCollection {
         this.dbEntity = dbEntity;
     }
 
-    public ZoneDTO getZone(String name) {
+    public ZoneData getZone(String name) {
         return dbEntity.getZone(name);
     }
     
-    public List<ZoneDTO> getZones() {
+    public List<ZoneData> getZones() {
         return dbEntity.getZones();
     }
     
-    public List<ZoneDataHistoryDTO> getZoneDataHistory() {
+    public List<ZoneHistoryData> getZoneDataHistory() {
         return dbEntity.getZoneDataHistory();
     }
 
-    public List<ZonePointsHistoryDTO> getZonePointsHistory() {
+    public List<ZonePointsHistoryData> getZonePointsHistory() {
         return dbEntity.getZonePointsHistory();
     }
     
     private void updateRegions(Instant from, List<Region> regions) {
-        List<RegionDTO> storedRegions = dbEntity.getRegions();
-        Map<Integer, RegionDTO> storedRegionsMap = storedRegions.stream().collect(Collectors.toMap(RegionDTO::getId, Function.identity()));
-        List<RegionDTO> newRegions = new ArrayList<>();
-        List<RegionDTO> changedRegions = new ArrayList<>();
+        List<RegionData> storedRegions = dbEntity.getRegions();
+        Map<Integer, RegionData> storedRegionsMap = storedRegions.stream().collect(Collectors.toMap(RegionData::getId, Function.identity()));
+        List<RegionData> newRegions = new ArrayList<>();
+        List<RegionData> changedRegions = new ArrayList<>();
         for (Region region : regions) {
-            RegionDTO storedRegion = storedRegionsMap.get(region.getId());
+            RegionData storedRegion = storedRegionsMap.get(region.getId());
             if (storedRegion == null) {
                 newRegions.add(toDTO(region));
             } else if (!isEqual(region, storedRegion)) {
@@ -58,28 +58,28 @@ public class ZoneCollection {
         dbEntity.updateRegions(from, newRegions, changedRegions);
     }
     
-    private static boolean isEqual(Region region, RegionDTO storedRegion) {
+    private static boolean isEqual(Region region, RegionData storedRegion) {
         return Objects.equals(region.getName(), storedRegion.getName())
                 && Objects.equals(region.getCountry(), storedRegion.getCountry());
     }
     
-    private static RegionDTO toDTO(Region region) {
-        return new RegionDTO(region.getId(), region.getName(), region.getCountry());
+    private static RegionData toDTO(Region region) {
+        return new RegionData(region.getId(), region.getName(), region.getCountry());
     }
 
     public void updateZones(Instant from, List<Zone> zones) {
         List<Region> regions = extractRegions(zones);
         updateRegions(from, regions);
-        List<ZoneDTO> storedZones = dbEntity.getZones();
-        Map<Integer, ZoneDTO> storedZonesMap = storedZones.stream().collect(Collectors.toMap(ZoneDTO::getId, Function.identity()));
-        List<ZoneDTO> newZones = new ArrayList<>();
-        List<ZoneDTO> changedZones = new ArrayList<>();
+        List<ZoneData> storedZones = dbEntity.getZones();
+        Map<Integer, ZoneData> storedZonesMap = storedZones.stream().collect(Collectors.toMap(ZoneData::getId, Function.identity()));
+        List<ZoneData> newZones = new ArrayList<>();
+        List<ZoneData> changedZones = new ArrayList<>();
         for (Zone zone : zones) {
             if (zone.getDateCreated() == null) {
                 System.err.println("Skipping zone " + zone.getName() + " - no date created");
                 continue;
             }
-            ZoneDTO storedZone = storedZonesMap.get(zone.getId());
+            ZoneData storedZone = storedZonesMap.get(zone.getId());
             if (storedZone == null) {
                 newZones.add(toDTO(zone));
             } else if (!isEqual(zone, storedZone)) {
@@ -95,7 +95,7 @@ public class ZoneCollection {
         return new ArrayList<>(regions.values());
     }
     
-    private static boolean isEqual(Zone zone, ZoneDTO storedZone) {
+    private static boolean isEqual(Zone zone, ZoneData storedZone) {
         return Objects.equals(zone.getName(), storedZone.getName())
                 && isEqual(zone.getRegion(), storedZone.getRegion())
                 && Objects.equals(toInstant(zone.getDateCreated()), storedZone.getDateCreated())
@@ -112,8 +112,8 @@ public class ZoneCollection {
         return Instant.from(zonedDateTime);
     }
     
-    private static ZoneDTO toDTO(Zone zone) {
-        return new ZoneDTO(zone.getId(), zone.getName(), toDTO(zone.getRegion()), toInstant(zone.getDateCreated()),
+    private static ZoneData toDTO(Zone zone) {
+        return new ZoneData(zone.getId(), zone.getName(), toDTO(zone.getRegion()), toInstant(zone.getDateCreated()),
                 zone.getLatitude(), zone.getLongitude(), zone.getTakeoverPoints(), zone.getPointsPerHour());
     }
     

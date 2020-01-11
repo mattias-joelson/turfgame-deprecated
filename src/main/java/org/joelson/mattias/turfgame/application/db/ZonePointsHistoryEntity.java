@@ -1,8 +1,7 @@
 package org.joelson.mattias.turfgame.application.db;
 
 import com.sun.istack.NotNull;
-import org.joelson.mattias.turfgame.application.model.ZoneDataHistoryDTO;
-import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryDTO;
+import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryData;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -14,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "zone_point_history")
+@Table(name = "zone_point_history") //NON-NLS
 public class ZonePointsHistoryEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -26,7 +25,7 @@ public class ZonePointsHistoryEntity implements Serializable {
 
     @NotNull
     @Id
-    @Column(name = "from_timestamp", nullable = false)
+    @Column(name = "from_timestamp", nullable = false) //NON-NLS
     private Instant from;
 
     @Column(nullable = false)
@@ -44,7 +43,7 @@ public class ZonePointsHistoryEntity implements Serializable {
     }
     
     public void setZone(@NotNull ZoneEntity zone) {
-        this.zone = Objects.requireNonNull(zone, "Zome can not be null");
+        this.zone = Objects.requireNonNull(zone, "Zome can not be null"); //NON-NLS
     }
     
     @NotNull
@@ -53,7 +52,7 @@ public class ZonePointsHistoryEntity implements Serializable {
     }
     
     public void setFrom(@NotNull Instant from) {
-        this.from = Objects.requireNonNull(from, "From can not be null");
+        this.from = Objects.requireNonNull(from, "From can not be null"); //NON-NLS
     }
     
     public int getTp() {
@@ -88,11 +87,11 @@ public class ZonePointsHistoryEntity implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("ZonePointsHistoryEntity[zone %s, from %s, tp %d, pph %d]", zone, from, tp, pph);
+        return String.format("ZonePointsHistoryEntity[zone %s, from %s, tp %d, pph %d]", zone, from, tp, pph); //NON-NLS
     }
     
-    public ZonePointsHistoryDTO toDTO() {
-        return new ZonePointsHistoryDTO(zone.getId(), from, tp, pph);
+    public ZonePointsHistoryData toData() {
+        return new ZonePointsHistoryData(zone.getId(), from, tp, pph);
     }
     
     static ZonePointsHistoryEntity build(ZoneEntity zone, Instant from, int tp, int pph) {

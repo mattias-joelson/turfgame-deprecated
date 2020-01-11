@@ -9,7 +9,7 @@
         <class>org.joelson.mattias.turfgame.application.db.RegionEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.RegionHistoryEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.ZoneEntity</class>
-        <class>org.joelson.mattias.turfgame.application.db.ZoneDataHistoryEntity</class>
+        <class>org.joelson.mattias.turfgame.application.db.ZoneHistoryEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.ZonePointsHistoryEntity</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />

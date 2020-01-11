@@ -1,19 +1,22 @@
 package org.joelson.mattias.turfgame.application.model;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-public class ZoneDataHistoryDTO {
+public class ZoneHistoryData implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private final int id;
     private final Instant from;
     private final String name;
-    private final RegionDTO region;
+    private final RegionData region;
     private final Instant dateCreated;
     private final double latitude;
     private final double longitude;
     
-    public ZoneDataHistoryDTO(int id, Instant from, String name, RegionDTO region, Instant dateCreated, double latitude, double longitude) {
+    public ZoneHistoryData(int id, Instant from, String name, RegionData region, Instant dateCreated, double latitude, double longitude) {
         this.id = id;
         this.from = from;
         this.name = name;
@@ -35,7 +38,7 @@ public class ZoneDataHistoryDTO {
         return name;
     }
     
-    public RegionDTO getRegion() {
+    public RegionData getRegion() {
         return region;
     }
     
@@ -53,8 +56,8 @@ public class ZoneDataHistoryDTO {
     
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ZoneDataHistoryDTO) {
-            ZoneDataHistoryDTO that = (ZoneDataHistoryDTO) obj;
+        if (obj instanceof ZoneHistoryData) {
+            ZoneHistoryData that = (ZoneHistoryData) obj;
             return id == that.id && Objects.equals(name, that.name) && Objects.equals(from, that.from) && Objects.equals(region, that.region)
                     && Objects.equals(dateCreated, that.dateCreated) && latitude == that.latitude && longitude == that.longitude;
         }
@@ -68,7 +71,7 @@ public class ZoneDataHistoryDTO {
     
     @Override
     public String toString() {
-        return String.format("ZoneDataHistoryDTO[id %d, from %s, name %s, region %s, dateCreated %s, latitude %f, longitude %f]",
+        return String.format("ZoneHistoryData[id %d, from %s, name %s, region %s, dateCreated %s, latitude %f, longitude %f]", //NON-NLS
                 id, from, name, region, dateCreated, latitude, longitude);
     }
 }
