@@ -30,7 +30,6 @@
           <failOnError>true</failOnError>
           <compilerArgs>
             <arg>-Xlint:all</arg>
-            <arg>-Xlint:-deprecation</arg>
           </compilerArgs>
         </configuration>
       </plugin>
