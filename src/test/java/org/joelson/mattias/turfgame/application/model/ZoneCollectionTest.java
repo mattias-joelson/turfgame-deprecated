@@ -43,13 +43,13 @@ public class ZoneCollectionTest {
         
         assertEquals(71, zoneData.getZone("FolkeFilbyter").getId());
         assertEquals(63920, zoneData.getZones().size());
-        assertEquals(63920, zoneData.getZoneDataHistory().size());
+        assertEquals(63920, zoneData.getZoneHistory().size());
         assertEquals(63920, zoneData.getZonePointsHistory().size());
         
         zoneData.updateZones(toInstant("2019-12-01T22:42:00.00+01:00"), getZones("zones-all.2019-12-01.json"));
     
         assertEquals(63927, zoneData.getZones().size());
-        assertEquals(63927, zoneData.getZoneDataHistory().size());
+        assertEquals(63927, zoneData.getZoneHistory().size());
         assertEquals(77344, zoneData.getZonePointsHistory().size());
     }
     
