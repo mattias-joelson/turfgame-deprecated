@@ -34,7 +34,7 @@ public class ZoneCollection {
         return dbEntity.getZones();
     }
     
-    public List<ZoneHistoryData> getZoneDataHistory() {
+    public List<ZoneHistoryData> getZoneHistory() {
         return dbEntity.getZoneDataHistory();
     }
 
