@@ -2,7 +2,7 @@ package org.joelson.mattias.turfgame.application.db;
 
 import com.sun.istack.NotNull;
 import org.joelson.mattias.turfgame.application.model.ZoneData;
-import org.joelson.mattias.turfgame.util.StringUtils;
+import org.joelson.mattias.turfgame.util.StringUtil;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -64,7 +64,7 @@ public class ZoneEntity implements Serializable {
     }
     
     public void setName(@NotNull String name) {
-        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
     }
     
     @NotNull

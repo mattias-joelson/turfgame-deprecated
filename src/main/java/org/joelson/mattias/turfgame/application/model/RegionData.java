@@ -1,6 +1,6 @@
 package org.joelson.mattias.turfgame.application.model;
 
-import org.joelson.mattias.turfgame.util.StringUtils;
+import org.joelson.mattias.turfgame.util.StringUtil;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -15,8 +15,8 @@ public class RegionData implements Serializable {
     
     public RegionData(int id, String name, String country) {
         this.id = id;
-        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
-        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty"); //NON-NLS
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
+        this.country = StringUtil.requireNullOrNonEmpty(country, "Country can not be empty"); //NON-NLS
     }
     
     public int getId() {

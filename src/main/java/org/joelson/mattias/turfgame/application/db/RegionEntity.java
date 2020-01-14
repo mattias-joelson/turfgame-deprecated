@@ -3,7 +3,7 @@ package org.joelson.mattias.turfgame.application.db;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import org.joelson.mattias.turfgame.application.model.RegionData;
-import org.joelson.mattias.turfgame.util.StringUtils;
+import org.joelson.mattias.turfgame.util.StringUtil;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -46,7 +46,7 @@ public class RegionEntity implements Serializable {
     }
     
     public void setName(@NotNull String name) {
-        this.name = StringUtils.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
     }
     
     @Nullable
@@ -55,7 +55,7 @@ public class RegionEntity implements Serializable {
     }
     
     public void setCountry(@Nullable String country) {
-        this.country = StringUtils.requireNullOrNonEmpty(country, "Country can not be empty"); //NON-NLS
+        this.country = StringUtil.requireNullOrNonEmpty(country, "Country can not be empty"); //NON-NLS
     }
     
     @Override
