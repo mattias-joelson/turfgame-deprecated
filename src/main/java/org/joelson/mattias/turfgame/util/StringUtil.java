@@ -2,9 +2,9 @@ package org.joelson.mattias.turfgame.util;
 
 import java.util.Objects;
 
-public final class StringUtils {
+public final class StringUtil {
     
-    private StringUtils() throws InstantiationException {
+    private StringUtil() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");
     }
     
