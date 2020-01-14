@@ -3,13 +3,9 @@ package org.joelson.mattias.turfgame.application.model;
 import org.joelson.mattias.turfgame.apiv4.Region;
 import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
+import org.joelson.mattias.turfgame.util.TimeUtil;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,22 +94,15 @@ public class ZoneCollection {
     private static boolean isEqual(Zone zone, ZoneData storedZone) {
         return Objects.equals(zone.getName(), storedZone.getName())
                 && isEqual(zone.getRegion(), storedZone.getRegion())
-                && Objects.equals(toInstant(zone.getDateCreated()), storedZone.getDateCreated())
+                && Objects.equals(TimeUtil.turfTimestampToInstant(zone.getDateCreated()), storedZone.getDateCreated())
                 && zone.getLatitude() == storedZone.getLatitude()
                 && zone.getLongitude() == storedZone.getLongitude()
                 && zone.getTakeoverPoints() == storedZone.getTp()
                 && zone.getPointsPerHour() == storedZone.getPph();
     }
     
-    private static Instant toInstant(String s) {
-        TemporalAccessor temporalAccessor = DateTimeFormatter.ISO_DATE_TIME.parse(s.substring(0, 19));
-        LocalDateTime localDateTime = LocalDateTime.from(temporalAccessor);
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
-        return Instant.from(zonedDateTime);
-    }
-    
     private static ZoneData toDTO(Zone zone) {
-        return new ZoneData(zone.getId(), zone.getName(), toDTO(zone.getRegion()), toInstant(zone.getDateCreated()),
+        return new ZoneData(zone.getId(), zone.getName(), toDTO(zone.getRegion()), TimeUtil.turfTimestampToInstant(zone.getDateCreated()),
                 zone.getLatitude(), zone.getLongitude(), zone.getTakeoverPoints(), zone.getPointsPerHour());
     }
     
