@@ -73,11 +73,14 @@ public class ZonePointsHistoryEntity implements Serializable {
     
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof ZonePointsHistoryEntity) {
             ZonePointsHistoryEntity that = (ZonePointsHistoryEntity) obj;
             return Objects.equals(zone, that.zone) && Objects.equals(from, that.from) && tp == that.tp && pph == that.pph;
         }
-        return super.equals(obj);
+        return false;
     }
     
     @Override
