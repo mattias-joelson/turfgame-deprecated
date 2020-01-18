@@ -23,19 +23,25 @@ public class MonthlyVisitTest {
     
     @Test
     public void visitDanderydTest() throws Exception {
-        visitMunicipalityTest("danderyd_month.kml", MunicipalityTest.getDanderydZones());
+        visitMunicipalityTest("Danderyd", "danderyd_month.kml", MunicipalityTest.getDanderydZones());
     }
     
     @Test
     public void visitSolnaTest() throws Exception {
-        visitMunicipalityTest("solna_month.kml", MunicipalityTest.getSolnaZones());
+        visitMunicipalityTest("Solna", "solna_month.kml", MunicipalityTest.getSolnaZones());
     }
+    
     @Test
-    public void visitSundbybergTest() throws Exception {
-        visitMunicipalityTest("sundbyberg_month.kml", MunicipalityTest.getSundbybergZones());
+    public void visitStockholmTest() throws Exception {
+        visitMunicipalityTest("Stockholm", "stockholm_month.kml", MunicipalityTest.getStockholmZones());
     }
 
-    private static void visitMunicipalityTest(String filename, Map<String, Boolean> municipalityZones) throws Exception {
+    @Test
+    public void visitSundbybergTest() throws Exception {
+        visitMunicipalityTest("Sundbyberg", "sundbyberg_month.kml", MunicipalityTest.getSundbybergZones());
+    }
+
+    private static void visitMunicipalityTest(String municipality, String filename, Map<String, Boolean> municipalityZones) throws Exception {
         Monthly monthly = getMonthly();
         List<Zone> zones = ZonesTest.getAllZones();
     
@@ -56,11 +62,11 @@ public class MonthlyVisitTest {
                 .collect(Collectors.toSet());
     
         try (KMLWriter out = new KMLWriter(filename)) {
-            out.writeFolder("unvisited");
+            out.writeFolder(municipality + " unvisited");
             unvisitedZones.stream()
                     .sorted(Comparator.comparing(Zone::getName))
                     .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
-            out.writeFolder("visited");
+            out.writeFolder(municipality + " visited");
             visitedZones.stream()
                     .sorted(Comparator.comparing(Zone::getName))
                     .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
