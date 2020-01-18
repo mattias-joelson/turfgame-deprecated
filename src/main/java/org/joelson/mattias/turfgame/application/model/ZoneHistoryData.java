@@ -56,12 +56,15 @@ public class ZoneHistoryData implements Serializable {
     
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof ZoneHistoryData) {
             ZoneHistoryData that = (ZoneHistoryData) obj;
             return id == that.id && Objects.equals(name, that.name) && Objects.equals(from, that.from) && Objects.equals(region, that.region)
                     && Objects.equals(dateCreated, that.dateCreated) && latitude == that.latitude && longitude == that.longitude;
         }
-        return super.equals(obj);
+        return false;
     }
     
     @Override
