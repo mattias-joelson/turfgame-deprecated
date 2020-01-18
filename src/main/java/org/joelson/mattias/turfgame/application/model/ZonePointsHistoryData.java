@@ -38,11 +38,14 @@ public class ZonePointsHistoryData implements Serializable {
     
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof ZonePointsHistoryData) {
             ZonePointsHistoryData that = (ZonePointsHistoryData) obj;
             return id == that.id && Objects.equals(from, that.from) && tp == that.tp && pph == that.pph;
         }
-        return super.equals(obj);
+        return false;
     }
     
     @Override

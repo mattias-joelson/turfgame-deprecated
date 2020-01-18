@@ -62,12 +62,15 @@ public class ZoneData implements Serializable {
     
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof ZoneData) {
             ZoneData that = (ZoneData) obj;
             return id == that.id && Objects.equals(name, that.name) && Objects.equals(region, that.region) && Objects.equals(dateCreated, that.dateCreated)
                     && latitude == that.latitude && longitude == that.longitude && tp == that.tp && pph == that.pph;
         }
-        return super.equals(obj);
+        return false;
     }
     
     @Override

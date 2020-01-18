@@ -33,11 +33,14 @@ public class RegionData implements Serializable {
     
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof RegionData) {
             RegionData that = (RegionData) obj;
             return id == that.id && Objects.equals(name, that.name) && Objects.equals(country, that.country);
         }
-        return super.equals(obj);
+        return false;
     }
     
     @Override
