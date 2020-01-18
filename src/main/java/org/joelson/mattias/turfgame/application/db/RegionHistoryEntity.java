@@ -78,12 +78,15 @@ public class RegionHistoryEntity implements Serializable {
     
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj instanceof RegionHistoryEntity) {
             RegionHistoryEntity that = (RegionHistoryEntity) obj;
             return Objects.equals(region, that.region) && Objects.equals(from, that.from) && Objects.equals(name, that.name)
                     && Objects.equals(country, that.country);
         }
-        return super.equals(obj);
+        return false;
     }
     
     @Override
