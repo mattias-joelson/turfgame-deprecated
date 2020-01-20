@@ -1,5 +1,7 @@
 package org.joelson.mattias.turfgame.application.model;
 
+import org.joelson.mattias.turfgame.util.StringUtil;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -18,10 +20,10 @@ public class ZoneHistoryData implements Serializable {
     
     public ZoneHistoryData(int id, Instant from, String name, RegionData region, Instant dateCreated, double latitude, double longitude) {
         this.id = id;
-        this.from = from;
-        this.name = name;
-        this.region = region;
-        this.dateCreated = dateCreated;
+        this.from = Objects.requireNonNull(from, "From can not be null"); //NON-NLS
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS;
+        this.region = Objects.requireNonNull(region, "Region can not be null"); //NON-NLS
+        this.dateCreated = Objects.requireNonNull(dateCreated, "Date created can not be null"); //NON-NLS
         this.latitude = latitude;
         this.longitude = longitude;
     }

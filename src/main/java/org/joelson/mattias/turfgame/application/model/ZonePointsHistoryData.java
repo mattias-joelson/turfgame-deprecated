@@ -15,7 +15,7 @@ public class ZonePointsHistoryData implements Serializable {
     
     public ZonePointsHistoryData(int id, Instant from, int tp, int pph) {
         this.id = id;
-        this.from = from;
+        this.from = Objects.requireNonNull(from, "From can not be null"); //NON-NLS
         this.tp = tp;
         this.pph = pph;
     }
