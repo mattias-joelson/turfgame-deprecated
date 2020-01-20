@@ -1,6 +1,6 @@
 package org.joelson.mattias.turfgame.application.db;
 
-public class EntityUtil {
+final class EntityUtil {
     
     private EntityUtil() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");
