@@ -90,7 +90,7 @@ public class ZonePointsHistoryEntity implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("ZonePointsHistoryEntity[zone %s, from %s, tp %d, pph %d]", zone, from, tp, pph); //NON-NLS
+        return String.format("ZonePointsHistoryEntity[zone %s, from %s, tp %d, pph %d]", EntityUtil.toStringPart(zone), from, tp, pph); //NON-NLS
     }
     
     public ZonePointsHistoryData toData() {

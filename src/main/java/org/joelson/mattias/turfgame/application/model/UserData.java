@@ -1,40 +1,48 @@
 package org.joelson.mattias.turfgame.application.model;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import org.joelson.mattias.turfgame.util.StringUtil;
+
+import java.util.Objects;
 
 public class UserData {
     
     // Oberoff 80119
     
-    private final String username;
-    private final int userID;
+    private final int id;
+    private final String name;
     
-    public UserData(String username, int userID) {
-        this.username = username;
-        this.userID = userID;
+    public UserData(int id, String name) {
+        this.id = id;
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS;
     }
     
-    public String getUsername() {
-        return username;
+    public int getId() {
+        return id;
     }
     
-    public int getUserID() {
-        return userID;
+    public String getName() {
+        return name;
     }
     
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(1);
-        out.writeObject(username);
-        out.writeInt(userID);
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof UserData) {
+            UserData that = (UserData) obj;
+            return id == that.id && Objects.equals(name, that.name);
+        }
+        return false;
     }
     
-    public static UserData readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        int version = in.readInt();
-        String username = (String) in.readObject();
-        int userID = in.readInt();
-        return new UserData(username, userID);
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("UserData{id %d, name %s}", id, name); //NON-NLS
     }
 }

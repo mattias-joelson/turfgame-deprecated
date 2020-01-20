@@ -132,7 +132,7 @@ public class ZoneHistoryEntity implements Serializable {
     @Override
     public String toString() {
         return String.format("ZoneHistoryEntity[zone %s, from %s, name %s, region %s, dateCreated %s, latitude %f, longitude %f]", //NON-NLS
-                zone, from, name, region, dateCreated, latitude, longitude);
+                EntityUtil.toStringPart(zone), from, name, region, dateCreated, latitude, longitude);
     }
     
     public ZoneHistoryData toData() {
