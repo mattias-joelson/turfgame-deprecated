@@ -5,6 +5,7 @@ import org.joelson.mattias.turfgame.application.model.ZoneData;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.GroupLayout;
@@ -28,7 +29,7 @@ public final class ZoneTableActionCreator {
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> showZoneTable(applicationUI))
                 .withName("Show Zone Table")
-                .withAcceleratorKey('Z')
+                .withAcceleratorKey(KeyEvent.VK_Z)
                 .build();
         action.setEnabled(false);
         ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
