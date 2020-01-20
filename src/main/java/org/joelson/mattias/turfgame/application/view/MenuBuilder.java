@@ -27,10 +27,13 @@ final class MenuBuilder {
         fileMenu.addSeparator();
         addMenuItem(fileMenu, "Quit", createMenuShortcutAccelerator('Q'), applicationActions::closeApplication);
         
+        JMenu statisticsMenu = addMenu(menuBar, "Statistics");
+        addMenuItem(statisticsMenu, applicationUI.zoneTableAction());
+        addMenuItem(statisticsMenu, applicationUI.userTableAction());
+        
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
         addMenuItem(turfgameMenu, applicationUI.readZonesAction());
         addMenuItem(turfgameMenu, applicationUI.readZonesFromFileAction());
-        addMenuItem(turfgameMenu, applicationUI.zoneTableAction());
         
         JMenu zundinMenu = addMenu(menuBar, "Zundin");
         addMenuItem(zundinMenu, applicationUI.readTodayFromFileAction());
