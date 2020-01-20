@@ -5,6 +5,7 @@ import org.joelson.mattias.turfgame.apiv4.Zones;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
 import org.joelson.mattias.turfgame.application.view.ApplicationUI;
+import org.joelson.mattias.turfgame.zundin.Today;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,11 +13,10 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.PersistenceException;
 
 public class ApplicationActions {
@@ -52,30 +52,20 @@ public class ApplicationActions {
         return null;
     }
     
-    public Void readZonesFromFile(ApplicationUI applicationUI, Path zonesFile) throws IOException, ParseException {
+    public Void readZonesFromFile(ApplicationUI applicationUI, Path zonesFile, Instant instant) throws IOException, ParseException {
         List<Zone> zones = Zones.fromJSON(Files.readString(zonesFile));
-        Instant instant = null;
-        try {
-            String filename = zonesFile.getFileName().toString();
-            int year = Integer.parseInt(filename.substring(6, 10));
-            int month = Integer.parseInt(filename.substring(11, 13));
-            int day = Integer.parseInt(filename.substring(14, 16));
-            int hour = Integer.parseInt(filename.substring(17, 19));
-            int minutes = Integer.parseInt(filename.substring(20, 22));
-            LocalDateTime localDateTime = LocalDateTime.of(year, month, day, hour, minutes);
-            ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
-            instant = Instant.from(zonedDateTime);
-        } catch (NumberFormatException e) {
-            // ignore
-        }
-        if (instant == null) {
-            instant = Instant.now();
-        }
-        String input = applicationUI.showInputDialog("Instant of Zone Data",
-                String.format("Input instant when zone data in file %s was retrieved:", zonesFile.getFileName()), String.valueOf(instant));
-        if (input != null) {
-            applicationData.getZones().updateZones(Instant.parse(input), zones);
-        }
+        applicationData.getZones().updateZones(instant, zones);
+        return null;
+    }
+    
+    public Void readTodayFromFile(ApplicationUI applicationUI, Path todayFile, String username, String date) throws IOException, ParseException {
+        String file = Files.readString(todayFile);
+        Today today = Today.fromHTML(username, date, file);
+        Set<String> usernames = new HashSet<>(today.getZones().size() + 1);
+        usernames.add(today.getUserName());
+        today.getZones().forEach(todayZone -> usernames.add(todayZone.getUserId()));
+        applicationData.getUsers().updateUsers(usernames);
+        applicationData.getVisits().updateVisits(today);
         return null;
     }
 

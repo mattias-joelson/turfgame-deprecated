@@ -1,7 +1,11 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import org.joelson.mattias.turfgame.application.model.AssistData;
 import org.joelson.mattias.turfgame.application.model.RegionData;
 import org.joelson.mattias.turfgame.application.model.RegionHistoryData;
+import org.joelson.mattias.turfgame.application.model.TakeData;
+import org.joelson.mattias.turfgame.application.model.UserData;
+import org.joelson.mattias.turfgame.application.model.VisitData;
 import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.model.ZoneHistoryData;
 import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryData;
@@ -36,6 +40,9 @@ public class DatabaseEntityManager {
             entityManager = entityManagerFactory.createEntityManager();
             regionRegistry = new RegionRegistry(entityManager);
             regionHistoryRegistry = new RegionHistoryRegistry(entityManager);
+            takeRegistry = new TakeRegistry(entityManager);
+            userRegistry = new UserRegistry(entityManager);
+            visitRegistry = new VisitRegistry(entityManager);
             zoneRegistry = new ZoneRegistry(entityManager);
             zoneHistoryRegistry = new ZoneHistoryRegistry(entityManager);
             zonePointsHistoryRegistry = new ZonePointsHistoryRegistry(entityManager);
@@ -65,6 +72,9 @@ public class DatabaseEntityManager {
             entityManager = null;
             regionRegistry = null;
             regionHistoryRegistry = null;
+            takeRegistry = null;
+            userRegistry = null;
+            visitRegistry = null;
             zoneRegistry = null;
             zoneHistoryRegistry = null;
             zonePointsHistoryRegistry = null;
@@ -83,6 +93,9 @@ public class DatabaseEntityManager {
     private EntityManager entityManager;
     private RegionRegistry regionRegistry;
     private RegionHistoryRegistry regionHistoryRegistry;
+    private TakeRegistry takeRegistry;
+    private UserRegistry userRegistry;
+    private VisitRegistry visitRegistry;
     private ZoneRegistry zoneRegistry;
     private ZoneHistoryRegistry zoneHistoryRegistry;
     private ZonePointsHistoryRegistry zonePointsHistoryRegistry;
@@ -255,5 +268,68 @@ public class DatabaseEntityManager {
     private static String createJdbcURL(Path directoryPath, boolean openExisting) {
         return String.format("jdbc:h2:%s/%s;IFEXISTS=%s;", //NON-NLS
                 directoryPath, DATABASE_NAME, (openExisting) ? "TRUE" : "FALSE"); //NON-NLS
+    }
+    
+    public List<UserData> getUsers() {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return userRegistry.findAll()
+                    .map(UserEntity::toData)
+                    .collect(Collectors.toList());
+        }
+    }
+    
+    public void updateUsers(Iterable<UserData> newUsers, Iterable<UserData> updatedUsers) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.begin();
+            newUsers.forEach(this::createUser);
+            updatedUsers.forEach(this::updateUser);
+            transaction.commit();
+        }
+    }
+    
+    private void createUser(UserData userData) {
+        UserEntity user = UserEntity.build(userData.getId(), userData.getName());
+        userRegistry.persist(user);
+    }
+    
+    private void updateUser(UserData userData) {
+        UserEntity user = userRegistry.find(userData.getId());
+        user.setName(userData.getName());
+        userRegistry.persist(user);
+    }
+    
+    public void updateVisits(Iterable<VisitData> visits) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.begin();
+            for (VisitData visitData : visits) {
+                TakeEntity take = updateTake(visitData);
+                if (visitData instanceof TakeData) {
+                    updateVisit(take, userRegistry.find(visitData.getTaker().getId()), VisitType.TAKE);
+                } else if (visitData instanceof AssistData) {
+                    updateVisit(take, userRegistry.find(visitData.getTaker().getId()), VisitType.TAKE);
+                    updateVisit(take, userRegistry.find(((AssistData) visitData).getAssister().getId()), VisitType.ASSIST);
+                } else {
+                    throw new RuntimeException("Not instantiated yet!");
+                }
+            }
+            transaction.commit();
+        }
+    }
+    
+    private TakeEntity updateTake(VisitData visitData) {
+        TakeEntity take = takeRegistry.find(zoneRegistry.find(visitData.getZone().getId()), visitData.getWhen());
+        if (take == null) {
+            take = TakeEntity.build(zoneRegistry.find(visitData.getZone().getId()), visitData.getWhen());
+            takeRegistry.persist(take);
+        }
+        return take;
+    }
+    
+    private void updateVisit(TakeEntity take, UserEntity user, VisitType type) {
+        if (visitRegistry.find(take, user) == null) {
+            VisitEntity visit = VisitEntity.build(take, user, type);
+            visitRegistry.persist(visit);
+        }
     }
 }

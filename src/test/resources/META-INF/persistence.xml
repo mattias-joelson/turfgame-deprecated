@@ -8,6 +8,9 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>org.joelson.mattias.turfgame.application.db.RegionEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.RegionHistoryEntity</class>
+        <class>org.joelson.mattias.turfgame.application.db.TakeEntity</class>
+        <class>org.joelson.mattias.turfgame.application.db.UserEntity</class>
+        <class>org.joelson.mattias.turfgame.application.db.VisitEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.ZoneEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.ZoneHistoryEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.ZonePointsHistoryEntity</class>

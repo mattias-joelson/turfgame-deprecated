@@ -62,6 +62,10 @@ public class ApplicationUI {
     Action zoneTableAction() {
         return ZoneTableActionCreator.create(this);
     }
+
+    Action readTodayFromFileAction() {
+        return ReadTodayFromFileActionCreator.create(this);
+    }
     
     Action openDatabaseAction() {
         return OpenDatabaseActionCreator.create(this);
@@ -111,7 +115,7 @@ public class ApplicationUI {
         Container emptyContainer = new Container();
         contentPane.add(emptyContainer, BorderLayout.CENTER);
         currentContent = emptyContainer;
-        JLabel statusLabel = new JLabel("<no user>");
+        JLabel statusLabel = new JLabel("<no user>"); //NON-NLS
         contentPane.add(statusLabel, BorderLayout.PAGE_END);
         return statusLabel;
     }

@@ -15,6 +15,8 @@ public class ApplicationData {
     
     private final PropertyChangeSupport propertyChangeSupport;
 
+    private UserCollection users;
+    private VisitCollection visits;
     private ZoneCollection zones;
     private Path database;
     private DatabaseEntityManager databaseManager;
@@ -67,6 +69,8 @@ public class ApplicationData {
     private void setDatabase(DatabaseEntityManager newDatabaseManager, Path databasePath) {
         databaseManager = newDatabaseManager;
         database = databasePath;
+        users = new UserCollection(databaseManager);
+        visits = new VisitCollection(databaseManager);
         zones = new ZoneCollection(databaseManager);
         propertyChangeSupport.firePropertyChange(HAS_DATABASE, false, true);
     }
@@ -80,9 +84,19 @@ public class ApplicationData {
             databaseManager.close();
             databaseManager = null;
             database = null;
+            users = null;
+            visits = null;
             zones = null;
             propertyChangeSupport.firePropertyChange(HAS_DATABASE, true, false);
         }
+    }
+    
+    public UserCollection getUsers() {
+        return users;
+    }
+    
+    public VisitCollection getVisits() {
+        return visits;
     }
     
     public ZoneCollection getZones() {

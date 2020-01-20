@@ -32,6 +32,9 @@ final class MenuBuilder {
         addMenuItem(turfgameMenu, applicationUI.readZonesFromFileAction());
         addMenuItem(turfgameMenu, applicationUI.zoneTableAction());
         
+        JMenu zundinMenu = addMenu(menuBar, "Zundin");
+        addMenuItem(zundinMenu, applicationUI.readTodayFromFileAction());
+        
         return menuBar;
     }
     

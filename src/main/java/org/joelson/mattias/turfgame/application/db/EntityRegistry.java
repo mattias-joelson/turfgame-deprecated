@@ -16,6 +16,10 @@ class EntityRegistry<T> {
         persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
     
+    protected Query createQuery(String s) {
+        return entityManager.createQuery(s);
+    }
+    
     public T find(int id) {
         return entityManager.find(persistentClass, id);
     }
@@ -43,7 +47,7 @@ class EntityRegistry<T> {
         return result;
     }
     
-    public Stream<T> findAll(String field, String value) {
+    public Stream<T> findAll(String field, Object value) {
         Query query = entityManager.createQuery(String.format("SELECT e FROM %s e WHERE e.%s=:value", persistentClass.getName(), field)); //NON-NLS
         query.setParameter("value", value); //NON-NLS
         @SuppressWarnings("unchecked")

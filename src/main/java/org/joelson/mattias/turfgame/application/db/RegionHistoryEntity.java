@@ -96,7 +96,7 @@ public class RegionHistoryEntity implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("RegionHistoryEntity[region %s, from %s, name %s, country %s]", region, from, name, country); //NON-NLS
+        return String.format("RegionHistoryEntity[region %s, from %s, name %s, country %s]", EntityUtil.toStringPart(region), from, name, country); //NON-NLS
     }
     
     public RegionHistoryData toData() {

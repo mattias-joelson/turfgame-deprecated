@@ -6,7 +6,8 @@ import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,15 +22,21 @@ public final class Users {
         throw new InstantiationException("Should not be instantiated!");
     }
     
-    public static List<User> getUsers(String name, Integer id) throws IOException, ParseException {
-        Map<String, Object> params = new HashMap<>(2);
-        if (name != null && !name.isEmpty()) {
-            params.put(NAME_PARAMETER, name);
+    public static List<User> getUsers(Object... inputObjects) throws IOException, ParseException {
+        if (inputObjects.length == 0) {
+            return Collections.emptyList();
         }
-        if (id != null && id > 0) {
-            params.put(ID_PARAMETER, id);
+        List<JSONObject> objects = new ArrayList<>(inputObjects.length);
+        for (Object obj : inputObjects) {
+            if (obj instanceof String) {
+                objects.add(JSONObject.of(Map.of(NAME_PARAMETER, obj)));
+            } else if (obj instanceof Integer) {
+                objects.add(JSONObject.of(Map.of(ID_PARAMETER, obj)));
+            } else {
+                throw new IllegalArgumentException("Unknown input object type " + obj.getClass());
+            }
         }
-        JSONArray array = JSONArray.of(JSONObject.of(params));
+        JSONArray array = JSONArray.of(objects.toArray(JSONObject[]::new));
         String json = String.valueOf(array);
         return fromJSON(URLReader.postRequest(USERS_REQUEST, json));
     }
