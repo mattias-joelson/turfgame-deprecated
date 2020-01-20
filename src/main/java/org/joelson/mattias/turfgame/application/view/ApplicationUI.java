@@ -62,6 +62,10 @@ public class ApplicationUI {
     Action zoneTableAction() {
         return ZoneTableActionCreator.create(this);
     }
+    
+    Action userTableAction() {
+        return UserTableActionCreator.create(this);
+    }
 
     Action readTodayFromFileAction() {
         return ReadTodayFromFileActionCreator.create(this);
