@@ -12,6 +12,7 @@ import javax.swing.table.TableRowSorter;
 public class UserTableModel extends AbstractTableModel {
     
     private static final String[] COLUMN_NAMES = { "Id", "Name" };
+    private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class };
     private static final long serialVersionUID = 1L;
     
     private final List<UserData> users;
@@ -49,7 +50,8 @@ public class UserTableModel extends AbstractTableModel {
         return COLUMN_NAMES[column];
     }
     
-    public static void initTableRowSorter(TableRowSorter<TableModel> tableRowSorter) {
-        tableRowSorter.setComparator(0, TableUtil.getIntegerComparator());
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return COLUMN_CLASSES[columnIndex];
     }
 }

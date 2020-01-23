@@ -17,6 +17,11 @@ public class AssistData extends VisitData {
     }
     
     @Override
+    public String getType() {
+        return "Assist";
+    }
+    
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

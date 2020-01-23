@@ -23,7 +23,7 @@ public final class ZoneTableActionCreator {
     
     private static void showZoneTable(ApplicationUI applicationUI) {
         ZoneTableModel tableModel = new ZoneTableModel(applicationUI.getApplicationData().getZones().getZones());
-        applicationUI.setPane(TableUtil.createDefaultTablePane(tableModel, ZoneTableModel::initTableRowSorter, "Zone Filter"));
+        applicationUI.setPane(TableUtil.createDefaultTablePane(tableModel, "Zone Filter"));
     }
     
 }

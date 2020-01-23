@@ -30,6 +30,7 @@ final class MenuBuilder {
         JMenu statisticsMenu = addMenu(menuBar, "Statistics");
         addMenuItem(statisticsMenu, applicationUI.zoneTableAction());
         addMenuItem(statisticsMenu, applicationUI.userTableAction());
+        addMenuItem(statisticsMenu, applicationUI.visitTableAction());
         
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
         addMenuItem(turfgameMenu, applicationUI.readZonesAction());

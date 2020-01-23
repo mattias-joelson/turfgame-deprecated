@@ -9,7 +9,7 @@ public abstract class VisitData {
     private final Instant when;
     private final UserData taker;
     
-    public VisitData(ZoneData zone, Instant when, UserData taker) {
+    protected VisitData(ZoneData zone, Instant when, UserData taker) {
         this.zone = Objects.requireNonNull(zone, "Zone can not be null"); //NON-NLS
         this.when = Objects.requireNonNull(when, "When can not be null"); //NON-NLS
         this.taker = Objects.requireNonNull(taker, "Taker can not be null"); //NON-NLS
@@ -26,4 +26,14 @@ public abstract class VisitData {
     public UserData getTaker() {
         return taker;
     }
+    
+    public int getTp() {
+        return zone.getTp();
+    }
+    
+    public int getPph() {
+        return 0;
+    }
+    
+    public abstract String getType();
 }

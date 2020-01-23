@@ -7,7 +7,6 @@ import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,8 +16,18 @@ public class UserCollection {
     
     private final DatabaseEntityManager dbEntityManager;
     
+    private UserData selectedUser;
+    
     public UserCollection(DatabaseEntityManager dbEntityManager) {
         this.dbEntityManager = dbEntityManager;
+    }
+    
+    public UserData getSelectedUser() {
+        return selectedUser;
+    }
+    
+    public void setSelectedUser(UserData selectedUser) {
+        this.selectedUser = selectedUser;
     }
     
     public List<UserData> getUsers() {
@@ -52,12 +61,12 @@ public class UserCollection {
         dbEntityManager.updateUsers(newUsers, updatedUsers);
     }
     
-    private Map<String, UserData> createUserMap(List<UserData> existingUsers) {
+    private static Map<String, UserData> createUserMap(List<UserData> existingUsers) {
         return existingUsers.stream()
                 .collect(Collectors.toMap(UserData::getName, Function.identity()));
     }
 
-    private Map<Integer, UserData> createUserIdMap(List<UserData> existingUsers) {
+    private static Map<Integer, UserData> createUserIdMap(List<UserData> existingUsers) {
         return existingUsers.stream()
                 .collect(Collectors.toMap(UserData::getId, Function.identity()));
     }
