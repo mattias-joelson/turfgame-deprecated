@@ -1,6 +1,7 @@
 package org.joelson.mattias.turfgame.application.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.util.Comparator;
 import java.util.function.Consumer;
@@ -23,9 +24,9 @@ final class TableUtil {
         throw new InstantiationException("Should not be instantiated!");
     }
     
-    public static Container createDefaultTablePane(TableModel tabelModel, Consumer<TableRowSorter<TableModel>> initTableRowSorter, String filterLabelText) {
+    public static Container createDefaultTablePane(TableModel tabelModel, String filterLabelText) {
         JTable table = createDefaultTable(tabelModel);
-        TableRowSorter<TableModel> tableSorter = createTableSorter(table, initTableRowSorter);
+        TableRowSorter<TableModel> tableSorter = createTableSorter(table);
         Container filterContainer = createFilterContainer(tableSorter, filterLabelText);
         return createTableContainer(table, filterContainer);
         
@@ -33,17 +34,16 @@ final class TableUtil {
     
     private static JTable createDefaultTable(TableModel tableModel) {
         JTable table = new JTable(tableModel);
+        table.setShowGrid(true);
+        table.setGridColor(Color.BLACK);
         table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);
         table.setDefaultEditor(Object.class, null); // disable edit
         return table;
     }
     
-    private static TableRowSorter<TableModel> createTableSorter(JTable table, Consumer<TableRowSorter<TableModel>> initializer) {
+    private static TableRowSorter<TableModel> createTableSorter(JTable table) {
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
-        if (initializer != null) {
-            initializer.accept(sorter);
-        }
         table.setRowSorter(sorter);
         return sorter;
     }
@@ -55,7 +55,6 @@ final class TableUtil {
         tableContainer.add(new JScrollPane(table), BorderLayout.CENTER);
         return tableContainer;
     }
-    
     
     private static Container createFilterContainer(TableRowSorter<TableModel> sorter, String filterLabelText) {
         Container filterContainer = new Container();
@@ -109,13 +108,5 @@ final class TableUtil {
             RowFilter<TableModel, Object> rf = RowFilter.regexFilter(filterText, columnIndices);
             sorter.setRowFilter(rf);
         }
-    }
-    
-    public static Comparator<Object> getIntegerComparator() {
-        return Comparator.comparingInt(o -> (Integer) o);
-    }
-    
-    public static Comparator<Object> getDoubleComparator() {
-        return Comparator.comparingDouble(o -> (Double) o);
     }
 }

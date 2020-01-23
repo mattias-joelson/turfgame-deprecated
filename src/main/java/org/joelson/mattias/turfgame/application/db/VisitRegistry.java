@@ -20,4 +20,11 @@ public class VisitRegistry extends EntityRegistry<VisitEntity> {
             return null;
         }
     }
+    
+    public VisitEntity findTakeVisit(TakeEntity take) {
+        Query query = createQuery("SELECT e FROM VisitEntity e WHERE e.take=:take AND e.type=:type"); //NON-NLS
+        query.setParameter("take", take); //NON-NLS
+        query.setParameter("type", VisitType.TAKE); //NON-NLS
+        return (VisitEntity) query.getSingleResult();
+    }
 }

@@ -3,7 +3,9 @@ package org.joelson.mattias.turfgame.application.db;
 import org.joelson.mattias.turfgame.application.model.ZoneData;
 
 import java.time.Instant;
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 class ZonePointsHistoryRegistry extends EntityRegistry<ZonePointsHistoryEntity> {
     
@@ -19,5 +21,14 @@ class ZonePointsHistoryRegistry extends EntityRegistry<ZonePointsHistoryEntity> 
         ZonePointsHistoryEntity zonePointsHistory = ZonePointsHistoryEntity.build(zone, from, tp, pph);
         persist(zonePointsHistory);
         return zonePointsHistory;
+    }
+    
+    public ZonePointsHistoryEntity findLatestBefore(ZoneEntity zone, Instant when) {
+        Query query = createQuery("SELECT e FROM ZonePointsHistoryEntity e WHERE e.zone=:zone AND e.from<=:when ORDER BY e.from DESC"); //NON-NLS
+        query.setParameter("zone", zone); //NON-NLS
+        query.setParameter("when", when); //NON-NLS
+        @SuppressWarnings("unchecked")
+        List<ZonePointsHistoryEntity> zoneHistories = query.getResultList();
+        return zoneHistories.get(0);
     }
 }

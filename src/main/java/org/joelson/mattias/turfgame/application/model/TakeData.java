@@ -9,6 +9,15 @@ public class TakeData extends VisitData {
         super(zone, when, taker);
     }
     
+    public int getPph() {
+        return getZone().getPph();
+    }
+    
+    @Override
+    public String getType() {
+        return "Take";
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

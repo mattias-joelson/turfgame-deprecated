@@ -299,6 +299,39 @@ public class DatabaseEntityManager {
         userRegistry.persist(user);
     }
     
+    public List<VisitData> getVisits(UserData userData) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            UserEntity user = userRegistry.find(userData.getId());
+            List<VisitEntity> visits = visitRegistry.findAll("user", user)
+                    .collect(Collectors.toList());
+            return visits.stream()
+                    .map(visit -> getVisitData(userData, visit))
+                    .collect(Collectors.toList());
+        }
+    }
+    
+    private VisitData getVisitData(UserData userData, VisitEntity visit) {
+        TakeEntity take = visit.getTake();
+        Instant when = take.getWhen();
+        ZoneEntity zone = take.getZone();
+        ZoneHistoryEntity zoneHistory = zoneHistoryRegistry.findLatestBefore(zone, when);
+        ZonePointsHistoryEntity zonePointsHistory = zonePointsHistoryRegistry.findLatestBefore(zone, when);
+        
+        ZoneData zoneData = new ZoneData(zone.getId(), zone.getName(), zoneHistory.getRegion().toData(), zoneHistory.getDateCreated(),
+                zoneHistory.getLatitude(), zoneHistory.getLongitude(), zonePointsHistory.getTp(), zonePointsHistory.getPph());
+        switch (visit.getType()) {
+        case TAKE:
+            return new TakeData(zoneData, when, userData);
+        case ASSIST:
+            UserEntity taker = visitRegistry.findTakeVisit(take).getUser();
+            return new AssistData(zoneData, when, taker.toData(), userData);
+        case REVISIT:
+        default:
+            throw new IllegalStateException("Unknown visit type " + visit.getType());
+        }
+    }
+    
     public void updateVisits(Iterable<VisitData> visits) {
         try (Transaction transaction = new Transaction()) {
             transaction.begin();

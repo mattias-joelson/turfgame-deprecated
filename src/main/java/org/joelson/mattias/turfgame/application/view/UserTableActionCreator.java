@@ -23,6 +23,6 @@ public final class UserTableActionCreator {
     
     private static void showUserTable(ApplicationUI applicationUI) {
         UserTableModel userTableModel = new UserTableModel(applicationUI.getApplicationData().getUsers().getUsers());
-        applicationUI.setPane(TableUtil.createDefaultTablePane(userTableModel, UserTableModel::initTableRowSorter, "User Filter"));
+        applicationUI.setPane(TableUtil.createDefaultTablePane(userTableModel, "User Filter"));
     }
 }

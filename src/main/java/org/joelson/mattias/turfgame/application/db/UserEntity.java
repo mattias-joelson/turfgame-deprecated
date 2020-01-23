@@ -66,8 +66,8 @@ public class UserEntity implements Serializable {
         return String.format("UserEntity[id %d, name %s]", id, name); //NON-NLS
     }
     
-    public static UserData toData(UserEntity user) {
-        return new UserData(user.getId(), user.getName());
+    public UserData toData() {
+        return new UserData(id, name);
     }
 
     public static UserEntity build(int id, @NotNull String name) {

@@ -6,7 +6,6 @@ import org.joelson.mattias.turfgame.zundin.Today;
 import org.joelson.mattias.turfgame.zundin.TodayZone;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class VisitCollection {
     }
     
     public List<VisitData> getVisits(UserData user) {
-        return Collections.emptyList();
+        return dbEntity.getVisits(user);
     }
     
     public void updateVisits(Today today) {
@@ -53,13 +52,13 @@ public class VisitCollection {
                 .collect(Collectors.toMap(ZoneData::getName, Function.identity()));
     }
     
-    private VisitData createVisit(Map<String, ZoneData> zones, Map<String, UserData> userMap, String userName, TodayZone todayZone) {
+    private static VisitData createVisit(Map<String, ZoneData> zones, Map<String, UserData> userMap, String userName, TodayZone todayZone) {
         switch (todayZone.getActivity()) {
-        case "Takeover":
+        case "Takeover": //NON-NLS
             return new TakeData(getZone(zones, todayZone.getZoneName()), getWhen(todayZone.getDate()), getUser(userMap, userName));
-        case "Lost":
+        case "Lost": //NON-NLS
             return new TakeData(getZone(zones, todayZone.getZoneName()), getWhen(todayZone.getDate()), getUser(userMap, todayZone.getUserId()));
-        case "Assist":
+        case "Assist": //NON-NLS
             return new AssistData(getZone(zones, todayZone.getZoneName()), getWhen(todayZone.getDate()), getUser(userMap, todayZone.getUserId()),
                     getUser(userMap, userName));
         default:
@@ -67,15 +66,15 @@ public class VisitCollection {
         }
     }
     
-    private ZoneData getZone(Map<String, ZoneData> zones, String zoneName) {
-        return Objects.requireNonNull(zones.get(zoneName), "Unknown zone " + zoneName);
+    private static ZoneData getZone(Map<String, ZoneData> zones, String zoneName) {
+        return Objects.requireNonNull(zones.get(zoneName), String.format("Unknown zone %s", zoneName)); //NON-NLS
     }
     
-    private UserData getUser(Map<String, UserData> userMap, String userName) {
-        return Objects.requireNonNull(userMap.get(userName), "Unknown user " + userName);
+    private static UserData getUser(Map<String, UserData> userMap, String userName) {
+        return Objects.requireNonNull(userMap.get(userName), String.format("Unknown user %s", userName)); // NON-NLS
     }
     
-    private Instant getWhen(String datetime) {
+    private static Instant getWhen(String datetime) {
         return TimeUtil.zundinTimestampToInstant(datetime);
     }
 }
