@@ -139,11 +139,13 @@ public class HeatmapTest {
         initZoneMaps(zoneMaps, HeatmapCategories.RED_45, HeatmapCategories.VIOLET);
         initZoneMaps(zoneMaps, HeatmapCategories.VIOLET);
         int[] zoneTakes = new int[TAKES_ENTRIES];
+        int municipalityTakes = 0;
     
         for (String zoneName : municipalityZones.keySet()) {
             int takes = 0;
             if (takenZones.containsKey(zoneName)) {
                 takes = takenZones.get(zoneName);
+                municipalityTakes += takes;
             }
             for (Zone zone : allZones) {
                 if (zone.getName().equals(zoneName)) {
@@ -211,6 +213,7 @@ public class HeatmapTest {
         System.out.println("Takes to orange: " + toOrange + " (" + toOrangeZones + " zones)");
         System.out.println("Takes to red:    " + toRed + " (" + toRedZones + " zones)");
         System.out.println("Takes to violet: " + toViolet + " (" + toVioletZones + " zones)");
+        System.out.println("Total takes:     " + municipalityTakes);
     }
     
     private static void initZoneMaps(List<Map<Zone, Integer>> zoneMaps, HeatmapCategories category) {
