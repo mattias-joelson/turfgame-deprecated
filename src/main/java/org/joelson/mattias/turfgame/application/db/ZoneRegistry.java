@@ -11,8 +11,8 @@ class ZoneRegistry extends EntityRegistry<ZoneEntity> {
         super(entityManager);
     }
     
-    public ZoneEntity findAnyByName(String name) {
-        return findAny("name", name); //NON-NLS
+    public ZoneEntity findByName(String name) {
+        return findAnyOrNull("name", name); //NON-NLS
     }
     
     public ZoneEntity create(RegionEntity region, ZoneData zoneData) {

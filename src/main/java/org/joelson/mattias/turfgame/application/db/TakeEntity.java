@@ -2,13 +2,17 @@ package org.joelson.mattias.turfgame.application.db;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -29,6 +33,10 @@ public class TakeEntity implements Serializable {
     
     @Column(name = "when_timestamp", nullable = false) //NON-NLS
     private Instant when;
+    
+    @OneToMany(cascade= CascadeType.ALL)
+    @JoinColumn(name="take_id") //NON-NLS
+    private List<VisitEntity> visits;
     
     public TakeEntity() {
     }
@@ -55,6 +63,14 @@ public class TakeEntity implements Serializable {
     
     public void setWhen(Instant when) {
         this.when = Objects.requireNonNull(when, "When can not be null!"); //NON-NLS
+    }
+    
+    public List<VisitEntity> getVisits() {
+        return visits;
+    }
+    
+    public VisitEntity getTakeVisit() {
+        return visits.stream().filter(visit -> visit.getType() == VisitType.TAKE).findAny().orElseThrow();
     }
     
     @Override

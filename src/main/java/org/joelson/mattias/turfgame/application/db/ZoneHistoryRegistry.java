@@ -3,9 +3,8 @@ package org.joelson.mattias.turfgame.application.db;
 import org.joelson.mattias.turfgame.application.model.ZoneData;
 
 import java.time.Instant;
-import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 class ZoneHistoryRegistry extends EntityRegistry<ZoneHistoryEntity> {
     
@@ -24,11 +23,12 @@ class ZoneHistoryRegistry extends EntityRegistry<ZoneHistoryEntity> {
     }
     
     public ZoneHistoryEntity findLatestBefore(ZoneEntity zone, Instant when) {
-        Query query = createQuery("SELECT e FROM ZoneHistoryEntity e WHERE e.zone=:zone AND e.from<=:when ORDER BY e.from DESC"); //NON-NLS
+        TypedQuery<ZoneHistoryEntity> query
+                = createQuery("SELECT e FROM ZoneHistoryEntity e WHERE e.zone=:zone AND e.from<=:when ORDER BY e.from DESC"); //NON-NLS
         query.setParameter("zone", zone); //NON-NLS
         query.setParameter("when", when); //NON-NLS
-        @SuppressWarnings("unchecked")
-        List<ZoneHistoryEntity> zoneHistories = query.getResultList();
-        return zoneHistories.get(0);
+        return query.getResultStream()
+                .findFirst()
+                .orElseThrow();
     }
 }
