@@ -3,7 +3,7 @@ package org.joelson.mattias.turfgame.application.db;
 import java.lang.reflect.ParameterizedType;
 import java.util.stream.Stream;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 class EntityRegistry<T> {
     
@@ -16,8 +16,8 @@ class EntityRegistry<T> {
         persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
     
-    protected Query createQuery(String s) {
-        return entityManager.createQuery(s);
+    protected TypedQuery<T> createQuery(String s) {
+        return entityManager.createQuery(s, persistentClass);
     }
     
     public T find(int id) {
@@ -28,31 +28,22 @@ class EntityRegistry<T> {
         return entityManager.find(persistentClass, key);
     }
     
-    public T findAny(String field, String value) {
-        return findAll(field, value).findAny().orElse(null);
-    }
-    
-    public T findSingle(String queryString, String parameterName, Object parameterValue) {
-        Query query = entityManager.createQuery(queryString);
-        query.setParameter(parameterName, parameterValue);
-        @SuppressWarnings("unchecked")
-        T entity = (T) query.getSingleResult();
-        return entity;
+    protected T findAnyOrNull(String field, Object value) {
+        return findAll(field, value)
+                .findAny()
+                .orElse(null);
     }
     
     public Stream<T> findAll() {
-        Query query = entityManager.createQuery(String.format("SELECT e FROM %s e", persistentClass.getName())); //NON-NLS
-        @SuppressWarnings("unchecked")
-        Stream<T> result = query.getResultStream();
-        return result;
+        TypedQuery<T>  query = entityManager.createQuery(String.format("SELECT e FROM %s e", persistentClass.getName()), persistentClass); //NON-NLS
+        return query.getResultStream();
     }
     
-    public Stream<T> findAll(String field, Object value) {
-        Query query = entityManager.createQuery(String.format("SELECT e FROM %s e WHERE e.%s=:value", persistentClass.getName(), field)); //NON-NLS
+    protected Stream<T> findAll(String field, Object value) {
+        TypedQuery<T> query = entityManager.createQuery(String.format("SELECT e FROM %s e WHERE e.%s=:value", persistentClass.getName(), field), //NON-NLS
+                persistentClass);
         query.setParameter("value", value); //NON-NLS
-        @SuppressWarnings("unchecked")
-        Stream<T> result = query.getResultStream();
-        return result;
+        return query.getResultStream();
     }
     
     public void persist(T t) {

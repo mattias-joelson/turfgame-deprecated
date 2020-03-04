@@ -10,8 +10,8 @@ class RegionRegistry extends EntityRegistry<RegionEntity> {
         super(entityManager);
     }
     
-    public RegionEntity findAnyByName(String name) {
-        return findAny("name", name); //NON-NLS
+    public RegionEntity findByName(String name) {
+        return findAnyOrNull("name", name); //NON-NLS
     }
     
     public RegionEntity create(RegionData regionData) {

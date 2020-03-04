@@ -133,7 +133,7 @@ public class DatabaseEntityManager {
     public RegionData getRegion(String name) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return regionRegistry.findAnyByName(name).toData();
+            return regionRegistry.findByName(name).toData();
         }
     }
 
@@ -180,7 +180,7 @@ public class DatabaseEntityManager {
     public ZoneData getZone(String name) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return zoneRegistry.findAnyByName(name).toData();
+            return zoneRegistry.findByName(name).toData();
         }
     }
     
@@ -324,7 +324,7 @@ public class DatabaseEntityManager {
         case TAKE:
             return new TakeData(zoneData, when, userData);
         case ASSIST:
-            UserEntity taker = visitRegistry.findTakeVisit(take).getUser();
+            UserEntity taker = take.getTakeVisit().getUser();
             return new AssistData(zoneData, when, taker.toData(), userData);
         case REVISIT:
         default:
@@ -360,7 +360,7 @@ public class DatabaseEntityManager {
     }
     
     private void updateVisit(TakeEntity take, UserEntity user, VisitType type) {
-        if (visitRegistry.find(take, user) == null) {
+        if (take.getVisits().stream().noneMatch(visitEntity -> visitEntity.getUser().equals(user))) {
             VisitEntity visit = VisitEntity.build(take, user, type);
             visitRegistry.persist(visit);
         }
