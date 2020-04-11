@@ -21,7 +21,7 @@ public class ZoneData implements Serializable {
     
     public ZoneData(int id, String name, RegionData region, Instant dateCreated, double latitude, double longitude, int tp, int pph) {
         this.id = id;
-        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS;
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
         this.region = Objects.requireNonNull(region, "Region can not be null"); //NON-NLS
         this.dateCreated = Objects.requireNonNull(dateCreated, "Date created can not be null"); //NON-NLS
         this.latitude = latitude;
