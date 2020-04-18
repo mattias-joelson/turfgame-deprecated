@@ -57,6 +57,6 @@ public class RegionHistoryData implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("RegionHistoryData{id %d, from %s, name %s, country %s", id, from, name, country); //NON-NLS
+        return String.format("RegionHistoryData[id %d, from %s, name %s, country %s]", id, from, name, country); //NON-NLS
     }
 }

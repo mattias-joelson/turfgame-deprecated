@@ -43,6 +43,6 @@ public class UserData {
     
     @Override
     public String toString() {
-        return String.format("UserData{id %d, name %s}", id, name); //NON-NLS
+        return String.format("UserData[id %d, name %s]", id, name); //NON-NLS
     }
 }

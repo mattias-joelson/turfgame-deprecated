@@ -50,6 +50,6 @@ public class RegionData implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("RegionData{id %d, name %s, country %s", id, name, country); //NON-NLS
+        return String.format("RegionData[id %d, name %s, country %s]", id, name, country); //NON-NLS
     }
 }
