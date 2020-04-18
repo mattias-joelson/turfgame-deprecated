@@ -74,7 +74,15 @@ public class ApplicationUI {
     Action readTodayFromFileAction() {
         return ReadTodayFromFileActionCreator.create(this);
     }
-    
+
+    Action readWardedFromFileAction() {
+        return ReadWardedFromFileActionCreator.create(this);
+    }
+
+    Action zoneVisitTableAction() {
+        return ZoneVisitTableActionCreator.create(this);
+    }
+
     Action openDatabaseAction() {
         return OpenDatabaseActionCreator.create(this);
     }

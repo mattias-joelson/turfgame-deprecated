@@ -21,7 +21,7 @@ import javax.swing.table.TableRowSorter;
 final class TableUtil {
     
     private TableUtil() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated!");
+        throw new InstantiationException("Should not be instantiated!"); //NON-NLS
     }
     
     public static Container createDefaultTablePane(TableModel tabelModel, String filterLabelText) {

@@ -9,6 +9,7 @@ import org.joelson.mattias.turfgame.application.model.VisitData;
 import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.model.ZoneHistoryData;
 import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryData;
+import org.joelson.mattias.turfgame.application.model.ZoneVisitData;
 
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -26,7 +27,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
 public class DatabaseEntityManager {
-    
+
     private final class Transaction implements AutoCloseable {
         
         private Transaction() {
@@ -46,6 +47,7 @@ public class DatabaseEntityManager {
             zoneRegistry = new ZoneRegistry(entityManager);
             zoneHistoryRegistry = new ZoneHistoryRegistry(entityManager);
             zonePointsHistoryRegistry = new ZonePointsHistoryRegistry(entityManager);
+            zoneVisitRegistry = new ZoneVisitRegistry(entityManager);
         }
 
         void use() {
@@ -78,6 +80,7 @@ public class DatabaseEntityManager {
             zoneRegistry = null;
             zoneHistoryRegistry = null;
             zonePointsHistoryRegistry = null;
+            zoneVisitRegistry = null;
         }
     
     }
@@ -99,6 +102,7 @@ public class DatabaseEntityManager {
     private ZoneRegistry zoneRegistry;
     private ZoneHistoryRegistry zoneHistoryRegistry;
     private ZonePointsHistoryRegistry zonePointsHistoryRegistry;
+    private ZoneVisitRegistry zoneVisitRegistry;
     
     public DatabaseEntityManager(String unit) {
         this(unit, null);
@@ -278,6 +282,13 @@ public class DatabaseEntityManager {
                     .collect(Collectors.toList());
         }
     }
+
+    public UserData getUser(String name) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return userRegistry.findAnyOrNull("name", name).toData(); //NON-NLS
+        }
+    }
     
     public void updateUsers(Iterable<UserData> newUsers, Iterable<UserData> updatedUsers) {
         try (Transaction transaction = new Transaction()) {
@@ -303,7 +314,7 @@ public class DatabaseEntityManager {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
             UserEntity user = userRegistry.find(userData.getId());
-            List<VisitEntity> visits = visitRegistry.findAll("user", user)
+            List<VisitEntity> visits = visitRegistry.findAll("user", user) //NON-NLS
                     .collect(Collectors.toList());
             return visits.stream()
                     .map(visit -> getVisitData(userData, visit))
@@ -363,6 +374,37 @@ public class DatabaseEntityManager {
         if (take.getVisits().stream().noneMatch(visitEntity -> visitEntity.getUser().equals(user))) {
             VisitEntity visit = VisitEntity.build(take, user, type);
             visitRegistry.persist(visit);
+        }
+    }
+
+    public List<ZoneVisitData> getZoneVisits(UserData userData) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            UserEntity user = userRegistry.find(userData.getId());
+            return zoneVisitRegistry.findAll("user", user) //NON-NLS
+                    .map(ZoneVisitEntity::toData)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public void updateZoneVisits(Iterable<ZoneVisitData> zoneVisits) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.begin();
+            for (ZoneVisitData zoneVisitData : zoneVisits) {
+                updateZoneVisit(zoneVisitData);
+            }
+            transaction.commit();
+        }
+    }
+
+    private void updateZoneVisit(ZoneVisitData zoneVisitData) {
+        UserEntity user = userRegistry.find(zoneVisitData.getUser().getId());
+        ZoneEntity zone = zoneRegistry.find(zoneVisitData.getZone().getId());
+        ZoneVisitEntity zoneVisit = zoneVisitRegistry.find(user, zone);
+        if (zoneVisit == null) {
+            zoneVisitRegistry.create(user, zone, zoneVisitData.getVisits());
+        } else {
+            zoneVisit.setVisits(zoneVisitData.getVisits());
         }
     }
 }

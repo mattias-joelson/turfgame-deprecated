@@ -18,6 +18,7 @@ public class ApplicationData {
     private UserCollection users;
     private VisitCollection visits;
     private ZoneCollection zones;
+    private ZoneVisitCollection zoneVisits;
     private Path database;
     private DatabaseEntityManager databaseManager;
     
@@ -72,6 +73,7 @@ public class ApplicationData {
         users = new UserCollection(databaseManager);
         visits = new VisitCollection(databaseManager);
         zones = new ZoneCollection(databaseManager);
+        zoneVisits = new ZoneVisitCollection(databaseManager);
         propertyChangeSupport.firePropertyChange(HAS_DATABASE, false, true);
     }
     
@@ -101,6 +103,10 @@ public class ApplicationData {
     
     public ZoneCollection getZones() {
         return zones;
+    }
+
+    public ZoneVisitCollection getZoneVisits() {
+        return zoneVisits;
     }
     
     public String getStatus() {

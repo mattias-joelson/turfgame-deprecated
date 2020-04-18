@@ -5,6 +5,7 @@ import org.joelson.mattias.turfgame.apiv4.Zones;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
 import org.joelson.mattias.turfgame.application.view.ApplicationUI;
+import org.joelson.mattias.turfgame.warded.TakenZones;
 import org.joelson.mattias.turfgame.zundin.Today;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.persistence.PersistenceException;
 
@@ -52,13 +54,13 @@ public class ApplicationActions {
         return null;
     }
     
-    public Void readZonesFromFile(ApplicationUI applicationUI, Path zonesFile, Instant instant) throws IOException, ParseException {
+    public Void readZonesFromFile(Path zonesFile, Instant instant) throws IOException, ParseException {
         List<Zone> zones = Zones.fromJSON(Files.readString(zonesFile));
         applicationData.getZones().updateZones(instant, zones);
         return null;
     }
     
-    public Void readTodayFromFile(ApplicationUI applicationUI, Path todayFile, String username, String date) throws IOException, ParseException {
+    public Void readTodayFromFile(Path todayFile, String username, String date) throws IOException, ParseException {
         String file = Files.readString(todayFile);
         Today today = Today.fromHTML(username, date, file);
         Set<String> usernames = new HashSet<>(today.getZones().size() + 1);
@@ -66,6 +68,14 @@ public class ApplicationActions {
         today.getZones().forEach(todayZone -> usernames.add(todayZone.getUserId()));
         applicationData.getUsers().updateUsers(usernames);
         applicationData.getVisits().updateVisits(today);
+        return null;
+    }
+
+    public Void readWardedFromFile(Path wardedFile) throws IOException, ParseException {
+        String file = Files.readString(wardedFile);
+        String userName = TakenZones.getUserNameFromHTML(file);
+        Map<String, Integer> visits = TakenZones.fromHTML(file);
+        applicationData.getZoneVisits().updateZoneVisits(userName, visits);
         return null;
     }
 
