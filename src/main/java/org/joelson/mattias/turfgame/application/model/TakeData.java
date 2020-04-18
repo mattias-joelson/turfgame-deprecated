@@ -37,7 +37,6 @@ public class TakeData extends VisitData {
     
     @Override
     public String toString() {
-        return String.format("TakeData{zone %d - %s, when %s, taker %d - %s", //NON-NLS
-                getZone().getId(), getZone().getName(), getWhen(), getTaker().getId(), getTaker().getName());
+        return String.format("TakeData[zone %s, when %s, taker %%s]", ModelUtil.toString(getZone()), getWhen(), ModelUtil.toString(getTaker())); //NON-NLS
     }
 }

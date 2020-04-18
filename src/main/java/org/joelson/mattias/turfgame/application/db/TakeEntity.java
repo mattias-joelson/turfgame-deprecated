@@ -92,7 +92,7 @@ public class TakeEntity implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("TakeEntity{id %d, zone %s, when %s", id, EntityUtil.toStringPart(zone), when); //NON-NLS
+        return String.format("TakeEntity[id %d, zone %s, when %s]", id, EntityUtil.toStringPart(zone), when); //NON-NLS
     }
     
     public static TakeEntity build(ZoneEntity zone, Instant when) {

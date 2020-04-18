@@ -72,8 +72,7 @@ public class VisitEntity implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("VisitEntity{zone %s, when %s, user %s, type %s", //NON-NLS
-                (take != null) ? EntityUtil.toStringPart(take.getZone()) : null, take.getWhen(), EntityUtil.toStringPart(user), type);
+        return String.format("VisitEntity[zone %s, when %s, user %s, type %s]", take.getZone(), take.getWhen(), EntityUtil.toStringPart(user), type); //NON-NLS
     }
     
     public static VisitEntity build(TakeEntity take, UserEntity user, VisitType type) {

@@ -41,7 +41,7 @@ public class AssistData extends VisitData {
     
     @Override
     public String toString() {
-        return String.format("TakeData{zone %d - %s, when %s, taker %d - %s, assister %d - %s", //NON-NLS
-                getZone().getId(), getZone().getName(), getWhen(), getTaker().getId(), getTaker().getName(), assister.getId(), assister.getName());
+        return String.format("AssistData[zone %s, when %s, taker %s, assister %s]", //NON-NLS
+                ModelUtil.toString(getZone()), getWhen(), ModelUtil.toString(getTaker()), ModelUtil.toString(assister));
     }
 }
