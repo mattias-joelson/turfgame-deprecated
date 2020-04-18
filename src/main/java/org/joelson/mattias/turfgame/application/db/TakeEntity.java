@@ -2,6 +2,7 @@ package org.joelson.mattias.turfgame.application.db;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
@@ -99,6 +100,7 @@ public class TakeEntity implements Serializable {
         TakeEntity take = new TakeEntity();
         take.setZone(zone);
         take.setWhen(when);
+        take.visits = new ArrayList<>();
         return take;
     }
 }
