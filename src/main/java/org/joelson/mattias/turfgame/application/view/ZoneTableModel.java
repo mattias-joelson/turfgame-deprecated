@@ -12,7 +12,7 @@ import javax.swing.table.TableRowSorter;
 
 class ZoneTableModel extends AbstractTableModel {
     
-    private static final String[] COLUMN_NAMES = { "ID", "Name", "Region Name", "Country", "Latitude", "Longitude", "Date Created", "TP", "PPH" }; //NON-NLS
+    private static final String[] COLUMN_NAMES = { "ID", "Name", "Region Name", "Country", "Latitude", "Longitude", "Date Created", "TP", "PPH" };
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class, String.class, String.class, Double.class, Double.class, Instant.class,
             Integer.class, Integer.class};
     private static final long serialVersionUID = 1L;
