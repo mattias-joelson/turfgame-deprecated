@@ -44,7 +44,17 @@ public final class TakenZones {
     }
     
     private TakenZones() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated!");
+        throw new InstantiationException("Should not be instantiated!"); //NON-NLS
+    }
+
+    public static String getUserNameFromHTML(String s) {
+        int startIndex = s.indexOf("<a href=/turf/user.php>"); //NON-NLS
+        if (startIndex < 0) {
+            return null;
+        }
+        startIndex += 23;
+        int endIndex = s.indexOf("</a>", startIndex); //NON-NLS
+        return s.substring(startIndex, endIndex);
     }
     
     public static Map<String,Integer> fromHTML(String s) throws ParseException {

@@ -51,7 +51,7 @@ final class ReadZonesFromFileActionCreator {
             if (input != null) {
                 applicationUI.setStatus(String.format("Reading zones from file %s ...", zonesFile));
                 Instant finalInstant = instant;
-                new SwingWorkerBuilder<Void, Void>(() -> applicationUI.getApplicationActions().readZonesFromFile(applicationUI, zonesFile, finalInstant))
+                new SwingWorkerBuilder<Void, Void>(() -> applicationUI.getApplicationActions().readZonesFromFile(zonesFile, finalInstant))
                         .withDone(finishedWorker -> done(finishedWorker, applicationUI, zonesFile))
                         .build()
                         .execute();

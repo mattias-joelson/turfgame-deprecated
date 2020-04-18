@@ -61,7 +61,7 @@ public final class ReadTodayFromFileActionCreator {
             int result = JOptionPane.showConfirmDialog(null, panel, "Please enter user name and date", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 applicationUI.setStatus(String.format("Reading today from file %s ...", todayFile));
-                new SwingWorkerBuilder<Void, Void>(() -> applicationUI.getApplicationActions().readTodayFromFile(applicationUI, todayFile, userField.getText(), dateField.getText()))
+                new SwingWorkerBuilder<Void, Void>(() -> applicationUI.getApplicationActions().readTodayFromFile(todayFile, userField.getText(), dateField.getText()))
                         .withDone(finishedWorker -> done(finishedWorker, applicationUI, todayFile))
                         .build()
                         .execute();

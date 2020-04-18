@@ -31,6 +31,7 @@ final class MenuBuilder {
         addMenuItem(statisticsMenu, applicationUI.zoneTableAction());
         addMenuItem(statisticsMenu, applicationUI.userTableAction());
         addMenuItem(statisticsMenu, applicationUI.visitTableAction());
+        addMenuItem(statisticsMenu, applicationUI.zoneVisitTableAction());
         
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
         addMenuItem(turfgameMenu, applicationUI.readZonesAction());
@@ -38,6 +39,9 @@ final class MenuBuilder {
         
         JMenu zundinMenu = addMenu(menuBar, "Zundin");
         addMenuItem(zundinMenu, applicationUI.readTodayFromFileAction());
+
+        JMenu wardedMenu = addMenu(menuBar, "Warded");
+        addMenuItem(wardedMenu, applicationUI.readWardedFromFileAction());
         
         return menuBar;
     }
