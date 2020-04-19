@@ -66,6 +66,10 @@ public class ApplicationUI {
     Action zoneHistoryTableAction() {
         return ZoneHistoryTableActionCreator.create(this);
     }
+
+    Action zonePointsHistoryTableAction() {
+        return ZonePointsHistoryTableActionCreator.create(this);
+    }
     
     Action userTableAction() {
         return UserTableActionCreator.create(this);

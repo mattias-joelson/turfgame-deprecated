@@ -30,6 +30,7 @@ final class MenuBuilder {
         JMenu statisticsMenu = addMenu(menuBar, "Statistics");
         addMenuItem(statisticsMenu, applicationUI.zoneTableAction());
         addMenuItem(statisticsMenu, applicationUI.zoneHistoryTableAction());
+        addMenuItem(statisticsMenu, applicationUI.zonePointsHistoryTableAction());
         addMenuItem(statisticsMenu, applicationUI.userTableAction());
         addMenuItem(statisticsMenu, applicationUI.visitTableAction());
         addMenuItem(statisticsMenu, applicationUI.zoneVisitTableAction());
