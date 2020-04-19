@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class ZoneHistoryTableModel extends AbstractTableModel {
 
-    private static final String[] COLUMN_NAMES = { "ID", "Name", "From", "Region Name", "Country", "Latitude", "Longitude", "Date Created",};
+    private static final String[] COLUMN_NAMES = { "ID", "Name", "From", "Region Name", "Country", "Latitude", "Longitude", "Date Created" };
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class, Instant.class, String.class, String.class, Double.class, Double.class,
             Instant.class };
     private static final long serialVersionUID = 1L;
@@ -39,24 +39,24 @@ public class ZoneHistoryTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         ZoneHistoryData zone = zones.get(rowIndex);
         switch (columnIndex) {
-            case 0:
-                return zone.getId();
-            case 1:
-                return zone.getName();
-            case 2:
-                return zone.getFrom();
-            case 3:
-                return zone.getRegion().getName();
-            case 4:
-                return zone.getRegion().getCountry();
-            case 5:
-                return zone.getLatitude();
-            case 6:
-                return zone.getLongitude();
-            case 7:
-                return zone.getDateCreated();
-            default:
-                throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
+        case 0:
+            return zone.getId();
+        case 1:
+            return zone.getName();
+        case 2:
+            return zone.getFrom();
+        case 3:
+            return zone.getRegion().getName();
+        case 4:
+            return zone.getRegion().getCountry();
+        case 5:
+            return zone.getLatitude();
+        case 6:
+            return zone.getLongitude();
+        case 7:
+            return zone.getDateCreated();
+        default:
+            throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
         }
     }
 
@@ -80,18 +80,5 @@ public class ZoneHistoryTableModel extends AbstractTableModel {
             return cmpFrom;
         }
         return -1;
-    }
-
-    private static class DoubleRenderer extends DefaultTableCellRenderer {
-
-        NumberFormat formatter;
-
-        public void setValue(Object value) {
-            if (formatter == null) {
-                formatter = NumberFormat.getInstance();
-                formatter.setMaximumFractionDigits(6);
-            }
-            setText((value == null) ? "" : formatter.format(value));
-        }
     }
 }
