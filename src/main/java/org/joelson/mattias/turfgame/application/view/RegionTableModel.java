@@ -68,7 +68,7 @@ class RegionTableModel extends AbstractTableModel {
         return -1;
     }
 
-    private static int compareCountry(String country1, String country2) {
+    static int compareCountry(String country1, String country2) {
         if (country1 == null) {
             return (country2 == null) ? 0 : 1;
         }
