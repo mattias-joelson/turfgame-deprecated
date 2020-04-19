@@ -11,7 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
-public final class UserTableActionCreator {
+final class UserTableActionCreator {
     
     private UserTableActionCreator() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");

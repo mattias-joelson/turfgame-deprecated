@@ -5,7 +5,7 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import javax.swing.SwingWorker;
 
-public class SwingWorkerBuilder<T, V> {
+class SwingWorkerBuilder<T, V> {
     
     @FunctionalInterface
     public interface DoInBackgroundSupplier<T> {

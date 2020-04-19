@@ -5,7 +5,7 @@ import org.joelson.mattias.turfgame.application.model.ApplicationData;
 import java.awt.event.KeyEvent;
 import javax.swing.Action;
 
-public final class ZoneTableActionCreator {
+final class ZoneTableActionCreator {
     
     private ZoneTableActionCreator() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");

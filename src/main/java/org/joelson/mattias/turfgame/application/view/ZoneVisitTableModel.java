@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-public class ZoneVisitTableModel extends AbstractTableModel {
+class ZoneVisitTableModel extends AbstractTableModel {
 
     private static final String[] COLUMN_NAMES = { "Zone", "Visits" };
     private static final Class<?>[] COLUMN_CLASSES = { String.class, Integer.class };
