@@ -29,7 +29,11 @@ public class UserCollection {
     public void setSelectedUser(UserData selectedUser) {
         this.selectedUser = selectedUser;
     }
-    
+
+    public UserData getUser(int userId) {
+        return dbEntityManager.getUser(userId);
+    }
+
     public List<UserData> getUsers() {
         return dbEntityManager.getUsers();
     }
