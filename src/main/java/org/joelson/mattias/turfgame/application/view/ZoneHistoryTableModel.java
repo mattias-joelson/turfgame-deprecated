@@ -5,6 +5,7 @@ import org.joelson.mattias.turfgame.application.model.ZoneHistoryData;
 
 import java.text.NumberFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -20,7 +21,7 @@ public class ZoneHistoryTableModel extends AbstractTableModel {
     private final List<ZoneHistoryData> zones;
 
     public ZoneHistoryTableModel(List<ZoneHistoryData> zones) {
-        this.zones = zones;
+        this.zones = new ArrayList<>(zones);
         this.zones.sort(ZoneHistoryTableModel::compareZoneHistoryData);
     }
 
