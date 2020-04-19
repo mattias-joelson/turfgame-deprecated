@@ -3,6 +3,7 @@ package org.joelson.mattias.turfgame.application.db;
 import org.joelson.mattias.turfgame.application.model.AssistData;
 import org.joelson.mattias.turfgame.application.model.RegionData;
 import org.joelson.mattias.turfgame.application.model.RegionHistoryData;
+import org.joelson.mattias.turfgame.application.model.RevisitData;
 import org.joelson.mattias.turfgame.application.model.TakeData;
 import org.joelson.mattias.turfgame.application.model.UserData;
 import org.joelson.mattias.turfgame.application.model.VisitData;
@@ -338,6 +339,7 @@ public class DatabaseEntityManager {
             UserEntity taker = take.getTakeVisit().getUser();
             return new AssistData(zoneData, when, taker.toData(), userData);
         case REVISIT:
+            return new RevisitData(zoneData, when, userData);
         default:
             throw new IllegalStateException("Unknown visit type " + visit.getType());
         }
@@ -353,6 +355,8 @@ public class DatabaseEntityManager {
                 } else if (visitData instanceof AssistData) {
                     updateVisit(take, userRegistry.find(visitData.getTaker().getId()), VisitType.TAKE);
                     updateVisit(take, userRegistry.find(((AssistData) visitData).getAssister().getId()), VisitType.ASSIST);
+                } else if (visitData instanceof RevisitData) {
+                    updateVisit(take, userRegistry.find(visitData.getTaker().getId()), VisitType.REVISIT);
                 } else {
                     throw new RuntimeException("Not instantiated yet!");
                 }

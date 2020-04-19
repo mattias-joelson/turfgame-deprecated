@@ -61,6 +61,8 @@ public class VisitCollection {
         case "Assist": //NON-NLS
             return new AssistData(getZone(zones, todayZone.getZoneName()), getWhen(todayZone.getDate()), getUser(userMap, todayZone.getUserId()),
                     getUser(userMap, userName));
+        case "Revisit": //NON-NLS
+            return new RevisitData(getZone(zones, todayZone.getZoneName()), getWhen(todayZone.getDate()), getUser(userMap, userName));
         default:
             throw new RuntimeException("Activity " + todayZone.getActivity() + " not implemented yet.");
         }
