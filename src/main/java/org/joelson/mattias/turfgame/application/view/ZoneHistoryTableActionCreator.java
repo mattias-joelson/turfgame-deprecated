@@ -4,7 +4,7 @@ import org.joelson.mattias.turfgame.application.model.ApplicationData;
 
 import javax.swing.Action;
 
-public final class ZoneHistoryTableActionCreator {
+final class ZoneHistoryTableActionCreator {
 
     private  ZoneHistoryTableActionCreator() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated");

@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-public class UserTableModel extends AbstractTableModel {
+class UserTableModel extends AbstractTableModel {
     
     private static final String[] COLUMN_NAMES = { "Id", "Name" };
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class };

@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.swing.table.AbstractTableModel;
 
-public class ZonePointsHistoryTableModel extends AbstractTableModel {
+class ZonePointsHistoryTableModel extends AbstractTableModel {
 
     private static final String[] COLUMN_NAMES = { "ID", "Name", "From", "TP", "PPH" };
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class, Instant.class, Integer.class, Integer.class };

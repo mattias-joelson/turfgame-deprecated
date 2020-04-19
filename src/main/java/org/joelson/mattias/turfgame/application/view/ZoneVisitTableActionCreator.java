@@ -6,7 +6,7 @@ import org.joelson.mattias.turfgame.application.model.UserData;
 import java.awt.Container;
 import javax.swing.Action;
 
-public final class ZoneVisitTableActionCreator {
+final class ZoneVisitTableActionCreator {
 
     private ZoneVisitTableActionCreator() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated"); //NON-NLS

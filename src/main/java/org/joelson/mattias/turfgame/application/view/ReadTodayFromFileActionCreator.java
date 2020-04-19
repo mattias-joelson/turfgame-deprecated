@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public final class ReadTodayFromFileActionCreator {
+final class ReadTodayFromFileActionCreator {
     
     private ReadTodayFromFileActionCreator() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");

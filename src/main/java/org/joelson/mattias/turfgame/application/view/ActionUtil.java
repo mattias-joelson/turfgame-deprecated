@@ -6,7 +6,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Objects;
 import javax.swing.Action;
 
-public final class ActionUtil {
+final class ActionUtil {
     
     private ActionUtil() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");

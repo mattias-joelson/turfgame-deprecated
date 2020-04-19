@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import javax.swing.Action;
 
-public final class ReadWardedFromFileActionCreator {
+final class ReadWardedFromFileActionCreator {
 
     private ReadWardedFromFileActionCreator() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!"); //NON_NLS

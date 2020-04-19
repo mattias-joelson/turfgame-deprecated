@@ -1,17 +1,13 @@
 package org.joelson.mattias.turfgame.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.model.ZoneHistoryData;
 
-import java.text.NumberFormat;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 
-public class ZoneHistoryTableModel extends AbstractTableModel {
+class ZoneHistoryTableModel extends AbstractTableModel {
 
     private static final String[] COLUMN_NAMES = { "ID", "Name", "From", "Region Name", "Country", "Latitude", "Longitude", "Date Created" };
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class, Instant.class, String.class, String.class, Double.class, Double.class,

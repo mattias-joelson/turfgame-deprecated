@@ -8,7 +8,7 @@ import java.awt.Container;
 import java.awt.event.KeyEvent;
 import javax.swing.Action;
 
-public final class VisitTableActionCreator {
+final class VisitTableActionCreator {
     
     private VisitTableActionCreator() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");

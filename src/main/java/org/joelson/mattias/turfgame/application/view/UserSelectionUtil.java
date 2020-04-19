@@ -20,7 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-final public class UserSelectionUtil {
+final class UserSelectionUtil {
 
     private UserSelectionUtil() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated"); //NON-NLS

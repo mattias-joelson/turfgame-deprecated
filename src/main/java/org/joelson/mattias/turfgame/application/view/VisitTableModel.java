@@ -10,7 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-public class VisitTableModel extends AbstractTableModel {
+class VisitTableModel extends AbstractTableModel {
     
     private static final String[] COLUMN_NAMES = { "When", "Zone", "TP", "PPH", "Type", "TP / h" };
     private static final Class<?>[] COLUMN_CLASSES = { Instant.class, String.class, Integer.class, Integer.class, String.class, Integer.class };

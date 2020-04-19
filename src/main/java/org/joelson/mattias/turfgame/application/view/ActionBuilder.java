@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-public class ActionBuilder {
+class ActionBuilder {
     
     private final Consumer<ActionEvent> actionPerformed;
     private String name;
