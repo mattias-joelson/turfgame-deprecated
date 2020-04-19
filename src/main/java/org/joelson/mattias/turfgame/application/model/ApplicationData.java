@@ -112,7 +112,7 @@ public class ApplicationData {
     public String getStatus() {
         return String.format("Database %s, User %s, Zones %s",
                 (database != null) ? database : "<no database>",
-                "<no user>",
+                (users != null && users.getSelectedUser() != null) ? users.getSelectedUser().getName() : "<no user>",
                 (getZones() != null) ? getZones().getZones().size() : "<no zones>");
     }
 }

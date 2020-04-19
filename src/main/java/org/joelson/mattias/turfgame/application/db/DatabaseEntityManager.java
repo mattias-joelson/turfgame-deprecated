@@ -284,13 +284,21 @@ public class DatabaseEntityManager {
         }
     }
 
+    public UserData getUser(int id) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            UserEntity user = userRegistry.find(id);
+            return (user != null) ? user.toData() : null;
+        }
+    }
+
     public UserData getUser(String name) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
             return userRegistry.findAnyOrNull("name", name).toData(); //NON-NLS
         }
     }
-    
+
     public void updateUsers(Iterable<UserData> newUsers, Iterable<UserData> updatedUsers) {
         try (Transaction transaction = new Transaction()) {
             transaction.begin();

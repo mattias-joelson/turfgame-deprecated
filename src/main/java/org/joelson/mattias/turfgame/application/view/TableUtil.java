@@ -25,14 +25,16 @@ final class TableUtil {
     }
     
     public static Container createDefaultTablePane(TableModel tabelModel, String filterLabelText) {
-        JTable table = createDefaultTable(tabelModel);
+        return createDefaultTablePane(createDefaultTable(tabelModel), filterLabelText);
+    }
+
+    public static Container createDefaultTablePane(JTable table, String filterLabelText) {
         TableRowSorter<TableModel> tableSorter = createTableSorter(table);
         Container filterContainer = createFilterContainer(tableSorter, filterLabelText);
         return createTableContainer(table, filterContainer);
-        
     }
     
-    private static JTable createDefaultTable(TableModel tableModel) {
+    public static JTable createDefaultTable(TableModel tableModel) {
         JTable table = new JTable(tableModel);
         table.setShowGrid(true);
         table.setGridColor(Color.BLACK);
