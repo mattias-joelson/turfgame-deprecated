@@ -62,6 +62,10 @@ public class ApplicationUI {
     Action zoneTableAction() {
         return ZoneTableActionCreator.create(this);
     }
+
+    Action zoneHistoryTableAction() {
+        return ZoneHistoryTableActionCreator.create(this);
+    }
     
     Action userTableAction() {
         return UserTableActionCreator.create(this);

@@ -3,8 +3,11 @@ package org.joelson.mattias.turfgame.application.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.util.Comparator;
-import java.util.function.Consumer;
+import java.text.NumberFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.stream.IntStream;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -13,8 +16,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -41,6 +46,8 @@ final class TableUtil {
         table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);
         table.setDefaultEditor(Object.class, null); // disable edit
+        table.setDefaultRenderer(Double.class, new DoubleRenderer());
+        table.setDefaultRenderer(Instant.class, new InstantRenderer());
         return table;
     }
     
@@ -109,6 +116,52 @@ final class TableUtil {
             String filterText = filterField.getText();
             RowFilter<TableModel, Object> rf = RowFilter.regexFilter(filterText, columnIndices);
             sorter.setRowFilter(rf);
+        }
+    }
+
+    private static final class DoubleRenderer extends DefaultTableCellRenderer {
+
+        private NumberFormat formatter;
+
+        private DoubleRenderer() {
+            setHorizontalAlignment(SwingConstants.RIGHT);
+        }
+
+        @Override
+        public void setValue(Object value) {
+            if (formatter == null) {
+                formatter = NumberFormat.getInstance();
+                formatter.setMinimumFractionDigits(6);
+                formatter.setMaximumFractionDigits(6);
+            }
+            setText((value == null) ? "" : formatter.format(value));
+        }
+    }
+
+    private static final class InstantRenderer extends DefaultTableCellRenderer {
+
+        private DateTimeFormatter formatter;
+
+        private InstantRenderer() {
+            setHorizontalAlignment(SwingConstants.RIGHT);
+        }
+
+        @Override
+        public void setValue(Object value) {
+            if (formatter == null) {
+                formatter = new DateTimeFormatterBuilder()
+                        .parseCaseInsensitive()
+                        .append(DateTimeFormatter.ISO_LOCAL_DATE)
+                        .appendLiteral(' ')
+                        .append(DateTimeFormatter.ISO_LOCAL_TIME)
+                        .toFormatter()
+                        .withZone(ZoneId.systemDefault());
+            }
+            if (value instanceof Instant) {
+                setText(formatter.format((Instant) value));
+            } else {
+                setText((value == null) ? "" : value.toString());
+            }
         }
     }
 }
