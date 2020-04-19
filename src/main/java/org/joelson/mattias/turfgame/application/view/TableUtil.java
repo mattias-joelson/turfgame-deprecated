@@ -121,6 +121,8 @@ final class TableUtil {
 
     private static final class DoubleRenderer extends DefaultTableCellRenderer {
 
+        private static final long serialVersionUID = 1L;
+
         private NumberFormat formatter;
 
         private DoubleRenderer() {
@@ -139,6 +141,8 @@ final class TableUtil {
     }
 
     private static final class InstantRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
 
         private DateTimeFormatter formatter;
 
