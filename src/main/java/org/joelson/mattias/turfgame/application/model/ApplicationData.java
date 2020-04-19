@@ -17,6 +17,7 @@ public class ApplicationData {
 
     private UserCollection users;
     private VisitCollection visits;
+    private RegionCollection regions;
     private ZoneCollection zones;
     private ZoneVisitCollection zoneVisits;
     private Path database;
@@ -70,6 +71,7 @@ public class ApplicationData {
     private void setDatabase(DatabaseEntityManager newDatabaseManager, Path databasePath) {
         databaseManager = newDatabaseManager;
         database = databasePath;
+        regions = new RegionCollection(databaseManager);
         users = new UserCollection(databaseManager);
         visits = new VisitCollection(databaseManager);
         zones = new ZoneCollection(databaseManager);
@@ -86,11 +88,16 @@ public class ApplicationData {
             databaseManager.close();
             databaseManager = null;
             database = null;
+            regions = null;
             users = null;
             visits = null;
             zones = null;
             propertyChangeSupport.firePropertyChange(HAS_DATABASE, true, false);
         }
+    }
+
+    public RegionCollection getRegions() {
+        return regions;
     }
     
     public UserCollection getUsers() {

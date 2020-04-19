@@ -28,6 +28,7 @@ final class MenuBuilder {
         addMenuItem(fileMenu, "Quit", createMenuShortcutAccelerator('Q'), applicationActions::closeApplication);
         
         JMenu statisticsMenu = addMenu(menuBar, "Statistics");
+        addMenuItem(statisticsMenu, applicationUI.regionTableAction());
         addMenuItem(statisticsMenu, applicationUI.zoneTableAction());
         addMenuItem(statisticsMenu, applicationUI.zoneHistoryTableAction());
         addMenuItem(statisticsMenu, applicationUI.zonePointsHistoryTableAction());

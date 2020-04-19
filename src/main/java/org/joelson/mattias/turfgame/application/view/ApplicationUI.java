@@ -59,6 +59,10 @@ public class ApplicationUI {
         return ReadZonesFromFileActionCreator.create(this);
     }
     
+    Action regionTableAction() {
+        return RegionTableActionCreator.create(this);
+    }
+
     Action zoneTableAction() {
         return ZoneTableActionCreator.create(this);
     }
