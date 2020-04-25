@@ -25,12 +25,22 @@ public class MonthlyVisitTest {
     public void visitDanderydTest() throws Exception {
         visitMunicipalityTest("Danderyd", "danderyd_month.kml", MunicipalityTest.getDanderydZones());
     }
-    
+
+    @Test
+    public void visitJarfallaTest() throws Exception {
+        visitMunicipalityTest("Järfälla", "jarfalla_month.kml", MunicipalityTest.getJarfallaZones());
+    }
+
     @Test
     public void visitSolnaTest() throws Exception {
         visitMunicipalityTest("Solna", "solna_month.kml", MunicipalityTest.getSolnaZones());
     }
-    
+
+    @Test
+    public void visitSollentunaTest() throws Exception {
+        visitMunicipalityTest("Sollentuna", "sollentuna_month.kml", MunicipalityTest.getSollentunaZones());
+    }
+
     @Test
     public void visitStockholmTest() throws Exception {
         visitMunicipalityTest("Stockholm", "stockholm_month.kml", MunicipalityTest.getStockholmZones());
