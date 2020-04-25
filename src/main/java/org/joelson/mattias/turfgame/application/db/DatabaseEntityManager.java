@@ -336,7 +336,15 @@ public class DatabaseEntityManager {
         Instant when = take.getWhen();
         ZoneEntity zone = take.getZone();
         ZoneHistoryEntity zoneHistory = zoneHistoryRegistry.findLatestBefore(zone, when);
+        if (zoneHistory == null) {
+            System.out.println("Zone " + zone.getName() + " stored after visit data.");
+            zoneHistory = zoneHistoryRegistry.findLatest(zone);
+        }
         ZonePointsHistoryEntity zonePointsHistory = zonePointsHistoryRegistry.findLatestBefore(zone, when);
+        if (zonePointsHistory == null) {
+            System.out.println("Zone " + zone.getName() + " stored after visit data.");
+            zonePointsHistory = zonePointsHistoryRegistry.findLatest(zone);
+        }
         
         ZoneData zoneData = new ZoneData(zone.getId(), zone.getName(), zoneHistory.getRegion().toData(), zoneHistory.getDateCreated(),
                 zoneHistory.getLatitude(), zoneHistory.getLongitude(), zonePointsHistory.getTp(), zonePointsHistory.getPph());

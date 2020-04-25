@@ -29,6 +29,14 @@ class ZoneHistoryRegistry extends EntityRegistry<ZoneHistoryEntity> {
         query.setParameter("when", when); //NON-NLS
         return query.getResultStream()
                 .findFirst()
+                .orElse(null);
+    }
+
+    public ZoneHistoryEntity findLatest(ZoneEntity zone) {
+        TypedQuery<ZoneHistoryEntity> query = createQuery("SELECT e FROM ZoneHistoryEntity e WHERE e.zone=:zone ORDER BY e.from DESC"); //NON-NLS
+        query.setParameter("zone", zone); //NON-NLS
+        return query.getResultStream()
+                .findFirst()
                 .orElseThrow();
     }
 }
