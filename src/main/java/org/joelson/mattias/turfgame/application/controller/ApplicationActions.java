@@ -65,10 +65,16 @@ public class ApplicationActions {
         Today today = Today.fromHTML(username, date, file);
         Set<String> usernames = new HashSet<>(today.getZones().size() + 1);
         usernames.add(today.getUserName());
-        today.getZones().forEach(todayZone -> usernames.add(todayZone.getUserId()));
+        today.getZones().forEach(todayZone -> addUserToSet(usernames, todayZone.getUserId()));
         applicationData.getUsers().updateUsers(usernames);
         applicationData.getVisits().updateVisits(today);
         return null;
+    }
+
+    private static void addUserToSet(Set<String> usernames, String username) {
+        if (!username.isEmpty()) {
+            usernames.add(username);
+        }
     }
 
     public Void readWardedFromFile(Path wardedFile) throws IOException, ParseException {

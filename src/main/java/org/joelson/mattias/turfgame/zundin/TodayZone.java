@@ -97,6 +97,10 @@ public class TodayZone {
         StringPosition pphPosition = Parser.getString(html, Parser.LEFT_TABLE_CELL_TAG, tpPosition);
         StringPosition activityPosition = Parser.getString(html, ACTIVITY_TABLE_CELL_TAG, pphPosition);
         StringPosition userIdPosition = Parser.getString(html, USER_NAME_LINK_TAG, activityPosition);
+        if (userIdPosition.getPosition() < activityPosition.getPosition()) {
+            // neutralizer
+            userIdPosition = Parser.getString(html, Parser.TABLE_CELL_TAG, activityPosition);
+        }
         StringPosition takePosition = Parser.getString(html, Parser.TABLE_CELL_TAG, userIdPosition);
 
         return new TodayZone(datePosition.stringValue(), eagerTimePosition.stringValue(), namePosition.stringValue(),
