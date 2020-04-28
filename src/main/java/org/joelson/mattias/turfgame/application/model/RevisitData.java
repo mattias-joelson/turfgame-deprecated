@@ -38,6 +38,6 @@ public class RevisitData extends VisitData {
 
     @Override
     public String toString() {
-        return String.format("RevisitData[zone %s, when %s, taker %%s]", ModelUtil.toString(getZone()), getWhen(), ModelUtil.toString(getTaker())); //NON-NLS
+        return String.format("RevisitData[zone %s, when %s, taker %%s]", ModelUtil.toStringPart(getZone()), getWhen(), ModelUtil.toStringPart(getTaker())); //NON-NLS
     }
 }

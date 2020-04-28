@@ -45,7 +45,7 @@ public class ZoneVisitData {
 
     @Override
     public String toString() {
-        return String.format("ZoneVisitData[user %s, zone %s, visits %d]", ModelUtil.toString(user), ModelUtil.toString(zone), visits); //NON-NLS
+        return String.format("ZoneVisitData[user %s, zone %s, visits %d]", ModelUtil.toStringPart(user), ModelUtil.toStringPart(zone), visits); //NON-NLS
     }
 
     private static int requirePositiveVisits(int visits) {
