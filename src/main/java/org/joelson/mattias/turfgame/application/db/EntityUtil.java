@@ -1,20 +1,27 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
+
 final class EntityUtil {
     
     private EntityUtil() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated!");
+        throw new InstantiationException("Should not be instantiated!"); // NON-NLS
     }
     
     public static String toStringPart(RegionEntity region) {
-        return (region != null) ? String.format("%d - %s", region.getId(), region.getName()) : null; //NON-NLS
+        return toStringPart(region, RegionEntity::getId, RegionEntity::getName);
     }
 
     public static String toStringPart(UserEntity user) {
-        return (user != null) ? String.format("%d - %s", user.getId(), user.getName()) : null; //NON-NLS
+        return toStringPart(user, UserEntity::getId, UserEntity::getName);
     }
 
     public static String toStringPart(ZoneEntity zone) {
-        return (zone != null) ? String.format("%d - %s", zone.getId(), zone.getName()) : null; //NON-NLS
+        return toStringPart(zone, ZoneEntity::getId, ZoneEntity::getName);
+    }
+
+    private static <T> String toStringPart(T entity, ToIntFunction<T> id, Function<T, String> name) {
+        return (entity != null) ? String.format("%d - %s", id.applyAsInt(entity), name.apply(entity)) : null; //NON-NLS
     }
 }

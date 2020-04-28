@@ -6,11 +6,19 @@ final class ModelUtil {
         throw new InstantiationException("Should not be instantiated!"); //NON-NLS
     }
 
-    public static String toString(UserData user) {
-        return String.format("%d - %s", user.getId(), user.getName()); //NON-NLS
+    public static String toStringPart(UserData user) {
+        return toStringPart(user.getId(), user.getName());
     }
 
-    public static String toString(ZoneData zone) {
-        return String.format("%d - %s", zone.getId(), zone.getName()); //NON-NLS
+    public static String toStringPart(ZoneData zone) {
+        return toStringPart(zone.getId(), zone.getName());
+    }
+
+    public static String toStringPart(RegionData region) {
+        return toStringPart(region.getId(), region.getName());
+    }
+
+    private static String toStringPart(int id, String name) {
+        return String.format("%d - %s", id, name); //NON-NLS
     }
 }
