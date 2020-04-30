@@ -56,7 +56,7 @@ public class ZoneHistoryEntity implements Serializable {
     }
     
     public void setZone(@NotNull ZoneEntity zone) {
-        this.zone = Objects.requireNonNull(zone, "Zome can not be null"); //NON-NLS
+        this.zone = Objects.requireNonNull(zone, "Zone can not be null"); //NON-NLS
     }
     
     @NotNull

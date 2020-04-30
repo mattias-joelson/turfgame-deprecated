@@ -55,7 +55,7 @@ public class TakeEntity implements Serializable {
     }
     
     public void setZone(ZoneEntity zone) {
-        this.zone = Objects.requireNonNull(zone, "Zone can not bu null!"); //NON-NLS
+        this.zone = Objects.requireNonNull(zone, "Zone can not be null!"); //NON-NLS
     }
     
     public Instant getWhen() {
