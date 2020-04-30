@@ -38,7 +38,7 @@ public class ZoneVisitEntity implements Serializable {
     }
 
     public void setUser(UserEntity user) {
-        this.user = user;
+        this.user = Objects.requireNonNull(user, "User can not be null!"); //NON-NLS
     }
 
     public ZoneEntity getZone() {
@@ -46,7 +46,7 @@ public class ZoneVisitEntity implements Serializable {
     }
 
     public void setZone(ZoneEntity zone) {
-        this.zone = zone;
+        this.zone = Objects.requireNonNull(zone, "Zone can not be null"); //NON-NLS
     }
 
     public int getVisits() {

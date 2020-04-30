@@ -10,21 +10,22 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "visits", uniqueConstraints = @UniqueConstraint(columnNames = { "take_id", "user_id"}))
+@Table(name = "visits", //NON-NLS
+        uniqueConstraints = @UniqueConstraint(columnNames = { "take_id", "user_id"})) //NON-NLS
 public class VisitEntity implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
     @Id
     @ManyToOne(optional = false)
-    TakeEntity take;
+    private TakeEntity take;
     
     @Id
     @ManyToOne(optional = false)
-    UserEntity user;
+    private UserEntity user;
     
     @Enumerated
-    VisitType type;
+    private VisitType type;
     
     public VisitEntity() {
     }
@@ -42,7 +43,7 @@ public class VisitEntity implements Serializable {
     }
     
     public void setUser(UserEntity user) {
-        this.user = Objects.requireNonNull(user, "Ussr can not be null!"); //NON-NLS
+        this.user = Objects.requireNonNull(user, "User can not be null!"); //NON-NLS
     }
     
     public VisitType getType() {
