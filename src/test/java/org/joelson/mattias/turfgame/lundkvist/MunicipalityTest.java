@@ -18,14 +18,14 @@ public class MunicipalityTest {
     @Test
     public void readSolna() throws Exception {
         Map<String, Boolean> zones = getSolnaZones();
-        assertEquals(192, zones.size());
+        assertEquals(193, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(192, taken);
+        assertEquals(193, taken);
     }
     
     @Test

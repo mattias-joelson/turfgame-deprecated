@@ -67,7 +67,7 @@ public class MonthlyTest {
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
         assertEquals(ROUND, monthly.getRound());
-        assertEquals(711, (monthly.getZones()).size());
+        assertEquals(896, (monthly.getZones()).size());
     }
 
     @Test
