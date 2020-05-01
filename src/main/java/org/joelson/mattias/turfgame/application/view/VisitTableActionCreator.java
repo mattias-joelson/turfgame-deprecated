@@ -30,5 +30,6 @@ final class VisitTableActionCreator {
         VisitTableModel tableModel = new VisitTableModel(applicationData.getVisits(), selectedUser);
         Container tableContainer = TableUtil.createDefaultTablePane(tableModel, "Visit Filter");
         applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser, tableModel::updateSelectedUser, tableContainer));
+        applicationUI.setApplicationDataStatus();
     }
 }
