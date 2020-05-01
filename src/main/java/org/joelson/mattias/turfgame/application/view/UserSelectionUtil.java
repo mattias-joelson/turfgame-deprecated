@@ -28,7 +28,11 @@ final class UserSelectionUtil {
 
     public static Container createContainer(ApplicationData applicationData, UserData selectedUser, Consumer<UserData> userSelectionListener,
             Container tableContainer) {
-        return createContainer(createUserSelectionContainer(applicationData, selectedUser, userSelectionListener), tableContainer);
+        return createContainer(applicationData.getUsers().getUsers(), selectedUser, userSelectionListener, tableContainer);
+    }
+
+    public static Container createContainer(List<UserData> users, UserData selectedUser, Consumer<UserData> userSelectionListener, Container tableContainer) {
+        return createContainer(createUserSelectionContainer(users, selectedUser, userSelectionListener), tableContainer);
     }
 
     private static Container createContainer(Container userContainer, Container tableContainer) {
@@ -40,10 +44,13 @@ final class UserSelectionUtil {
     }
 
     public static UserData getSelectedUser(ApplicationData applicationData) {
+        return getSelectedUser(applicationData, applicationData.getUsers().getUsers());
+    }
+
+    public static UserData getSelectedUser(ApplicationData applicationData, List<UserData> existingUsers) {
         UserCollection users = applicationData.getUsers();
         UserData user = users.getSelectedUser();
-        if (user == null) {
-            List<UserData> existingUsers = users.getUsers();
+        if (user == null || !existingUsers.contains(user)) {
             if (!existingUsers.isEmpty()) {
                 user = existingUsers.get(0);
                 users.setSelectedUser(user);
@@ -55,8 +62,7 @@ final class UserSelectionUtil {
         return user;
     }
 
-    public static Container createUserSelectionContainer(ApplicationData applicationData, UserData selectedUser, Consumer<UserData> userSelectionListener) {
-        List<UserData> users = applicationData.getUsers().getUsers();
+    public static Container createUserSelectionContainer(List<UserData> users, UserData selectedUser, Consumer<UserData> userSelectionListener) {
         Container userContainer = new Container();
         GroupLayout groupLayout = new GroupLayout(userContainer);
         userContainer.setLayout(groupLayout);

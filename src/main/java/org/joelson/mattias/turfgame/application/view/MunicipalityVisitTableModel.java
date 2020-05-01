@@ -1,14 +1,11 @@
 package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.model.MunicipalityData;
-import org.joelson.mattias.turfgame.application.model.RegionData;
 import org.joelson.mattias.turfgame.application.model.UserData;
 import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.model.ZoneVisitCollection;
 import org.joelson.mattias.turfgame.application.model.ZoneVisitData;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,22 +21,37 @@ class MunicipalityVisitTableModel extends AbstractTableModel {
     private final List<MunicipalityData> municipalities;
     private final Map<ZoneData, MunicipalityData> zoneMunicipalityMap;
     private final ZoneVisitCollection zoneVisits;
+    private List<MunicipalityData> selectedMunicipalities;
+    private UserData selectedUser;
     private List<ZoneVisitData> currentZoneVisits;
 
 
     public MunicipalityVisitTableModel(List<MunicipalityData> municipalities, ZoneVisitCollection zoneVisits, UserData selectedUser) {
         this.municipalities = municipalities;
+        selectedMunicipalities = municipalities;
         zoneMunicipalityMap = createZoneMunicipalityMap(municipalities);
         this.zoneVisits = zoneVisits;
         updateSelectedUser(selectedUser);
     }
 
     public void updateSelectedUser(UserData selectedUser) {
+        this.selectedUser = selectedUser;
+        updateData();
+    }
+
+    public void updateSelectedMunicipalities(List<MunicipalityData> municipalities) {
+        selectedMunicipalities = (municipalities.isEmpty()) ? this.municipalities : municipalities;
+        updateData();
+    }
+
+    private void updateData() {
         currentZoneVisits = zoneVisits.getZoneVisits(selectedUser).stream()
                 .filter(zoneVisitData -> zoneMunicipalityMap.containsKey(zoneVisitData.getZone()))
+                .filter(zoneVisitData -> selectedMunicipalities.contains(zoneMunicipalityMap.get(zoneVisitData.getZone())))
                 .collect(Collectors.toList());
         currentZoneVisits.sort((zv1, zv2) -> compareZoneVisits(zoneMunicipalityMap, zv1, zv2));
         fireTableDataChanged();
+
     }
 
     @Override
