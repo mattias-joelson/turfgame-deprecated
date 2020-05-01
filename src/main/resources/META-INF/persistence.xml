@@ -14,6 +14,7 @@
         <class>org.joelson.mattias.turfgame.application.db.ZoneEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.ZoneHistoryEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.ZonePointsHistoryEntity</class>
+        <class>org.joelson.mattias.turfgame.application.db.ZoneVisitEntity</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
             <property name="hibernate.show_sql" value="false" />

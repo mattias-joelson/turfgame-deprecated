@@ -19,7 +19,7 @@ public class RegionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
-    @Column(nullable = false)
+    @Column(updatable = false, nullable = false)
     private int id;
 
     @NotNull
@@ -36,7 +36,7 @@ public class RegionEntity implements Serializable {
         return id;
     }
     
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
     

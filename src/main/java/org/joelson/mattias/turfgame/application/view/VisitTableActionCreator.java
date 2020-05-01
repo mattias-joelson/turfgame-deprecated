@@ -31,12 +31,4 @@ final class VisitTableActionCreator {
         Container tableContainer = TableUtil.createDefaultTablePane(tableModel, "Visit Filter");
         applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser, tableModel::updateSelectedUser, tableContainer));
     }
-
-    private static Container createContainer(Container userContainer, Container tableContainer) {
-        Container container = new Container();
-        container.setLayout(new BorderLayout());
-        container.add(userContainer, BorderLayout.PAGE_START);
-        container.add(tableContainer, BorderLayout.CENTER);
-        return container;
-    }
 }
