@@ -16,6 +16,10 @@ public final class Municipality {
     private static final String SELECTED_ATTRIBUTE = "selected";
     private static final String ZONE_LINK = "<td><a href='https://turfgame.com/map/";
     private static final String ROW_END = "</td></tr>";
+
+    private Municipality() throws InstantiationException {
+        throw new InstantiationException("Should not be instantiated"); //NON-NLS
+    }
     
     public static Map<String, Boolean> fromLundkvist(String userName, String country, int region, String municipality) throws IOException {
         return fromHTML(getMunicipalityHTML(userName, country, region, municipality));
