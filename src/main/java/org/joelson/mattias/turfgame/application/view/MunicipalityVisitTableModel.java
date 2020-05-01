@@ -6,9 +6,11 @@ import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.model.ZoneVisitCollection;
 import org.joelson.mattias.turfgame.application.model.ZoneVisitData;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.table.AbstractTableModel;
 
@@ -49,6 +51,13 @@ class MunicipalityVisitTableModel extends AbstractTableModel {
                 .filter(zoneVisitData -> zoneMunicipalityMap.containsKey(zoneVisitData.getZone()))
                 .filter(zoneVisitData -> selectedMunicipalities.contains(zoneMunicipalityMap.get(zoneVisitData.getZone())))
                 .collect(Collectors.toList());
+        // add unvisited zones
+        Set<ZoneData> visitedZones = currentZoneVisits.stream().map(ZoneVisitData::getZone).collect(Collectors.toSet());
+        selectedMunicipalities.stream()
+                .map(MunicipalityData::getZones)
+                .flatMap(Collection::stream)
+                .filter(zone -> !visitedZones.contains(zone))
+                .forEach(zone -> currentZoneVisits.add(new ZoneVisitData(selectedUser, zone, 0)));
         currentZoneVisits.sort((zv1, zv2) -> compareZoneVisits(zoneMunicipalityMap, zv1, zv2));
         fireTableDataChanged();
 
