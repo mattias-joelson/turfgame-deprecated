@@ -40,7 +40,7 @@ final class ReadWardedFromFileActionCreator {
         try {
             finishedWorker.get();
         } catch (ExecutionException e) {
-            applicationUI.showErrorDialog("Error Readin Warded File",
+            applicationUI.showErrorDialog("Error Reading Warded File",
                     String.format("There was an error reading warded file %s\n%s", wardedFile, e.getCause()));
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -33,7 +33,7 @@ final class ReadZonesActionCreator {
         try {
             finishedWorker.get();
         } catch (ExecutionException e) {
-            applicationUI.showErrorDialog("Error reading zones",
+            applicationUI.showErrorDialog("Error Reading Zones",
                     String.format("Unable to read zones through API V4 and update database.\n%s",e.getCause()));
         } catch (InterruptedException e) {
             applicationUI.showUnexpectedInteruptionError(e);

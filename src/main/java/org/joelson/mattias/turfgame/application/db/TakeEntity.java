@@ -27,6 +27,7 @@ public class TakeEntity implements Serializable {
 
     @Id
     @GeneratedValue
+    @Column(updatable = false, nullable = false)
     private int id;
     
     @ManyToOne(optional = false)
@@ -44,10 +45,6 @@ public class TakeEntity implements Serializable {
     
     public int getId() {
         return id;
-    }
-    
-    public void setId(int id) {
-        this.id = id;
     }
     
     public ZoneEntity getZone() {
