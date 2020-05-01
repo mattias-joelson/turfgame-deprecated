@@ -10,8 +10,8 @@ import javax.swing.table.AbstractTableModel;
 
 public class MunicipalityTableModel  extends AbstractTableModel {
 
-    private static final String[] COLUMN_NAMES = { "Country", "Region", "Municipality" };
-    private static final Class<?>[] COLUMN_CLASSES = { String.class, String.class, String.class };
+    private static final String[] COLUMN_NAMES = { "Country", "Region", "Municipality", "Zones" };
+    private static final Class<?>[] COLUMN_CLASSES = { String.class, String.class, String.class, Integer.class };
     private static final long serialVersionUID = 1L;
 
     private final List<MunicipalityData> municipalities;
@@ -28,7 +28,7 @@ public class MunicipalityTableModel  extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -41,6 +41,8 @@ public class MunicipalityTableModel  extends AbstractTableModel {
                 return municipality.getRegion().getName();
             case 2:
                 return municipality.getName();
+            case 3:
+                return municipality.getZones().size();
             default:
                 throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
         }
