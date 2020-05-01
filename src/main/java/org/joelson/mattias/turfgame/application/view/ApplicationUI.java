@@ -99,6 +99,14 @@ public class ApplicationUI {
         return ZoneVisitTableActionCreator.create(this);
     }
 
+    Action municipalityVisitAction() {
+        return MunicipalityVisitTableActionCreator.create(this);
+    }
+
+    Action readMunicipalityFromFileAction() {
+        return ReadMunicipalityFromFileActionCreator.create(this);
+    }
+
     Action openDatabaseAction() {
         return OpenDatabaseActionCreator.create(this);
     }

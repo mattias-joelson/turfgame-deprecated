@@ -4,7 +4,10 @@ import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.Zones;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 import org.joelson.mattias.turfgame.application.model.ApplicationData;
+import org.joelson.mattias.turfgame.application.model.MunicipalityData;
+import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.view.ApplicationUI;
+import org.joelson.mattias.turfgame.lundkvist.Municipality;
 import org.joelson.mattias.turfgame.warded.TakenZones;
 import org.joelson.mattias.turfgame.zundin.Today;
 
@@ -19,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.PersistenceException;
 
 public class ApplicationActions {
@@ -59,7 +63,20 @@ public class ApplicationActions {
         applicationData.getZones().updateZones(instant, zones);
         return null;
     }
-    
+
+    public Void readMunicipalityFromFile(Path municipalityFile) throws IOException, ParseException {
+        String file = Files.readString(municipalityFile);
+        String name = Municipality.nameFromHTML(file);
+        Map<String, Boolean> zoneMap = Municipality.fromHTML(file);
+        Set<String> zoneNames = zoneMap.keySet();
+        List<ZoneData> zones = applicationData.getZones().getZones().stream()
+                .filter(zoneData -> zoneNames.contains(zoneData.getName()))
+                .collect(Collectors.toList());
+        MunicipalityData municipality = new MunicipalityData(zones.get(0).getRegion(), name, zones);
+        applicationData.getMunicipalities().updateMunicipality(municipality);
+        return null;
+    }
+
     public Void readTodayFromFile(Path todayFile, String username, String date) throws IOException, ParseException {
         String file = Files.readString(todayFile);
         Today today = Today.fromHTML(username, date, file);

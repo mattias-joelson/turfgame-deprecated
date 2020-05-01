@@ -1,6 +1,7 @@
 package org.joelson.mattias.turfgame.application.db;
 
 import org.joelson.mattias.turfgame.application.model.AssistData;
+import org.joelson.mattias.turfgame.application.model.MunicipalityData;
 import org.joelson.mattias.turfgame.application.model.RegionData;
 import org.joelson.mattias.turfgame.application.model.RegionHistoryData;
 import org.joelson.mattias.turfgame.application.model.RevisitData;
@@ -40,6 +41,8 @@ public class DatabaseEntityManager {
                 throw new IllegalStateException("Starting new transaction inside existing.");
             }
             entityManager = entityManagerFactory.createEntityManager();
+            municipalityRegistry = new MunicipalityRegistry(entityManager);
+            municipalityZoneRegistry = new MunicipalityZoneRegistry(entityManager);
             regionRegistry = new RegionRegistry(entityManager);
             regionHistoryRegistry = new RegionHistoryRegistry(entityManager);
             takeRegistry = new TakeRegistry(entityManager);
@@ -73,6 +76,8 @@ public class DatabaseEntityManager {
             }
             entityManager.close();
             entityManager = null;
+            municipalityRegistry = null;
+            municipalityZoneRegistry = null;
             regionRegistry = null;
             regionHistoryRegistry = null;
             takeRegistry = null;
@@ -95,6 +100,8 @@ public class DatabaseEntityManager {
     private final EntityManagerFactory entityManagerFactory;
 
     private EntityManager entityManager;
+    private MunicipalityRegistry municipalityRegistry;
+    private MunicipalityZoneRegistry municipalityZoneRegistry;
     private RegionRegistry regionRegistry;
     private RegionHistoryRegistry regionHistoryRegistry;
     private TakeRegistry takeRegistry;
@@ -397,6 +404,15 @@ public class DatabaseEntityManager {
         }
     }
 
+    public List<UserData> getZoneVisitUsers() {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return zoneVisitRegistry.findAllUsers()
+                    .map(UserEntity::toData)
+                    .collect(Collectors.toList());
+        }
+    }
+
     public List<ZoneVisitData> getZoneVisits(UserData userData) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
@@ -425,6 +441,52 @@ public class DatabaseEntityManager {
             zoneVisitRegistry.create(user, zone, zoneVisitData.getVisits());
         } else {
             zoneVisit.setVisits(zoneVisitData.getVisits());
+        }
+    }
+
+    public MunicipalityData getMunicipality(String name) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            MunicipalityEntity municipality = municipalityRegistry.findByName(name);
+            return (municipality != null) ? municipality.toData() : null;
+        }
+    }
+
+    public List<MunicipalityData> getMunicipalities() {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return municipalityRegistry.findAll()
+                    .map(MunicipalityEntity::toData)
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public void updateMunicipality(MunicipalityData municipalityData) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.begin();
+            MunicipalityEntity municipality = getOrCreateMunicipality(municipalityData);
+            municipalityData.getZones().forEach(zoneData -> updateMunicipalityZone(municipality, zoneData));
+            transaction.commit();
+        }
+    }
+
+    private MunicipalityEntity getOrCreateMunicipality(MunicipalityData municipalityData) {
+        RegionEntity region = regionRegistry.find(municipalityData.getRegion().getId());
+        String municipalityName = municipalityData.getName();
+        MunicipalityEntity municipality = municipalityRegistry.find(region, municipalityName);
+        if (municipality == null) {
+            municipality = municipalityRegistry.create(region, municipalityName);
+        }
+        return municipality;
+    }
+
+    private void updateMunicipalityZone(MunicipalityEntity municipality, ZoneData zoneData) {
+        ZoneEntity zone = zoneRegistry.find(zoneData.getId());
+        MunicipalityZoneEntity municipalityZone = municipalityZoneRegistry.findZone(zone);
+        if (municipalityZone == null) {
+            municipalityZoneRegistry.create(municipality, zone);
+        } else if (municipalityZone.getMunicipality().getId() != municipality.getId()){
+            municipalityZone.setMunicipality(municipality);
         }
     }
 }

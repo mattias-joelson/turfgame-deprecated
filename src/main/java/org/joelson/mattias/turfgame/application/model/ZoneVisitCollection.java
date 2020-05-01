@@ -15,6 +15,10 @@ public class ZoneVisitCollection {
         this.dbEntity = dbEntity;
     }
 
+    public List<UserData> getZoneVisitUsers() {
+        return dbEntity.getZoneVisitUsers();
+    }
+
     public List<ZoneVisitData> getZoneVisits(UserData user) {
         return dbEntity.getZoneVisits(user);
     }

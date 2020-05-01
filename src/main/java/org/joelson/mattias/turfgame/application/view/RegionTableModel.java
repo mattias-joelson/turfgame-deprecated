@@ -18,7 +18,7 @@ class RegionTableModel extends AbstractTableModel {
 
     public RegionTableModel(List<RegionData> regions) {
         this.regions = new ArrayList<>(regions);
-        this.regions.sort(RegionTableModel::compareRegions);
+        this.regions.sort(RegionTableModel::endCompareRegions);
     }
 
     @Override
@@ -56,16 +56,17 @@ class RegionTableModel extends AbstractTableModel {
         return COLUMN_CLASSES[columnIndex];
     }
 
-    private static int compareRegions(RegionData regionData1, RegionData regionData2) {
+    private static int endCompareRegions(RegionData regionData1, RegionData regionData2) {
+        int cmpRegions = compareRegions(regionData1, regionData2);
+        return (cmpRegions != 0) ? cmpRegions : -1;
+    }
+
+    static int compareRegions(RegionData regionData1, RegionData regionData2) {
         int cmpCountry = compareCountry(regionData1.getCountry(), regionData2.getCountry());
         if (cmpCountry != 0) {
             return cmpCountry;
         }
-        int cmpName = regionData1.getName().compareTo(regionData2.getName());
-        if (cmpName != 0) {
-            return cmpName;
-        }
-        return -1;
+        return regionData1.getName().compareTo(regionData2.getName());
     }
 
     static int compareCountry(String country1, String country2) {
