@@ -36,10 +36,14 @@ final class MenuBuilder {
         addMenuItem(statisticsMenu, applicationUI.userTableAction());
         addMenuItem(statisticsMenu, applicationUI.visitTableAction());
         addMenuItem(statisticsMenu, applicationUI.zoneVisitTableAction());
+        addMenuItem(statisticsMenu, applicationUI.municipalityVisitAction());
         
         JMenu turfgameMenu = addMenu(menuBar, "Turfgame");
         addMenuItem(turfgameMenu, applicationUI.readZonesAction());
         addMenuItem(turfgameMenu, applicationUI.readZonesFromFileAction());
+
+        JMenu lundkvistMenu = addMenu(menuBar, "Lundkvist");
+        addMenuItem(lundkvistMenu, applicationUI.readMunicipalityFromFileAction());
         
         JMenu zundinMenu = addMenu(menuBar, "Zundin");
         addMenuItem(zundinMenu, applicationUI.readTodayFromFileAction());

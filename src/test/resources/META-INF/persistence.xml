@@ -6,6 +6,8 @@
 
     <persistence-unit name="turfgame-test-h2">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>org.joelson.mattias.turfgame.application.db.MunicipalityEntity</class>
+        <class>org.joelson.mattias.turfgame.application.db.MunicipalityZoneEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.RegionEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.RegionHistoryEntity</class>
         <class>org.joelson.mattias.turfgame.application.db.TakeEntity</class>

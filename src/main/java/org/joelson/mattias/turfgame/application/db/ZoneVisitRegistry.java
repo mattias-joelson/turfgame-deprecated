@@ -1,5 +1,6 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
@@ -13,6 +14,10 @@ public class ZoneVisitRegistry extends EntityRegistry<ZoneVisitEntity> {
         ZoneVisitEntity zoneVisitEntity = ZoneVisitEntity.build(user, zone, visits);
         persist(zoneVisitEntity);
         return zoneVisitEntity;
+    }
+
+    public Stream<UserEntity> findAllUsers() {
+        return findAll().map(ZoneVisitEntity::getUser).distinct();
     }
 
     public ZoneVisitEntity find(UserEntity user, ZoneEntity zone) {
