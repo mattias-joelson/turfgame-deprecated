@@ -36,8 +36,10 @@ public class Flipp08MissionTest {
     public void flipp08Test() throws Exception {
         List<Zone> zones = ZonesTest.getAllZones();
         Map<String, Zone> zoneMap = new HashMap<>();
+        Map<Integer, Zone> zoneIdMap = new HashMap<>();
         for (Zone zone : zones) {
             zoneMap.put(zone.getName(), zone);
+            zoneIdMap.put(zone.getId(), zone);
         }
         
         File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
@@ -76,15 +78,34 @@ public class Flipp08MissionTest {
                 JSONArray array = (JSONArray) flip.getValue("zones");
                 int count = 0;
                 Set<String> flipZoneNames = new HashSet<>();
+                boolean zoneNameInput = false;
                 for (JSONValue value : array.getElements()) {
-                    String zoneName = ((JSONString) value).stringValue();
-                    assertFalse(uniqueZoneNames.contains(zoneName));
-                    uniqueZoneNames.add(zoneName);
-                    Zone zone = zoneMap.get(zoneName);
-                    assertNotNull("Zone '" + zoneName + "' not found!", zone);
+                    Zone zone;
+                    if (value instanceof JSONString) {
+                        String zoneName = ((JSONString) value).stringValue();
+                        zone = zoneMap.get(zoneName);
+                        assertNotNull("Zone '" + zoneName + "' not found!", zone);
+                        zoneNameInput = true;
+                    } else {
+                        int zoneNumber = ((JSONNumber) value).intValue();
+                        zone = zoneIdMap.get(zoneNumber);
+                        assertNotNull("Zone '" + zoneNumber + "' not found!", zone);
+                    }
+                    assertFalse(uniqueZoneNames.contains(zone.getName()));
+                    uniqueZoneNames.add(zone.getName());
                     //System.out.println("  " + zoneName);
-                    flipZoneNames.add(zoneName);
+                    flipZoneNames.add(zone.getName());
                     count += 1;
+                }
+                if (zoneNameInput) {
+                    String flipZoneNumbers = flipZoneNames.stream()
+                            .map(zoneMap::get)
+                            .map(Zone::getId)
+                            .map(integer -> Integer.toString(integer))
+                            .collect(Collectors.joining(","));
+                    String outFlip = String.format("{\"name\":\"%s\",\"taken\":\"%s\",\"zoneCount\":%d,\"zones\":[%s]}",
+                            flipName, Boolean.toString(flipZoneTaken), flipZoneCount, flipZoneNumbers);
+                    System.out.println(outFlip);
                 }
                 assertEquals(flipZoneCount, count);
                 //System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
