@@ -31,7 +31,7 @@ public class MunicipalityTest {
     @Test
     public void readStockholm() throws Exception {
         Map<String, Boolean> zones = getStockholmZones();
-        assertEquals(1392, zones.size());
+        assertEquals(1394, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
