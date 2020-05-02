@@ -60,7 +60,7 @@ public class ApplicationActions {
     
     public Void readZonesFromFile(Path zonesFile, Instant instant) throws IOException, ParseException {
         List<Zone> zones = Zones.fromJSON(Files.readString(zonesFile));
-        applicationData.getZones().updateZones(instant, zones);
+        applicationData.getZones().updateZones(instant.truncatedTo(ChronoUnit.SECONDS), zones);
         return null;
     }
 
