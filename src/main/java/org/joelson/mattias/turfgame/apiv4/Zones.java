@@ -5,7 +5,6 @@ import org.joelson.mattias.turfgame.util.JSONObject;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +13,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,11 +39,13 @@ public final class Zones {
     }
 
     public static void mainNew(String[] args) {
-        LocalDateTime startDate = LocalDateTime.of(2020, 3, 1, 11, 54, 0);
-        LocalDateTime endDate = LocalDateTime.of(2020, 3, 1, 12, 35, 0);
+        LocalDateTime startDate = LocalDateTime.of(2020, 5, 3, 11, 54, 0);
+        LocalDateTime endDate = LocalDateTime.of(2020, 5, 3, 12, 35, 0);
         Instant start = toInstant(startDate);
         Instant end = toInstant(endDate);
 
+        System.out.println("Start time: " + start + " (" + startDate + ')');
+        System.out.println("End time: " + end + " (" + endDate + ')');
         while (Instant.now().isBefore(start)) {
             System.out.println("Sleeping at " + Instant.now());
             try {
@@ -53,9 +55,14 @@ public final class Zones {
             }
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_hh-mm-ss");
         while (Instant.now().isBefore(end)) {
             try {
-                Path file = Files.createTempFile(Path.of("."), "zones-all.", ".json");
+                Instant instant = Instant.now();
+                LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                String time = formatter.format(ldt);
+                String name = String.format("zones-all.%s.json", time);
+                Path file = Path.of(".", name);
                 Files.writeString(file, getAllZonesJSON(), StandardCharsets.UTF_8);
                 System.out.println("Downloaded " + file + " at " + Instant.now());
             } catch (IOException e) {
