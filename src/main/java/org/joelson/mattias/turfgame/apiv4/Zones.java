@@ -61,7 +61,7 @@ public final class Zones {
                 Instant instant = Instant.now();
                 LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
                 String time = formatter.format(ldt);
-                String name = String.format("zones-all.%s.json", time);
+                String name = String.format("zones_%s.json", time);
                 Path file = Path.of(".", name);
                 Files.writeString(file, getAllZonesJSON(), StandardCharsets.UTF_8);
                 System.out.println("Downloaded " + file + " at " + Instant.now());
