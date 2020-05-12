@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.text.NumberFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +48,7 @@ final class TableUtil {
         table.setAutoCreateRowSorter(true);
         table.setDefaultEditor(Object.class, null); // disable edit
         table.setDefaultRenderer(Double.class, new DoubleRenderer());
+        table.setDefaultRenderer(Duration.class, new DurationRenderer());
         table.setDefaultRenderer(Instant.class, new InstantRenderer());
         return table;
     }
@@ -163,6 +165,25 @@ final class TableUtil {
             }
             if (value instanceof Instant) {
                 setText(formatter.format((Instant) value));
+            } else {
+                setText((value == null) ? "" : value.toString());
+            }
+        }
+    }
+
+    private static final class DurationRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        private DurationRenderer() {
+            setHorizontalAlignment(SwingConstants.RIGHT);
+        }
+
+        @Override
+        public void setValue(Object value) {
+            if (value instanceof Duration) {
+                Duration duration = (Duration) value;
+                setText(String.format("%d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart()));
             } else {
                 setText((value == null) ? "" : value.toString());
             }
