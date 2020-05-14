@@ -183,7 +183,15 @@ final class TableUtil {
         public void setValue(Object value) {
             if (value instanceof Duration) {
                 Duration duration = (Duration) value;
-                setText(String.format("%d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart()));
+                String dayString;
+                long days = duration.toDays();
+                if (days == 0) {
+                    setText(String.format("%d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart()));
+                } else if (days == 1) {
+                    setText(String.format("1 day %02d:%02d:%02d", duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()));
+                } else {
+                    setText(String.format("%d days %02d:%02d:%02d", duration.toDays(), duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()));
+                }
             } else {
                 setText((value == null) ? "" : value.toString());
             }

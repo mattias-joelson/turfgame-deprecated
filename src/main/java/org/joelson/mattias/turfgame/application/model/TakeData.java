@@ -1,16 +1,30 @@
 package org.joelson.mattias.turfgame.application.model;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
 
 public class TakeData extends VisitData {
-    
+
+    private final Duration duration;
+
     public TakeData(ZoneData zone, Instant when, UserData taker) {
-        super(zone, when, taker);
+        this(zone, when, taker, null);
     }
     
+    public TakeData(ZoneData zone, Instant when, UserData taker, Duration duration) {
+        super(zone, when, taker);
+        this.duration = duration;
+    }
+
+    @Override
     public int getPph() {
         return getZone().getPph();
+    }
+
+    @Override
+    public Duration getDuration() {
+        return (duration != null) ? duration : Duration.between(getWhen(), Instant.now());
     }
     
     @Override
@@ -37,6 +51,6 @@ public class TakeData extends VisitData {
     
     @Override
     public String toString() {
-        return String.format("TakeData[zone %s, when %s, taker %%s]", ModelUtil.toStringPart(getZone()), getWhen(), ModelUtil.toStringPart(getTaker())); //NON-NLS
+        return String.format("TakeData[zone %s, when %s, taker %s]", ModelUtil.toStringPart(getZone()), getWhen(), ModelUtil.toStringPart(getTaker())); //NON-NLS
     }
 }

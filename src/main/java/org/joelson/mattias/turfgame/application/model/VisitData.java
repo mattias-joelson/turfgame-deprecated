@@ -1,5 +1,6 @@
 package org.joelson.mattias.turfgame.application.model;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -33,6 +34,10 @@ public abstract class VisitData {
     
     public int getPph() {
         return 0;
+    }
+
+    public Duration getDuration() {
+        return null;
     }
     
     public abstract String getType();
