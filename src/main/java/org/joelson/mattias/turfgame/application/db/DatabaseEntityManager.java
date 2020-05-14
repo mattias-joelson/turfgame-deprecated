@@ -18,10 +18,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -337,7 +340,7 @@ public class DatabaseEntityManager {
                     .collect(Collectors.toList());
         }
     }
-    
+
     private VisitData getVisitData(UserData userData, VisitEntity visit) {
         TakeEntity take = visit.getTake();
         Instant when = take.getWhen();
@@ -357,7 +360,7 @@ public class DatabaseEntityManager {
                 zoneHistory.getLatitude(), zoneHistory.getLongitude(), zonePointsHistory.getTp(), zonePointsHistory.getPph());
         switch (visit.getType()) {
         case TAKE:
-            return new TakeData(zoneData, when, userData);
+            return new TakeData(zoneData, when, userData, getVisitDuration(visit));
         case ASSIST:
             UserEntity taker = take.getTakeVisit().getUser();
             return new AssistData(zoneData, when, taker.toData(), userData);
@@ -367,7 +370,15 @@ public class DatabaseEntityManager {
             throw new IllegalStateException("Unknown visit type " + visit.getType());
         }
     }
-    
+
+    private Duration getVisitDuration(VisitEntity visit) {
+        Optional<TakeEntity> loss = takeRegistry.findAfter(visit.getTake().getZone(), visit.getTake().getWhen()).findFirst();
+        if(loss.isPresent()) {
+            return Duration.between(visit.getTake().getWhen(), loss.get().getWhen());
+        }
+        return null;
+    }
+
     public void updateVisits(Iterable<VisitData> visits) {
         try (Transaction transaction = new Transaction()) {
             transaction.begin();
