@@ -20,27 +20,39 @@ class SessionTableModel extends AbstractTableModel {
         private final int revisits;
         private final int assists;
         private final int tp;
+        private final int pph;
 
-        private SessionData(Instant start, Duration duration, int takes, int revisits, int assists, int tp) {
+        private SessionData(Instant start, Duration duration, int takes, int revisits, int assists, int tp, int pph) {
             this.start = start;
             this.duration = duration;
             this.takes = takes;
             this.revisits = revisits;
             this.assists = assists;
             this.tp = tp;
+            this.pph = pph;
         }
 
         public int getTpH() {
-            if (takes + revisits + assists < 2) {
+            int seconds = (int) duration.getSeconds();
+            if (seconds < 3600) {
                 return tp;
             }
-            int seconds = (int) duration.getSeconds();
             return (tp * 3600) / seconds;
+        }
+
+        public int getTpPphH() {
+            int seconds = (int) duration.getSeconds();
+            if (seconds < 3600) {
+                return tp + pph;
+            }
+            return ((tp + pph) * 3600) / seconds;
         }
     }
 
-    private static final String[] COLUMN_NAMES = { "When", "Duration", "Takes", "Revisits", "Assists", "TP", "TP / h" };
-    private static final Class<?>[] COLUMN_CLASSES = { Instant.class, Duration.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class };
+    private static final String[] COLUMN_NAMES = { "When", "Duration", "Takes", "Revisits", "Assists", "TP", "TP / h", "PPH", "TP + PPH", "TP + PPH / h" };
+    private static final Class<?>[] COLUMN_CLASSES = {
+            Instant.class, Duration.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class
+    };
     private static final long serialVersionUID = 1L;
     private static final int SESSION_HOUR_LENGTH = 1200;
 
@@ -68,14 +80,16 @@ class SessionTableModel extends AbstractTableModel {
         int revisits = 0;
         int assists = 0;
         int tp = 0;
+        int pph = 0;
         for (VisitData visit : currentVisits) {
             if (last == null || visit.getWhen().isAfter(last.plusSeconds(SESSION_HOUR_LENGTH))) {
                 if (last != null) {
-                    sessionData.add(new SessionData(start, Duration.between(start, last), takes, revisits, assists, tp));
+                    sessionData.add(new SessionData(start, Duration.between(start, last), takes, revisits, assists, tp, pph));
                     takes = 0;
                     revisits = 0;
                     assists = 0;
                     tp = 0;
+                    pph = 0;
                 }
                 start = visit.getWhen();
             }
@@ -83,6 +97,7 @@ class SessionTableModel extends AbstractTableModel {
             switch (visit.getType()) {
                 case "Take": // NON-NLS
                     takes += 1;
+                    pph += (int) (visit.getDuration().getSeconds() * visit.getPph() / 3600);
                     break;
                 case "Revisit": // NON-NLS
                     revisits += 1;
@@ -96,7 +111,7 @@ class SessionTableModel extends AbstractTableModel {
             tp += visit.getTp();
         }
         if (last != null) {
-            sessionData.add(new SessionData(start, Duration.between(start, last), takes, revisits, assists, tp));
+            sessionData.add(new SessionData(start, Duration.between(start, last), takes, revisits, assists, tp, pph));
         }
         return sessionData;
     }
@@ -129,6 +144,12 @@ class SessionTableModel extends AbstractTableModel {
                 return session.tp;
             case 6:
                 return session.getTpH();
+            case 7:
+                return session.pph;
+            case 8:
+                return session.tp + session.pph;
+            case 9:
+                return session.getTpPphH();
             default:
                 throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
         }

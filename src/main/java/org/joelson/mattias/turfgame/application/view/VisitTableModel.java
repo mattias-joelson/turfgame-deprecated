@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
 
 class VisitTableModel extends AbstractTableModel {
     
-    private static final String[] COLUMN_NAMES = { "When", "Zone", "TP", "PPH", "Type", "TP / h", "Duration", "Total PPH", "Total", "TP + PPH / h" };
+    private static final String[] COLUMN_NAMES = { "When", "Zone", "TP", "PPH", "Type", "TP / h", "Duration", "PPH", "TP + PPH", "TP + PPH / h" };
     private static final Class<?>[] COLUMN_CLASSES = {
             Instant.class, String.class, Integer.class, Integer.class, String.class, Integer.class, Duration.class, Integer.class, Integer.class, Integer.class
     };
