@@ -2,6 +2,7 @@ package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.model.MunicipalityCollection;
 import org.joelson.mattias.turfgame.application.model.MunicipalityData;
+import org.joelson.mattias.turfgame.application.model.TakeData;
 import org.joelson.mattias.turfgame.application.model.UserData;
 import org.joelson.mattias.turfgame.application.model.VisitCollection;
 import org.joelson.mattias.turfgame.application.model.VisitData;
@@ -25,20 +26,24 @@ class SessionTableModel extends AbstractTableModel {
         private final Duration duration;
         private final String municipalities;
         private final int takes;
+        private final int owns;
         private final int revisits;
         private final int assists;
         private final int tp;
         private final int pph;
+        private final int incPph;
 
-        private SessionData(Instant start, Duration duration, String municipalities, int takes, int revisits, int assists, int tp, int pph) {
+        private SessionData(Instant start, Duration duration, String municipalities, int takes, int owns, int revisits, int assists, int tp, int pph, int incPph) {
             this.start = start;
             this.duration = duration;
             this.municipalities = municipalities;
             this.takes = takes;
+            this.owns = owns;
             this.revisits = revisits;
             this.assists = assists;
             this.tp = tp;
             this.pph = pph;
+            this.incPph = incPph;
         }
 
         public int getTpH() {
@@ -59,10 +64,11 @@ class SessionTableModel extends AbstractTableModel {
     }
 
     private static final String[] COLUMN_NAMES = {
-            "When", "Duration", "Municipalities", "Takes", "Revisits", "Assists", "TP", "TP / h", "PPH", "TP + PPH", "TP + PPH / h"
+            "When", "Duration", "Municipalities", "Takes", "Owns", "Revisits", "Assists", "TP", "TP / h", "PPH", "TP + PPH", "TP + PPH / h", "PPH / h"
     };
     private static final Class<?>[] COLUMN_CLASSES = {
-            Instant.class, Duration.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class
+            Instant.class, Duration.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class,
+            Integer.class, Integer.class, Integer.class, Integer.class
     };
     private static final long serialVersionUID = 1L;
     private static final int SESSION_HOUR_LENGTH = 1200;
@@ -99,20 +105,24 @@ class SessionTableModel extends AbstractTableModel {
         Instant last = null;
         Set<MunicipalityData> municipalities = new HashSet<>();
         int takes = 0;
+        int owns = 0;
         int revisits = 0;
         int assists = 0;
         int tp = 0;
         int pph = 0;
+        int incPph = 0;
         for (VisitData visit : currentVisits) {
             if (last == null || visit.getWhen().isAfter(last.plusSeconds(SESSION_HOUR_LENGTH))) {
                 if (last != null) {
-                    sessionData.add(new SessionData(start, Duration.between(start, last), toString(municipalities), takes, revisits, assists, tp, pph));
+                    sessionData.add(new SessionData(start, Duration.between(start, last), toString(municipalities), takes, owns, revisits, assists, tp, pph, incPph));
                     municipalities.clear();
                     takes = 0;
+                    owns = 0;
                     revisits = 0;
                     assists = 0;
                     tp = 0;
                     pph = 0;
+                    incPph = 0;
                 }
                 start = visit.getWhen();
             }
@@ -125,6 +135,10 @@ class SessionTableModel extends AbstractTableModel {
                 case "Take": // NON-NLS
                     takes += 1;
                     pph += (int) (visit.getDuration().getSeconds() * visit.getPph() / 3600);
+                    if (((TakeData) visit).isOwning()) {
+                        owns += 1;
+                        incPph += visit.getZone().getPph();
+                    }
                     break;
                 case "Revisit": // NON-NLS
                     revisits += 1;
@@ -138,7 +152,7 @@ class SessionTableModel extends AbstractTableModel {
             tp += visit.getTp();
         }
         if (last != null) {
-            sessionData.add(new SessionData(start, Duration.between(start, last), toString(municipalities), takes, revisits, assists, tp, pph));
+            sessionData.add(new SessionData(start, Duration.between(start, last), toString(municipalities), takes, owns, revisits, assists, tp, pph, incPph));
         }
         return sessionData;
     }
@@ -185,24 +199,32 @@ class SessionTableModel extends AbstractTableModel {
             case 2:
                 return session.municipalities;
             case 3:
-                return session.takes;
+                return nullZero(session.takes);
             case 4:
-                return session.revisits;
+                return nullZero(session.owns);
             case 5:
-                return session.assists;
+                return nullZero(session.revisits);
             case 6:
-                return session.tp;
+                return nullZero(session.assists);
             case 7:
-                return session.getTpH();
+                return session.tp;
             case 8:
-                return session.pph;
+                return session.getTpH();
             case 9:
-                return session.tp + session.pph;
+                return session.pph;
             case 10:
+                return session.tp + session.pph;
+            case 11:
                 return session.getTpPphH();
+            case 12:
+                return nullZero(session.incPph);
             default:
                 throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
         }
+    }
+
+    private static Integer nullZero(int i) {
+        return (i != 0) ? i : null;
     }
 
     @Override

@@ -22,6 +22,10 @@ public class TakeData extends VisitData {
         return getZone().getPph();
     }
 
+    public boolean isOwning() {
+        return duration == null;
+    }
+
     @Override
     public Duration getDuration() {
         return (duration != null) ? duration : Duration.between(getWhen(), Instant.now());
