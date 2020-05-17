@@ -87,8 +87,8 @@ public class ApplicationUI {
         return VisitTableActionCreator.create(this);
     }
 
-    Action sessionsTableAction() {
-        return SessionsTableActionCreator.create(this);
+    Action sessionTableAction() {
+        return SessionTableActionCreator.create(this);
     }
 
     Action readTodayFromFileAction() {

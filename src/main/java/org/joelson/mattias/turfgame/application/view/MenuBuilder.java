@@ -35,7 +35,7 @@ final class MenuBuilder {
         addMenuItem(statisticsMenu, applicationUI.zonePointsHistoryTableAction());
         addMenuItem(statisticsMenu, applicationUI.userTableAction());
         addMenuItem(statisticsMenu, applicationUI.visitTableAction());
-        addMenuItem(statisticsMenu, applicationUI.sessionsTableAction());
+        addMenuItem(statisticsMenu, applicationUI.sessionTableAction());
         addMenuItem(statisticsMenu, applicationUI.zoneVisitTableAction());
         addMenuItem(statisticsMenu, applicationUI.municipalityVisitAction());
         
