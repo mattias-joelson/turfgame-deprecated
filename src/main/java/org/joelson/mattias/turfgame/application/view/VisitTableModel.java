@@ -19,10 +19,10 @@ import javax.swing.table.AbstractTableModel;
 
 class VisitTableModel extends AbstractTableModel {
     
-    private static final String[] COLUMN_NAMES = { "When", "Municipality", "Zone", "TP", "PPH", "Type", "TP / h", "Duration", "PPH", "TP + PPH", "TP + PPH / h" };
+    private static final String[] COLUMN_NAMES = { "When", "Municipality", "Zone", "TP", "PPH", "Type", "TP / h", "Owns", "Duration", "PPH", "TP + PPH", "TP + PPH / h" };
     private static final Class<?>[] COLUMN_CLASSES = {
-            Instant.class, String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, Duration.class, Integer.class, Integer.class,
-            Integer.class
+            Instant.class, String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, Boolean.class, Duration.class, Integer.class,
+            Integer.class, Integer.class
     };
     private static final long serialVersionUID = 1L;
     private static final int HALF_HOUR_RANGE = 1801;
@@ -82,12 +82,14 @@ class VisitTableModel extends AbstractTableModel {
         case 6:
             return sumRange(visit.getWhen(), VisitData::getTp);
         case 7:
-            return visit.getDuration();
+            return visit instanceof TakeData && ((TakeData) visit).isOwning();
         case 8:
-            return calcPph(visit);
+            return visit.getDuration();
         case 9:
-            return totalPoints(visit);
+            return calcPph(visit);
         case 10:
+            return totalPoints(visit);
+        case 11:
             return sumRange(visit.getWhen(), VisitTableModel::totalPoints);
         default:
             throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
