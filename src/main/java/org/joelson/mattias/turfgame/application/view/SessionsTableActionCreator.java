@@ -24,7 +24,7 @@ final class SessionsTableActionCreator {
     private static void showSessionTable(ApplicationUI applicationUI) {
         ApplicationData applicationData = applicationUI.getApplicationData();
         UserData selectedUser = UserSelectionUtil.getSelectedUser(applicationData);
-        SessionTableModel tableModel = new SessionTableModel(applicationData.getVisits(), selectedUser);
+        SessionTableModel tableModel = new SessionTableModel(applicationData.getVisits(), applicationData.getMunicipalities(), selectedUser);
         Container tableContainer = TableUtil.createDefaultTablePane(tableModel, "Visit Filter");
         applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser, tableModel::updateSelectedUser, tableContainer));
         applicationUI.setApplicationDataStatus();
