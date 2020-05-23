@@ -4,6 +4,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
@@ -14,6 +15,8 @@ import org.joelson.mattias.turfgame.application.model.UserData;
 import org.joelson.mattias.turfgame.application.model.VisitCollection;
 
 import java.awt.Container;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -97,6 +100,9 @@ public class ZoneOwnershipGraphModel {
 
     public Container getChart() {
         chart = ChartFactory.createXYLineChart("Zone Ownership", "When", "Sum", getDataSet());
+        StandardXYToolTipGenerator standardXYToolTipGenerator = new StandardXYToolTipGenerator("{0}: {2} @ {1}",
+                new SimpleDateFormat("yyyy-MM-dd HH:mm"), new DecimalFormat("0"));
+        chart.getXYPlot().getRenderer().setDefaultToolTipGenerator(standardXYToolTipGenerator);
         updateTimeAxis();
         return new ChartPanel(chart);
     }
