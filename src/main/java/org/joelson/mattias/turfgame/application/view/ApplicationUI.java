@@ -95,6 +95,10 @@ public class ApplicationUI {
         return ZoneOwnershipGraphActionCreator.create(this);
     }
 
+    Action zoneTakeGraphAction() {
+        return ZoneTakeGraphActionCreator.create(this);
+    }
+
     Action readTodayFromFileAction() {
         return ReadTodayFromFileActionCreator.create(this);
     }
