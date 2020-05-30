@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class MonthlyVisitTest {
 
     private static final String OBEROFF = "Oberoff";
-    private static final int ROUND = 114;
+    private static final int ROUND = 119;
     
     @Test
     public void visitDanderydTest() throws Exception {
@@ -49,6 +49,11 @@ public class MonthlyVisitTest {
     @Test
     public void visitSundbybergTest() throws Exception {
         visitMunicipalityTest("Sundbyberg", "sundbyberg_month.kml", MunicipalityTest.getSundbybergZones());
+    }
+
+    @Test
+    public void visitTäbyTest() throws Exception {
+        visitMunicipalityTest("Täby", "taby_month.kml", MunicipalityTest.getTabyZones());
     }
 
     private static void visitMunicipalityTest(String municipality, String filename, Map<String, Boolean> municipalityZones) throws Exception {
@@ -87,7 +92,7 @@ public class MonthlyVisitTest {
     
     private static Monthly getMonthly() throws Exception {
         //return readProperties("monthly_oberoff_round96.html");
-        return readProperties("monthly_oberoff_round118.html");
+        return readProperties("monthly_oberoff_round119.html");
     }
     
     private static Monthly readProperties(String resource) throws Exception {
