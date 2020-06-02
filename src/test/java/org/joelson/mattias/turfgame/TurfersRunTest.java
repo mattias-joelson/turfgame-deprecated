@@ -34,6 +34,7 @@ public class TurfersRunTest {
             writeRun(writer, "zonerx_2019-11-15.txt");
             writeRun(writer, "oberoff_2019-11-21.txt");
             writeRun(writer, "oberoff_2019-11-26.txt");
+            writeRun(writer, "oberoff_2020-05-09.txt");
         }
     }
     
