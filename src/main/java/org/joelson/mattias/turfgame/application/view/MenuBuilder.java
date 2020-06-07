@@ -38,6 +38,7 @@ final class MenuBuilder {
         addMenuItem(statisticsMenu, applicationUI.sessionTableAction());
         addMenuItem(statisticsMenu, applicationUI.zoneOwnershipGraphAction());
         addMenuItem(statisticsMenu, applicationUI.zoneTakeGraphAction());
+        addMenuItem(statisticsMenu, applicationUI.zoneRoundUniqueGraphAction());
         addMenuItem(statisticsMenu, applicationUI.zoneVisitTableAction());
         addMenuItem(statisticsMenu, applicationUI.municipalityVisitAction());
         
