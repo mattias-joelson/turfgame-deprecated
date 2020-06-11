@@ -12,20 +12,24 @@ import java.util.stream.Collectors;
 public class ZonesCompare {
 
     public static void main(String[] args) throws IOException, ParseException {
-        if (args.length != 2) {
+        if (args.length < 2) {
             System.out.println(String.format("Usage:\n\t%s zonefile1.json zonefile2.json", ZonesCompare.class.getName()));
             return;
         }
-        List<Zone> zones1 = readZones(Path.of(args[0]));
-        List<Zone> zones2 = readZones(Path.of(args[1]));
-        Map<String, Zone> zonesMap = zones1.stream().collect(Collectors.toMap(Zone::getName, Function.identity()));
-        zones2.stream().forEach(zone -> compareZones(zonesMap.get(zone.getName()), zone));
-
+        for (int i = 0; i + 1 < args.length; i += 1) {
+            System.out.println(">>> Comparing " + args[i] + " and " + args[i + 1]);
+            List<Zone> zones1 = readZones(Path.of(args[i]));
+            List<Zone> zones2 = readZones(Path.of(args[i + 1]));
+            Map<String, Zone> zonesMap = zones1.stream().collect(Collectors.toMap(Zone::getName, Function.identity()));
+            zones2.stream().forEach(zone -> compareZones(zonesMap.get(zone.getName()), zone));
+        }
     }
 
     private static void compareZones(Zone zone1, Zone zone2) {
         if (zone1 == null) {
             System.out.println("New zone: " + toString(zone2));
+        } else if (zone1.getDateCreated() == null || zone2.getDateCreated() == null) {
+            System.out.println("Zone '" + zone1.getName() + "' date problem: " + zone1.getDateCreated() + ", " + zone2.getDateCreated());
         } else if (!zone1.getName().equals(zone2.getName())
                 || !zone1.getDateCreated().equals(zone2.getDateCreated())
                 || zone1.getId() != zone2.getId()
