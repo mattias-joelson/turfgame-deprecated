@@ -99,8 +99,8 @@ public class ApplicationUI {
         return ZoneTakeGraphActionCreator.create(this);
     }
 
-    Action zoneRoundUniqueGraphAction() {
-        return ZoneRoundUniqueGraphActionCreator.create(this);
+    Action uniqueRoundZoneGraphAction() {
+        return UniqueRoundZoneGraphActionCreator.create(this);
     }
 
     Action readTodayFromFileAction() {
