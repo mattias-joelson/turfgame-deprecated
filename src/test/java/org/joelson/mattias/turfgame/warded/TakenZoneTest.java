@@ -13,7 +13,7 @@ public class TakenZoneTest {
     @Test
     public void takenZonesTest() throws Exception {
         Map<String, Integer> takenZones = readTakenZones();
-        assertEquals(2968, takenZones.size());
+        assertEquals(2987, takenZones.size());
         assertTrue(takenZones.containsKey("Bockholmen"));
         assertEquals(1, (long) takenZones.get("Lambastranden"));
     }
