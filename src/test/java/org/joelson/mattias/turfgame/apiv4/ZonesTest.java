@@ -14,7 +14,7 @@ public class ZonesTest {
     @Test
     public void parseAllZones() throws Exception {
         List<Zone> zones = getAllZones();
-        assertEquals(65945, zones.size());
+        assertEquals(66126, zones.size());
     }
 
     @Test
@@ -25,7 +25,7 @@ public class ZonesTest {
         Set<String> countryNames = new HashSet<>();
         zones.forEach(zone -> countryNames.add(zone.getRegion().getCountry()));
         System.out.println("Max length: " + regionNames.stream().map(String::length).max(Integer::compareTo));
-        System.out.println("Max length: " + regionNames.stream().map(String::length).min(Integer::compareTo));
+        System.out.println("Min length: " + regionNames.stream().map(String::length).min(Integer::compareTo));
         countryNames.forEach(System.out::println);
         //System.out.println("Max length: " + countryNames.stream().map(String::length).max(Integer::compareTo));
         //System.out.println("Max length: " + countryNames.stream().map(String::length).min(Integer::compareTo));
@@ -35,7 +35,7 @@ public class ZonesTest {
     public void zonenameLengthTest() throws Exception {
         List<Zone> zones = getAllZones();
         System.out.println("Max length: " + zones.stream().map(Zone::getName).map(String::length).max(Integer::compareTo));
-        System.out.println("Max length: " + zones.stream().map(Zone::getName).map(String::length).min(Integer::compareTo));
+        System.out.println("Min length: " + zones.stream().map(Zone::getName).map(String::length).min(Integer::compareTo));
     }
     
     @Test
