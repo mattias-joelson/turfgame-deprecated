@@ -89,10 +89,10 @@ public class MonthlyVisitTest {
         System.out.println(filename + ": " + (unvisitedZones.size() + visitedZones.size()) + " (" + municipalityZones.size() + ')');
         assertEquals(municipalityZones.size(), unvisitedZones.size() + visitedZones.size());
     }
-    
+
     private static Monthly getMonthly() throws Exception {
         //return readProperties("monthly_oberoff_round96.html");
-        return readProperties("monthly_oberoff_round119.html");
+        return readProperties("monthly_oberoff_round120.html");
     }
     
     private static Monthly readProperties(String resource) throws Exception {

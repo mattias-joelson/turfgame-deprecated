@@ -19,7 +19,7 @@ public class MonthlyStatsTest {
     
     @Before
     public void before() throws Exception {
-        monthly = URLReaderTest.readProperties("monthly_oberoff_round119.html", s -> Monthly.fromHTML("Oberoff", 113, s));
+        monthly = URLReaderTest.readProperties("monthly_oberoff_round120.html", s -> Monthly.fromHTML("Oberoff", 113, s));
     }
     
     @Test
