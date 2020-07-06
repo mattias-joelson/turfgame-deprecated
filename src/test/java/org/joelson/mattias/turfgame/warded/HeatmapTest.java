@@ -94,6 +94,14 @@ public class HeatmapTest {
     public void sundbybergHeatmap() throws Exception {
         municipalityHeatmap("sundbyberg_heatmap.kml", readTakenZones(), MunicipalityTest.getSundbybergZones());
     }
+
+    @Test
+    public void combinedHeatmap() throws Exception {
+        Map<String, Boolean> combinedZones = MunicipalityTest.getSolnaZones();
+        combinedZones.putAll(MunicipalityTest.getDanderydZones());
+        combinedZones.putAll(MunicipalityTest.getSundbybergZones());
+        municipalityHeatmap("dss_heatmap.kml", readTakenZones(), combinedZones);
+    }
     
     @Test
     public void leifonsSolnaHeatmap() throws Exception {
