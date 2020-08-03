@@ -37,16 +37,25 @@ public class TurfersRunTest {
             writeRun(writer, "oberoff_2020-05-09.txt");
         }
     }
-    
+
+    @Test
+    public void writeRoadtrip() throws IOException {
+        try (KMLWriter writer = new KMLWriter("roadtrip.kml")) {
+            writeRun(writer, "oberoff_2020-07-25.txt");
+        }
+    }
     private void writeRun(KMLWriter writer, String shortFilename) throws IOException {
         String filename = TurfersRunTest.class.getResource(File.separatorChar + shortFilename).getFile();
         Path path = Paths.get(filename);
         try (Stream<String> lines = Files.lines(path)) {
-            List<Zone> run = lines.map(zoneName -> zoneIfExists(zoneName, zones.get(zoneName)))
+            List<Zone> run = lines.filter(s -> !s.isEmpty())
+                    .filter(s -> !s.startsWith("//"))
+                    .map(zoneName -> zoneIfExists(zoneName, zones.get(zoneName)))
                     .collect(Collectors.toList());
             writer.writeFolder(shortFilename);
             IntStream.range(0, run.size()).forEach(i -> {
                 Zone zone = run.get(i);
+                System.out.println(zone.getName());
                 writer.writePlacemark(String.format("%d - %s", i + 1, zone.getName()), "", zone.getLongitude(), zone.getLatitude());
             });
         }
