@@ -56,6 +56,14 @@ public class MonthlyVisitTest {
         visitMunicipalityTest("Täby", "taby_month.kml", MunicipalityTest.getTabyZones());
     }
 
+    @Test
+    public void combinedVisitTest() throws Exception {
+        Map<String, Boolean> combinedZones = MunicipalityTest.getSolnaZones();
+        combinedZones.putAll(MunicipalityTest.getDanderydZones());
+        combinedZones.putAll(MunicipalityTest.getSundbybergZones());
+        visitMunicipalityTest("DSS", "dss_month.kml", combinedZones);
+    }
+
     private static void visitMunicipalityTest(String municipality, String filename, Map<String, Boolean> municipalityZones) throws Exception {
         Monthly monthly = getMonthly();
         List<Zone> zones = ZonesTest.getAllZones();
@@ -92,7 +100,7 @@ public class MonthlyVisitTest {
 
     private static Monthly getMonthly() throws Exception {
         //return readProperties("monthly_oberoff_round96.html");
-        return readProperties("monthly_oberoff_round120.html");
+        return readProperties("monthly_oberoff_round121.html");
     }
     
     private static Monthly readProperties(String resource) throws Exception {

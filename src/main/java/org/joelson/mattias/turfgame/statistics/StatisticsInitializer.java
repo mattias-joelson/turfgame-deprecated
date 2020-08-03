@@ -17,6 +17,28 @@ public final class StatisticsInitializer {
         Country sweden = new Country("se");
         statistics.addCountry(sweden);
 
+        Region gavleborg = new Region(144, "Gävleborg", sweden);
+        statistics.addRegion(gavleborg);
+        addMunicipality(statistics, gavleborg, "Bollnäs kommun");
+        addMunicipality(statistics, gavleborg, "Gävle kommun");
+        addMunicipality(statistics, gavleborg, "Hofors kommun");
+        addMunicipality(statistics, gavleborg, "Hudiksvalls kommun");
+        addMunicipality(statistics, gavleborg, "Ljusdals kommun");
+        addMunicipality(statistics, gavleborg, "Nordanstigs kommun");
+        addMunicipality(statistics, gavleborg, "Ockelbo kommun");
+        addMunicipality(statistics, gavleborg, "Ovanåker");
+        addMunicipality(statistics, gavleborg, "Sandvikens kommun");
+        addMunicipality(statistics, gavleborg, "Söderhamn");
+
+        Region jamtland = new Region(128, "Jämtland", sweden);
+        statistics.addRegion(gavleborg);
+        addMunicipality(statistics, jamtland, "Bräcke kommun");
+        addMunicipality(statistics, jamtland, "Ragunda kommun");
+
+        Region norrbotten = new Region(126, "Norrbotten", sweden);
+        statistics.addRegion(gavleborg);
+        addMunicipality(statistics, jamtland, "Piteå kommun");
+
         Region stockholm = new Region(141, "Stockholm", sweden);
         statistics.addRegion(stockholm);
         addMunicipality(statistics, stockholm, "Danderyds kommun");
@@ -36,9 +58,33 @@ public final class StatisticsInitializer {
 
         Region uppsala = new Region(142, "Uppsala", sweden);
         statistics.addRegion(uppsala);
+        addMunicipality(statistics, stockholm, "Heby kommun");
         addMunicipality(statistics, stockholm, "Knivsta kommun");
+        addMunicipality(statistics, stockholm, "Tierps kommun");
         addMunicipality(statistics, uppsala, "Uppsala kommun");
-    
+        addMunicipality(statistics, uppsala, "Älvkarleby kommun");
+        addMunicipality(statistics, uppsala, "Östhammars kommun");
+
+        Region vasterbotten = new Region(127, "Västerbotten", sweden);
+        statistics.addRegion(vasterbotten);
+        addMunicipality(statistics, vasterbotten, "Bjurholms kommun");
+        addMunicipality(statistics, vasterbotten, "Nordmalings kommun");
+        addMunicipality(statistics, vasterbotten, "Norsjö kommun");
+        addMunicipality(statistics, vasterbotten, "Skellefteå kommun");
+        addMunicipality(statistics, vasterbotten, "Umeå kommun");
+        addMunicipality(statistics, vasterbotten, "Vindelns kommun");
+        addMunicipality(statistics, vasterbotten, "Vännäs kommun");
+
+        Region vasternorrland = new Region(145, "Västernorrland", sweden);
+        statistics.addRegion(vasternorrland);
+        addMunicipality(statistics, vasternorrland, "Härnösands kommun");
+        addMunicipality(statistics, vasternorrland, "Kramfors kommun");
+        addMunicipality(statistics, vasternorrland, "Sollefteå kommun");
+        addMunicipality(statistics, vasternorrland, "Sundsvalls kommun");
+        addMunicipality(statistics, vasternorrland, "Timrå kommun");
+        addMunicipality(statistics, vasternorrland, "Ånge kommun");
+        addMunicipality(statistics, vasternorrland, "Örnsköldsviks kommun");
+
         Region orebro = new Region(131, "Örebro", sweden);
         statistics.addRegion(uppsala);
         addMunicipality(statistics, stockholm, "Lindesbergs kommun");
