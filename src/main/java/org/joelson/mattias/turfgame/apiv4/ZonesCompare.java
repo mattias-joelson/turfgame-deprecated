@@ -20,8 +20,8 @@ public class ZonesCompare {
             System.out.println(">>> Comparing " + args[i] + " and " + args[i + 1]);
             List<Zone> zones1 = readZones(Path.of(args[i]));
             List<Zone> zones2 = readZones(Path.of(args[i + 1]));
-            Map<String, Zone> zonesMap = zones1.stream().collect(Collectors.toMap(Zone::getName, Function.identity()));
-            zones2.stream().forEach(zone -> compareZones(zonesMap.get(zone.getName()), zone));
+            Map<Integer, Zone> zonesMap = zones1.stream().collect(Collectors.toMap(Zone::getId, Function.identity()));
+            zones2.stream().forEach(zone -> compareZones(zonesMap.get(zone.getId()), zone));
         }
     }
 
