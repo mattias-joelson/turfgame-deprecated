@@ -17,7 +17,7 @@ public class ZonesTest {
     @Test
     public void parseAllZones() throws Exception {
         List<Zone> zones = getAllZones();
-        assertEquals(67105, zones.size());
+        assertEquals(69248, zones.size());
     }
 
     @Test

@@ -41,7 +41,9 @@ public final class StatisticsInitializer {
 
         Region stockholm = new Region(141, "Stockholm", sweden);
         statistics.addRegion(stockholm);
+        addMunicipality(statistics, stockholm, "Botkyrka kommun");
         addMunicipality(statistics, stockholm, "Danderyds kommun");
+        addMunicipality(statistics, stockholm, "Ekerö kommun");
         addMunicipality(statistics, stockholm, "Huddinge kommun");
         addMunicipality(statistics, stockholm, "Järfälla kommun");
         addMunicipality(statistics, stockholm, "Lidingö kommun");
