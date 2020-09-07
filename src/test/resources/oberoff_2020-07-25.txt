@@ -1,58 +1,58 @@
 //** Uppsala
 // Östhammar
-//Harviksvägen
-//Brukfolkspark
+Harviksvägen
+Brukfolkspark
 
 // Tierp
-//EarByHouse
-//Örbyhus
+EarByHouse
+Örbyhus
 
 // Älvkarleby
-//DragonGate
-//MarmaCamp
+DragonGate
+MarmaCamp
 
 //** Gävleborg
 // Nordanstig
-//BackMacken
-//HarmChurch
+BackMacken
+HarmChurch
 
 //** Västernorrland
 // Timrå
-//Timerchurch
-//LidITimrå
+Timerchurch
+LidITimrå
 
 // ** Västerbotten
 // Nordmaling
-//NordmaStation
-//OrrField
+NordmaStation
+OrrField
 
 // ---
 
 //** Norrbotten
 // Piteå
-//Jävrefyren
-//TuristaMäET
+Jävrefyren
+TuristaMäET
 
 //** Västerbotten
 // Norsjö
-//BastuträskStn
-//Stationvolley
+BastuträskStn
+Stationvolley
 
 // ---
 
 //** Västerbotten
 // Vindeln
-//TallbackZone
-//Tvärålund
+TallbackZone
+Tvärålund
 
 // Vännes
-//Eldsoffan
-//VännäsbyE12
-//SufferTheHill
+Eldsoffan
+VännäsbyE12
+SufferTheHill
 
 // Bjurholm
-//GasMeUp
-//DetBränns
+GasMeUp
+DetBränns
 
 // 43
 NordmaStation

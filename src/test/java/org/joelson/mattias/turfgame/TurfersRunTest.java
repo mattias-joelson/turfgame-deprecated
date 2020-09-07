@@ -44,6 +44,15 @@ public class TurfersRunTest {
             writeRun(writer, "oberoff_2020-07-25.txt");
         }
     }
+
+    @Test
+    public void writeStaminatrix() throws IOException {
+        try (KMLWriter writer = new KMLWriter("staminatrix.kml")) {
+            writeRun(writer, "staminatrix_north.txt");
+            writeRun(writer, "staminatrix_south.txt");
+        }
+    }
+
     private void writeRun(KMLWriter writer, String shortFilename) throws IOException {
         String filename = TurfersRunTest.class.getResource(File.separatorChar + shortFilename).getFile();
         Path path = Paths.get(filename);

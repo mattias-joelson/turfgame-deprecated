@@ -18,27 +18,27 @@ public class MunicipalityTest {
     @Test
     public void readSolna() throws Exception {
         Map<String, Boolean> zones = getSolnaZones();
-        assertEquals(199, zones.size());
+        assertEquals(200, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(199, taken);
+        assertEquals(200, taken);
     }
     
     @Test
     public void readStockholm() throws Exception {
         Map<String, Boolean> zones = getStockholmZones();
-        assertEquals(1398, zones.size());
+        assertEquals(1401, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(1398, taken);
+        assertEquals(1401, taken);
     }
     
     @Test
@@ -66,7 +66,20 @@ public class MunicipalityTest {
         IntStream.range(0, solnaZones.size())
                 .forEach(i -> System.out.println(String.format("%3d - %s, %s", i, solnaZones.get(i).getName(), solnaZones.get(i).getDateCreated())));
     }
-    
+
+    @Test
+    public void danderydZonesSorted() throws Exception {
+        System.out.println("Danderyd zones in date order");
+        List<Zone> zones = ZonesTest.getAllZones();
+        Map<String, Boolean> danderydLundkvist = getDanderydZones();
+        List<Zone> solnaZones = zones.stream()
+                .filter(zone -> danderydLundkvist.containsKey(zone.getName()))
+                .sorted(Comparator.comparing(Zone::getName))
+                .collect(Collectors.toList());
+        IntStream.range(0, solnaZones.size())
+                .forEach(i -> System.out.println(String.format("%3d - %s, %s", i, solnaZones.get(i).getName(), solnaZones.get(i).getDateCreated())));
+    }
+
     public static Map<String, Boolean> getDanderydZones() throws Exception {
         return URLReaderTest.readProperties("lundkvist_141_danderyd.html", Municipality::fromHTML);
     }
