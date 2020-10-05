@@ -28,9 +28,66 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class Flipp08MissionTest {
+
+    @Test
+    public void flipp08MonthProgressTest() throws Exception {
+        List<Zone> zones = ZonesTest.getAllZones();
+        Map<String, Zone> zoneMap = new HashMap<>();
+        Map<Integer, Zone> zoneIdMap = new HashMap<>();
+        for (Zone zone : zones) {
+            zoneMap.put(zone.getName(), zone);
+            zoneIdMap.put(zone.getId(), zone);
+        }
+
+        File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
+        List<JSONObject> flips = new ArrayList<>();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = in.readLine()) != null) {
+                //System.out.println("Parsing " + line);
+                JSONObject flip = (JSONObject) JSONValue.parse(line);
+                flips.add(flip);
+            }
+        }
+
+        Monthly monthly = MonthlyTest.getMonthly();
+        int totalZoneCount = 0;
+        int totalTakenCount = 0;
+        for (JSONObject flip : flips) {
+            String flipName = ((JSONString) flip.getValue("name")).stringValue();
+            int flipZoneCount = ((JSONNumber) flip.getValue("zoneCount")).intValue();
+            JSONArray array = (JSONArray) flip.getValue("zones");
+            int count = 0;
+            Set<String> flipZoneNames = new HashSet<>();
+            boolean zoneNameInput = false;
+            for (JSONValue value : array.getElements()) {
+                Zone zone;
+                if (value instanceof JSONString) {
+                    String zoneName = ((JSONString) value).stringValue();
+                    zone = zoneMap.get(zoneName);
+                    assertNotNull("Zone '" + zoneName + "' not found!", zone);
+                    zoneNameInput = true;
+                } else {
+                    int zoneNumber = ((JSONNumber) value).intValue();
+                    zone = zoneIdMap.get(zoneNumber);
+                    assertNotNull("Zone '" + zoneNumber + "' not found!", zone);
+                }
+                flipZoneNames.add(zone.getName());
+                count += 1;
+            }
+            assertEquals(flipZoneCount, count);
+            List<MonthlyZone> takeZones = monthly.getZones().stream()
+                    .filter(monthlyZone -> flipZoneNames.contains(monthlyZone.getName()))
+                    .collect(Collectors.toList());
+            System.out.println(String.format("%s - %d / %d", flipName, takeZones.size(), flipZoneNames.size()));
+            totalZoneCount += flipZoneNames.size();
+            totalTakenCount += takeZones.size();
+        }
+
+        System.out.println(String.format("Total - %d / %d", totalTakenCount, totalZoneCount));
+    }
     
     @Test
     public void flipp08Test() throws Exception {
