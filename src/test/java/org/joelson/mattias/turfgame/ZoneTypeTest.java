@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -77,12 +78,16 @@ public class ZoneTypeTest {
         System.out.println("TP:       " + zoneNames.stream().map(zones::get).mapToInt(Zone::getTakeoverPoints).sum());
     }
     
-    private static List<String> getZoneNames() throws IOException {
+    private static List<String> getZoneNamesOld() throws IOException {
         String filename = TurfersRunTest.class.getResource("/oberoff_2019-11-26.txt").getFile();
         Path path = Paths.get(filename);
         try (Stream<String> lines = Files.lines(path)) {
             return lines.collect(Collectors.toList());
         }
+    }
+
+    private static List<String> getZoneNames() throws IOException, ParseException {
+        return TurfersRunTest.getDandebetZones().collect(Collectors.toList());
     }
     
     private static void calcDistance(Map<String, Zone> zones, String zn1, String zn2) {
