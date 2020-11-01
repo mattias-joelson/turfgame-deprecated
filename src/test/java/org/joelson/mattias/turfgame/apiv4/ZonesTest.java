@@ -17,7 +17,7 @@ public class ZonesTest {
     @Test
     public void parseAllZones() throws Exception {
         List<Zone> zones = getAllZones();
-        assertEquals(70545, zones.size());
+        assertEquals(72237, zones.size());
     }
 
     @Test
@@ -172,7 +172,7 @@ public class ZonesTest {
         zones.forEach(zone -> assertEquals(zone.getName(), (long) points.get(zone.getPointsPerHour()), (long) zone.getTakeoverPoints()));
     }
 
-    public static List<Zone> getAllZones() throws Exception {
+    public static List<Zone> getAllZones() throws IOException, ParseException {
         return URLReaderTest.readProperties("zones-all.json", Zones::fromJSON);
     }
     
@@ -184,7 +184,7 @@ public class ZonesTest {
         System.out.println("zones: " + zones.size());
         System.out.println("zoneNames: " + zoneNames.size());
         zones.stream()
-                .filter(zone -> zone.getName().contains("FäbodaSwim"))
+                .filter(zone -> zone.getName().contains("FäbodaSwim") || zone.getName().contains("CarlislePlaza"))
                 .forEach(zone -> System.out.println(zone.getName() + " - " + zone.getId() + " - " + zone.getDateCreated() + " - " + zone.getRegion().getName()
                         + " @ " + zone.getLatitude() + ", " + zone.getLongitude()));
     }
