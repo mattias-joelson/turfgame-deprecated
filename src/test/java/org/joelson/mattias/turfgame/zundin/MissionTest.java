@@ -61,7 +61,7 @@ public class MissionTest {
         
     }
     
-    private static List<Integer> readSolnaSnurrZones() throws Exception {
+    public static List<Integer> readSolnaSnurrZones() throws Exception {
         return URLReaderTest.readProperties("mission_33.html", Mission::fromHTML);
         
     }
@@ -254,7 +254,7 @@ public class MissionTest {
         
         List<ZoneStat> includedZones = zones.values().stream().sorted().collect(Collectors.toList());
         ZoneStat zoneStat = includedZones.get(0);
-        
+
         try (PrintWriter out = new PrintWriter(FilesUtil.newDefaultWriter("testSolna.html"));
                 PrintWriter stdout = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true)) {
             out.println("<html><head><style>");
