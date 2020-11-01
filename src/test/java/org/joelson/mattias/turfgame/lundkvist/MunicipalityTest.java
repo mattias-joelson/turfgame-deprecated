@@ -5,6 +5,8 @@ import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +33,14 @@ public class MunicipalityTest {
     @Test
     public void readStockholm() throws Exception {
         Map<String, Boolean> zones = getStockholmZones();
-        assertEquals(1403, zones.size());
+        assertEquals(1407, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(1403, taken);
+        assertEquals(1407, taken);
     }
     
     @Test
@@ -80,7 +82,7 @@ public class MunicipalityTest {
                 .forEach(i -> System.out.println(String.format("%3d - %s, %s", i, solnaZones.get(i).getName(), solnaZones.get(i).getDateCreated())));
     }
 
-    public static Map<String, Boolean> getDanderydZones() throws Exception {
+    public static Map<String, Boolean> getDanderydZones() throws IOException, ParseException {
         return URLReaderTest.readProperties("lundkvist_141_danderyd.html", Municipality::fromHTML);
     }
     
