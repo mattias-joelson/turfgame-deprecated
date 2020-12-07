@@ -4,6 +4,7 @@ import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
+import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,8 +26,7 @@ public class TurfersRunTest {
     
     @Before
     public void before() throws Exception {
-        zones = new HashMap<>();
-        ZonesTest.getAllZones().forEach(zone -> zones.put(zone.getName(), zone));
+        zones = ZoneUtil.toNameMap(ZonesTest.getAllZones());
     }
     
     @Test

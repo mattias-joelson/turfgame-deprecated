@@ -5,6 +5,7 @@ import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.statistics.Statistics;
 import org.joelson.mattias.turfgame.statistics.StatisticsInitializer;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
+import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,8 +15,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -100,7 +99,7 @@ public class MonthlyTest {
             }
 
             Monthly monthly = getMonthly();
-            Map<String, Zone> zones = getZones();
+            Map<String, Zone> zones = ZoneUtil.toNameMap(ZonesTest.getAllZones());
             boolean comma = false;
             for (MonthlyZone zone : monthly.getZones()) {
                 Zone turfZone = zones.get(zone.getName());
@@ -133,15 +132,6 @@ public class MonthlyTest {
                 writer.write(ch);
             }
         }
-    }
-
-    private static Map<String,Zone> getZones() throws Exception {
-        List<Zone> z = ZonesTest.getAllZones();
-        Map<String, Zone> zones = new HashMap<>(z.size());
-        for (Zone zone : z) {
-            zones.put(zone.getName(), zone);
-        }
-        return zones;
     }
 }
 

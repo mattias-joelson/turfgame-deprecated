@@ -4,6 +4,7 @@ import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
+import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -12,7 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,8 +61,7 @@ public class ZoneTypeTest {
     @Test
     public void zoneTripTest() throws Exception {
         List<String> zoneNames = getZoneNames();
-        Map<String, Zone> zones = new HashMap<>();
-        ZonesTest.getAllZones().forEach(zone -> zones.put(zone.getName(), zone));
+        Map<String, Zone> zones = ZoneUtil.toNameMap(ZonesTest.getAllZones());
     
         IntStream.range(0, zoneNames.size()).forEach(i -> {
             if (!zones.containsKey(zoneNames.get(i))) {
@@ -71,7 +70,7 @@ public class ZoneTypeTest {
         });
         IntStream.range(0, zoneNames.size() - 1).forEach(i -> calcDistance(zones, zoneNames.get(i), zoneNames.get(i + 1)));
         double dist = IntStream.range(0, zoneNames.size() - 1)
-                .mapToDouble(i -> calcDistance(zones.get(zoneNames.get(i)), zones.get(zoneNames.get(i + 1))))
+                .mapToDouble(i -> ZoneUtil.calcDistance(zones.get(zoneNames.get(i)), zones.get(zoneNames.get(i + 1))))
                 .sum();
         System.out.println("Distance: " + dist);
         System.out.println("Zones:    " + zoneNames.size());
@@ -91,23 +90,6 @@ public class ZoneTypeTest {
     }
     
     private static void calcDistance(Map<String, Zone> zones, String zn1, String zn2) {
-        System.out.println("Distance from " + zn1 + " to " + zn2 + " is " + calcDistance(zones.get(zn1), zones.get(zn2)));
-    }
-    
-    private static double calcDistance(Zone p1, Zone p2) {
-        double R = 6371.0e3;
-        double phi1 = toRadians(p1.getLatitude());
-        double phi2 = toRadians(p2.getLatitude());
-        double deltaPhi = toRadians(p2.getLatitude() - p1.getLatitude());
-        double deltaLambda = toRadians(p2.getLongitude() - p1.getLongitude());
-        
-        double a = StrictMath.sin(deltaPhi / 2) * StrictMath.sin(deltaPhi / 2)
-                + StrictMath.cos(phi1) * StrictMath.cos(phi2) * StrictMath.sin(deltaLambda / 2) * StrictMath.sin(deltaLambda / 2);
-        double c = 2 * StrictMath.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    }
-    
-    private static double toRadians(double degrees) {
-        return degrees * Math.PI / 180;
+        System.out.println("Distance from " + zn1 + " to " + zn2 + " is " + ZoneUtil.calcDistance(zones.get(zn1), zones.get(zn2)));
     }
 }
