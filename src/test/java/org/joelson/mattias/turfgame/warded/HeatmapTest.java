@@ -125,7 +125,7 @@ public class HeatmapTest {
                 .filter(entry -> combinedZones.containsKey(entry.getKey()))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
         Map<String, Boolean> filteredZones = combinedZones.entrySet().stream()
-                .filter(entry -> takenZones.get(entry.getKey()) - monthlyTakenZones.get(entry.getKey()) <= 50)
+                .filter(entry -> takenZones.get(entry.getKey()) == null || takenZones.get(entry.getKey()) - monthlyTakenZones.get(entry.getKey()) <= 50)
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
         municipalityHeatmap("monthlyCombinedHeatmap.kml", monthlyTakenZones, filteredZones, false);
     }
@@ -237,24 +237,23 @@ public class HeatmapTest {
         for (int i = max; i > 0; i -= 1) {
             if (i % 5 == 0) {
                 if (i + 5 == max && i > nextToMax + 5) {
-                    System.out.println(String.format("   : %" + (zoneCountArray[51][0] + 1) + 's', ":"));
+                    System.out.println(String.format("     : %" + (zoneCountArray[51][0] + 1) + 's', ":"));
                     i = nextToMax;
+                    if (i == 0) {
+                        continue;
+                    }
                 }
-                if (i >= 10) {
-                    System.out.print(i + " + ");
-                } else {
-                    System.out.print(" " + i + " + ");
-                }
+                System.out.print(String.format("%4d + ", i));
             } else {
-                System.out.print("   | ");
+                System.out.print("     | ");
             }
             for (int zoneTake : zoneTakes) {
                 System.out.print((zoneTake >= i) ? "*" : " ");
             }
             System.out.println();
         }
-        System.out.println("   +-+----+----+----+----+----+----+----+----+----+----+-");
-        System.out.println("     0    5   10   15   20   25   30   35   40   45   50");
+        System.out.println("     +-+----+----+----+----+----+----+----+----+----+----+-");
+        System.out.println("       0    5   10   15   20   25   30   35   40   45   50");
 
         System.out.println("Municipality:    " + filename);
         System.out.println("Takes to orange: " + toOrange + " (" + toOrangeZones + " zones)");
