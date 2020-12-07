@@ -8,6 +8,7 @@ import org.joelson.mattias.turfgame.util.JSONObject;
 import org.joelson.mattias.turfgame.util.JSONString;
 import org.joelson.mattias.turfgame.util.JSONValue;
 import org.joelson.mattias.turfgame.util.KMLWriter;
+import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -34,12 +35,8 @@ public class Flipp08MissionTest {
     @Test
     public void flipp08MonthProgressTest() throws Exception {
         List<Zone> zones = ZonesTest.getAllZones();
-        Map<String, Zone> zoneMap = new HashMap<>();
-        Map<Integer, Zone> zoneIdMap = new HashMap<>();
-        for (Zone zone : zones) {
-            zoneMap.put(zone.getName(), zone);
-            zoneIdMap.put(zone.getId(), zone);
-        }
+        Map<String, Zone> zoneMap = ZoneUtil.toNameMap(zones);
+        Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(zones);
 
         File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
         List<JSONObject> flips = new ArrayList<>();
@@ -92,12 +89,8 @@ public class Flipp08MissionTest {
     @Test
     public void flipp08Test() throws Exception {
         List<Zone> zones = ZonesTest.getAllZones();
-        Map<String, Zone> zoneMap = new HashMap<>();
-        Map<Integer, Zone> zoneIdMap = new HashMap<>();
-        for (Zone zone : zones) {
-            zoneMap.put(zone.getName(), zone);
-            zoneIdMap.put(zone.getId(), zone);
-        }
+        Map<String, Zone> zoneMap = ZoneUtil.toNameMap(zones);
+        Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(zones);
         
         File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
         List<JSONObject> flips = new ArrayList<>();

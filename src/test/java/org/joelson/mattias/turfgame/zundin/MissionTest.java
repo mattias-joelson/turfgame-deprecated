@@ -6,10 +6,10 @@ import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.FilesUtil;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
+import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.junit.Test;
 
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -101,12 +101,8 @@ public class MissionTest {
         //Map<String, Boolean> sollentunaZoneNames = MunicipalityTest.getSollentunaZones();
         //Map<String, Boolean> upplandsBroZoneNames = MunicipalityTest.getUpplandsBroZones();
         
-        Map<String, Zone> namedZones = new HashMap<>(allZones.size());
-        Map<Integer, Zone> numberedZones = new HashMap<>(allZones.size());
-        for (Zone zone : allZones) {
-            namedZones.put(zone.getName(), zone);
-            numberedZones.put(zone.getId(), zone);
-        }
+        Map<String, Zone> namedZones = ZoneUtil.toNameMap(allZones);
+        Map<Integer, Zone> numberedZones = ZoneUtil.toIdMap(allZones);
     
         Map<String, ZoneStat> zones = new HashMap<>(soderSnurrZoneIds.size() + stockholmZoneNames.size());
         addMunicipalityZones(stockholmZoneNames, "Stockholm", namedZones, zones);
@@ -232,12 +228,8 @@ public class MissionTest {
         zoneNames.putAll(solnaZoneNames);
         zoneNames.putAll(sundbybergZoneNames);
         
-        Map<String, Zone> namedZones = new HashMap<>(allZones.size());
-        Map<Integer, Zone> numberedZones = new HashMap<>(allZones.size());
-        for (Zone zone : allZones) {
-            namedZones.put(zone.getName(), zone);
-            numberedZones.put(zone.getId(), zone);
-        }
+        Map<String, Zone> namedZones = ZoneUtil.toNameMap(allZones);
+        Map<Integer, Zone> numberedZones = ZoneUtil.toIdMap(allZones);
     
         Map<String, ZoneStat> zones = new HashMap<>(solnaSnurrZoneIds.size() + zoneNames.size());
         for (Entry<String, Boolean> entry : zoneNames.entrySet()) {
@@ -298,8 +290,7 @@ public class MissionTest {
     
     @Test
     public void outAndReturn() throws Exception {
-        Map<String, Zone> zones = new HashMap<>();
-        ZonesTest.getAllZones().forEach(zone -> zones.put(zone.getName(), zone));
+        Map<String, Zone> zones = ZoneUtil.toNameMap(ZonesTest.getAllZones());
         String filename = TurfersRunTest.class.getResource("/oberoff_2019-11-26.txt").getFile();
         Path path = Paths.get(filename);
         List<Zone> run = new ArrayList<>();
