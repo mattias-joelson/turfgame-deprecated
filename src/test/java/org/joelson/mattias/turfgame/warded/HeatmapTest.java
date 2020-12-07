@@ -5,17 +5,20 @@ import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
+import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.joelson.mattias.turfgame.zundin.Monthly;
 import org.joelson.mattias.turfgame.zundin.MonthlyTest;
 import org.joelson.mattias.turfgame.zundin.MonthlyZone;
 import org.junit.Test;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -106,6 +109,62 @@ public class HeatmapTest {
         combinedZones.putAll(MunicipalityTest.getDanderydZones());
         combinedZones.putAll(MunicipalityTest.getSundbybergZones());
         municipalityHeatmap("dss_heatmap.kml", readTakenZones(), combinedZones, true);
+    }
+
+    @Test
+    public void circleHeatmap() throws Exception {
+        Map<String, Boolean> combinedZones = MunicipalityTest.getSolnaZones();
+        combinedZones.putAll(MunicipalityTest.getDanderydZones());
+        combinedZones.putAll(MunicipalityTest.getSundbybergZones());
+
+        Map<String, Zone> zoneMap = ZoneUtil.toNameMap(ZonesTest.getAllZones());
+        Zone krausTorgZone = zoneMap.get("KrausTorg");
+
+        double solnaDistance = getMaxDistance(zoneMap, krausTorgZone, MunicipalityTest.getSolnaZones().keySet());
+        List<Entry<String, Double>> solnaZones = getSortedZoneDistances(zoneMap, krausTorgZone, MunicipalityTest.getSolnaZones().keySet());
+
+        double danderydDistance = getMaxDistance(zoneMap, krausTorgZone, MunicipalityTest.getDanderydZones().keySet());
+        List<Entry<String, Double>> danderydZones = getSortedZoneDistances(zoneMap, krausTorgZone, MunicipalityTest.getDanderydZones().keySet());
+
+        double sundbybergDistance = getMaxDistance(zoneMap, krausTorgZone, MunicipalityTest.getSundbybergZones().keySet());
+        List<Entry<String, Double>> sundbybergZones = getSortedZoneDistances(zoneMap, krausTorgZone, MunicipalityTest.getSundbybergZones().keySet());
+
+        double maxDistance = Math.max(Math.max(solnaDistance, danderydDistance), Math.max(sundbybergDistance, 6600.0));
+        System.out.println("Max distance: " + maxDistance);
+
+        Map<String, Boolean> stockholmZones = MunicipalityTest.getStockholmZones().entrySet().stream()
+                .filter(zoneNameEntry -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneNameEntry))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        List<Entry<String, Double>> stockholmDistances = getSortedZoneDistances(zoneMap, krausTorgZone, stockholmZones.keySet());
+        combinedZones.putAll(stockholmZones);
+        Map<String, Boolean> sollentunaZones = MunicipalityTest.getSollentunaZones().entrySet().stream()
+                .filter(zoneNameEntry -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneNameEntry))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        combinedZones.putAll(sollentunaZones);
+        Map<String, Boolean> tabyZones = MunicipalityTest.getTabyZones().entrySet().stream()
+                .filter(zoneNameEntry -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneNameEntry))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        combinedZones.putAll(tabyZones);
+
+        System.out.println("Zones: " + combinedZones.size());
+        municipalityHeatmap("circle_heatmap.kml", readTakenZones(), combinedZones, true);
+    }
+
+    private static double getMaxDistance(Map<String, Zone> zoneMap, Zone origoZone, Set<String> zoneNames) {
+        return zoneNames.stream()
+                .mapToDouble(name -> ZoneUtil.calcDistance(origoZone, zoneMap.get(name)))
+                .max().orElse(0.0);
+    }
+
+    private static List<Entry<String, Double>> getSortedZoneDistances(Map<String, Zone> zoneMap, Zone origoZone, Set<String> zoneNames) {
+        return zoneNames.stream()
+                .map(name -> new SimpleImmutableEntry<>(name, ZoneUtil.calcDistance(origoZone, zoneMap.get(name))))
+                .sorted(Comparator.comparing(Entry::getValue))
+                .collect(Collectors.toList());
+    }
+
+    private static boolean inDistance(Map<String, Zone> zoneMap, Zone origoZone, double maxDistance, Entry<String, Boolean> zoneNameEntry) {
+        return ZoneUtil.calcDistance(origoZone, zoneMap.get(zoneNameEntry.getKey())) <= maxDistance;
     }
 
     @Test
