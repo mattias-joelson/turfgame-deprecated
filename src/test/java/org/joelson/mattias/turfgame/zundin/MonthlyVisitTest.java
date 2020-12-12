@@ -25,52 +25,52 @@ public class MonthlyVisitTest {
     
     @Test
     public void visitDanderydTest() throws Exception {
-        visitMunicipalityTest("Danderyd", "danderyd_month.kml", MunicipalityTest.getDanderydZones());
+        visitMunicipalityTest("Danderyd", "danderyd_month.kml", MunicipalityTest.getDanderydZones().keySet());
     }
 
     @Test
     public void visitJarfallaTest() throws Exception {
-        visitMunicipalityTest("Järfälla", "jarfalla_month.kml", MunicipalityTest.getJarfallaZones());
+        visitMunicipalityTest("Järfälla", "jarfalla_month.kml", MunicipalityTest.getJarfallaZones().keySet());
     }
 
     @Test
     public void visitSolnaTest() throws Exception {
-        visitMunicipalityTest("Solna", "solna_month.kml", MunicipalityTest.getSolnaZones());
+        visitMunicipalityTest("Solna", "solna_month.kml", MunicipalityTest.getSolnaZones().keySet());
     }
 
     @Test
     public void visitSollentunaTest() throws Exception {
-        visitMunicipalityTest("Sollentuna", "sollentuna_month.kml", MunicipalityTest.getSollentunaZones());
+        visitMunicipalityTest("Sollentuna", "sollentuna_month.kml", MunicipalityTest.getSollentunaZones().keySet());
     }
 
     @Test
     public void visitStockholmTest() throws Exception {
-        visitMunicipalityTest("Stockholm", "stockholm_month.kml", MunicipalityTest.getStockholmZones());
+        visitMunicipalityTest("Stockholm", "stockholm_month.kml", MunicipalityTest.getStockholmZones().keySet());
     }
 
     @Test
     public void visitSundbybergTest() throws Exception {
-        visitMunicipalityTest("Sundbyberg", "sundbyberg_month.kml", MunicipalityTest.getSundbybergZones());
+        visitMunicipalityTest("Sundbyberg", "sundbyberg_month.kml", MunicipalityTest.getSundbybergZones().keySet());
     }
 
     @Test
     public void visitTäbyTest() throws Exception {
-        visitMunicipalityTest("Täby", "taby_month.kml", MunicipalityTest.getTabyZones());
+        visitMunicipalityTest("Täby", "taby_month.kml", MunicipalityTest.getTabyZones().keySet());
     }
 
     @Test
-    public void combinedVisitTest() throws Exception {
-        Map<String, Boolean> combinedZones = MunicipalityTest.getSolnaZones();
-        combinedZones.putAll(MunicipalityTest.getDanderydZones());
-        combinedZones.putAll(MunicipalityTest.getSundbybergZones());
-        visitMunicipalityTest("DSS", "dss_month.kml", combinedZones);
+    public void combinedDSSVisitTest() throws Exception {
+        visitMunicipalityTest("DSS", "dss_month.kml", HeatmapTest.getDSSZones());
+    }
+
+    @Test
+    public void combinedCircleVisitTest() throws Exception {
+        visitMunicipalityTest("circle", "circle_month.kml", HeatmapTest.getCircleZones());
     }
 
     @Test
     public void combinedNonSnurrTest() throws Exception {
-        Map<String, Boolean> combinedZones = MunicipalityTest.getSolnaZones();
-        combinedZones.putAll(MunicipalityTest.getDanderydZones());
-        combinedZones.putAll(MunicipalityTest.getSundbybergZones());
+        Set<String> combinedZones = HeatmapTest.getDSSZones();
         List<Integer> remainingZones = MissionTest.readSolnaSnurrZones();
         remainingZones = remainingZones.subList(185, remainingZones.size());
         List<Zone> zones1 = ZonesTest.getAllZones();
@@ -78,23 +78,23 @@ public class MonthlyVisitTest {
                 .collect(Collectors.toMap(Zone::getId, Function.identity()));
         remainingZones.forEach(id -> combinedZones.remove(zoneMap.get(id).getName()));
         HeatmapTest.readTakenZones().entrySet().stream()
-                .filter(entry -> combinedZones.containsKey(entry.getKey()))
+                .filter(entry -> combinedZones.contains(entry.getKey()))
                 .filter(entry -> entry.getValue() >= 51)
                 .forEach(entry -> combinedZones.remove(entry.getKey()));
 
         visitMunicipalityTest("NonSnurr", "dss_nonsnurr.kml", combinedZones);
     }
 
-    private static void visitMunicipalityTest(String municipality, String filename, Map<String, Boolean> municipalityZones) throws Exception {
+    private static void visitMunicipalityTest(String municipality, String filename, Set<String> municipalityZones) throws Exception {
         Monthly monthly = getMonthly();
         List<Zone> zones = ZonesTest.getAllZones();
     
         Set<String> monthlyVisits = monthly.getZones().stream().map(MonthlyZone::getName).collect(Collectors.toSet());
         
-        Set<String> visited = municipalityZones.keySet().stream()
+        Set<String> visited = municipalityZones.stream()
                 .filter(monthlyVisits::contains)
                 .collect(Collectors.toSet());
-        Set<String> unvisited = municipalityZones.keySet().stream()
+        Set<String> unvisited = municipalityZones.stream()
                 .filter(zoneName -> !monthlyVisits.contains(zoneName))
                 .collect(Collectors.toSet());
 
@@ -121,7 +121,7 @@ public class MonthlyVisitTest {
 
     private static Monthly getMonthly() throws Exception {
         //return readProperties("monthly_oberoff_round96.html");
-        return readProperties("monthly_0beroff_round125.html");
+        return readProperties("monthly_0beroff_round126.html");
     }
     
     private static Monthly readProperties(String resource) throws Exception {

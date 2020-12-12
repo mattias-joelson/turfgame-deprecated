@@ -100,7 +100,7 @@ public class HeatmapTest {
         municipalityHeatmap("sundbyberg_heatmap.kml", readTakenZones(), MunicipalityTest.getSundbybergZones().keySet(), true);
     }
 
-    private static Set<String> getDSSZones() throws Exception {
+    public static Set<String> getDSSZones() throws Exception {
         Set<String> combinedZones = new HashSet<>();
         combinedZones.addAll(MunicipalityTest.getSolnaZones().keySet());
         combinedZones.addAll(MunicipalityTest.getDanderydZones().keySet());
@@ -115,11 +115,10 @@ public class HeatmapTest {
 
     @Test
     public void circleHeatmap() throws Exception {
-
         municipalityHeatmap("circle_heatmap.kml", readTakenZones(), getCircleZones(), true);
     }
 
-    private static Set<String> getCircleZones() throws Exception {
+    public static Set<String> getCircleZones() throws Exception {
         Set<String> combinedZones = getDSSZones();
 
         Map<String, Zone> zoneMap = ZoneUtil.toNameMap(ZonesTest.getAllZones());
@@ -224,7 +223,6 @@ public class HeatmapTest {
     private void municipalityHeatmap(String filename, Map<String, Integer> takenZones, Set<String> zoneNames, boolean printZones)
             throws Exception {
         List<Zone> allZones = ZonesTest.getAllZones();
-        //Map<String, Zone> allZones = ZonesTest.getAllZones().stream().collect(Collectors.toMap(Zone::getName, Function.identity()));
 
         List<Map<Zone, Integer>> zoneMaps = new ArrayList<>(TAKES_ENTRIES);
         Map<String, Integer> zoneMap = new HashMap<>();
@@ -256,15 +254,6 @@ public class HeatmapTest {
                     break;
                 }
             }
-//            Zone zone = allZones.get(zoneName);
-//            if (zone != null) {
-//                int cappedTakes = Math.min(takes, 51);
-//                zoneMaps.get(cappedTakes).put(zone, takes);
-//                zoneTakes[cappedTakes] += 1;
-//                zoneMap.put(zone.getName(), takes);
-//            } else {
-//                System.out.println("Error");
-//            }
         }
     
         int toOrange = countTakes(zoneTakes, WardedCategories.ORANGE);
