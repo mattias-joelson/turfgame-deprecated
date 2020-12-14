@@ -140,6 +140,20 @@ public class HeatmapTest {
                 .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
                 .collect(Collectors.toSet());
         combinedZones.addAll(tabyZones);
+        Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(ZonesTest.getAllZones());
+        Set<String> extraZones = new HashSet<>();
+        extraZones.add(zoneIdMap.get(120).getName());
+        extraZones.add(zoneIdMap.get(299).getName());
+        extraZones.add(zoneIdMap.get(326).getName());
+        extraZones.add(zoneIdMap.get(64100).getName());
+        extraZones.add(zoneIdMap.get(94113).getName());
+        extraZones.add(zoneIdMap.get(131839).getName());
+        extraZones.add(zoneIdMap.get(223822).getName());
+        extraZones.add(zoneIdMap.get(223824).getName());
+        extraZones.add(zoneIdMap.get(275318).getName());
+        List<Entry<String, Double>> extraDistances = getSortedZoneDistances(zoneMap, krausTorgZone, extraZones);
+        combinedZones.addAll(extraZones);
+        List<Entry<String, Double>> combinedDistances = getSortedZoneDistances(zoneMap, krausTorgZone, combinedZones);
         System.out.println("Zones: " + combinedZones.size());
         return combinedZones;
     }
