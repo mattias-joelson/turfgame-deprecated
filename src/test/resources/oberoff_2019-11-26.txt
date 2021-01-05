@@ -21,7 +21,7 @@ CallethYou
 GrindtorpZone
 GrindtorpPath
 TäbyStation
-Tabyzone
+TäbyZone
 TäbyCare
 IngenBäverHär
 Enstation

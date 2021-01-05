@@ -22,7 +22,7 @@ GrindtorpZone
 GrindtorpPath
 TäbyStation
 TäbyCare
-Tabyzone
+TäbyZone
 Threehills
 FieldVillage
 IngenBäverHär
