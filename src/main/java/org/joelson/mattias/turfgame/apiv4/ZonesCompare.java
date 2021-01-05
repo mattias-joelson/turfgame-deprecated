@@ -35,16 +35,30 @@ public class ZonesCompare {
                 || zone1.getId() != zone2.getId()
                 || zone1.getPointsPerHour() != zone2.getPointsPerHour()
                 || zone1.getTakeoverPoints() != zone2.getTakeoverPoints()
-                || zone1.getRegion().getId() != zone2.getRegion().getId()
+                || !regionsEqual(zone1.getRegion(), zone2.getRegion())
                 || zone1.getLatitude() != zone2.getLatitude()
                 || zone1.getLongitude() != zone2.getLongitude()) {
             System.out.println(toString(zone1) + " differs from " + toString(zone2));
         }
     }
 
+    private static boolean regionsEqual(Region region1, Region region2) {
+        if (region1 == null || region2 == null) {
+            return region1 == region2;
+        }
+        return region1.getId() == region2.getId();
+    }
+
     private static String toString(Zone zone) {
-        return String.format("{ %d, %s, %d - %s, %s, %f, %f, %d, %d }", zone.getId(), zone.getName(), zone.getRegion().getId(), zone.getRegion().getName(),
+        return String.format("{ %d, %s, %s, %s, %f, %f, %d, %d }", zone.getId(), zone.getName(), toString(zone.getRegion()),
                 zone.getDateCreated(), zone.getLatitude(), zone.getLongitude(), zone.getTakeoverPoints(), zone.getPointsPerHour());
+    }
+
+    private static String toString(Region region) {
+        if (region == null) {
+            return "<no region>";
+        }
+        return String.format("%d - %s", region.getId(), region.getName());
     }
 
     private static List<Zone> readZones(Path file) throws IOException, ParseException {
