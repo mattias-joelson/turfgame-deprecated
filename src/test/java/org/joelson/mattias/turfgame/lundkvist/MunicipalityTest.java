@@ -20,40 +20,40 @@ public class MunicipalityTest {
     @Test
     public void readSolna() throws Exception {
         Map<String, Boolean> zones = getSolnaZones();
-        assertEquals(202, zones.size());
+        assertEquals(203, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(202, taken);
+        assertEquals(203, taken);
     }
     
     @Test
     public void readStockholm() throws Exception {
         Map<String, Boolean> zones = getStockholmZones();
-        assertEquals(1408, zones.size());
+        assertEquals(1410, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(1407, taken);
+        assertEquals(1408, taken);
     }
     
     @Test
     public void readSundbyberg() throws Exception {
         Map<String, Boolean> zones = getSundbybergZones();
-        assertEquals(105, zones.size());
+        assertEquals(106, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(105, taken);
+        assertEquals(106, taken);
     }
     
     @Test
