@@ -15,15 +15,23 @@ public class ZoneUtil {
         throw new InstantiationException("Should not be instantiated!");
     }
 
+    public static double calcDistance(Zone zone1, Zone zone2) {
+        return calcDistance(zone1.getLatitude(), zone1.getLongitude(), zone2.getLatitude(), zone2.getLongitude());
+    }
+
+    public static double calcDistance(double latitude, double longitude, Zone zone) {
+        return calcDistance(latitude, longitude, zone.getLatitude(), zone.getLongitude());
+    }
+
     /**
      * @see <a href="https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula">Stack overflow</a>
      * @see <a href="https://en.wikipedia.org/wiki/Haversine_formula">Haversine formula</a>
      */
-    public static double calcDistance(Zone p1, Zone p2) {
-        double phi1 = toRadians(p1.getLatitude());
-        double phi2 = toRadians(p2.getLatitude());
-        double deltaPhi = toRadians(p2.getLatitude() - p1.getLatitude());
-        double deltaLambda = toRadians(p2.getLongitude() - p1.getLongitude());
+    public static double calcDistance(double p1latitude, double p1longitude, double p2Latitude, double p2Longitude) {
+        double phi1 = toRadians(p1latitude);
+        double phi2 = toRadians(p2Latitude);
+        double deltaPhi = toRadians(p2Latitude - p1latitude);
+        double deltaLambda = toRadians(p2Longitude - p1longitude);
 
         double a = StrictMath.sin(deltaPhi / 2) * StrictMath.sin(deltaPhi / 2)
                 + StrictMath.cos(phi1) * StrictMath.cos(phi2) * StrictMath.sin(deltaLambda / 2) * StrictMath.sin(deltaLambda / 2);
