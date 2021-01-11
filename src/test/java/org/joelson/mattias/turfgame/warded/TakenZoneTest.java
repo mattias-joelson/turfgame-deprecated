@@ -18,7 +18,7 @@ public class TakenZoneTest {
         assertEquals(1, (long) takenZones.get("Lambastranden"));
     }
     
-    private static Map<String, Integer> readTakenZones() throws Exception {
+    public static Map<String, Integer> readTakenZones() throws Exception {
         return URLReaderTest.readProperties("warded.unique.php.html", TakenZones::fromHTML);
     }
 }
