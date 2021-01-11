@@ -6,8 +6,10 @@ import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.joelson.mattias.turfgame.warded.HeatmapTest;
+import org.joelson.mattias.turfgame.warded.TakenZoneTest;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +67,7 @@ public class MonthlyVisitTest {
 
     @Test
     public void combinedCircleVisitTest() throws Exception {
-        visitMunicipalityTest("circle", "circle_month.kml", HeatmapTest.getCircleZones());
+        visitMunicipalityTest("circle", "circle_month.kml", HeatmapTest.getCircleZones(), true);
     }
 
     @Test
@@ -86,6 +88,10 @@ public class MonthlyVisitTest {
     }
 
     private static void visitMunicipalityTest(String municipality, String filename, Set<String> municipalityZones) throws Exception {
+        visitMunicipalityTest(municipality, filename, municipalityZones, false);
+    }
+
+    private static void visitMunicipalityTest(String municipality, String filename, Set<String> municipalityZones, boolean partitionUnvisited) throws Exception {
         Monthly monthly = getMonthly();
         List<Zone> zones = ZonesTest.getAllZones();
     
@@ -97,6 +103,15 @@ public class MonthlyVisitTest {
         Set<String> unvisited = municipalityZones.stream()
                 .filter(zoneName -> !monthlyVisits.contains(zoneName))
                 .collect(Collectors.toSet());
+        Set<String> unvisitedPurple = new HashSet<>();
+        if (partitionUnvisited) {
+            Map<String, Integer> takenZones = TakenZoneTest.readTakenZones();
+            unvisited.stream()
+                    .filter(takenZones::containsKey)
+                    .filter(zoneName -> takenZones.get(zoneName) > 50)
+                    .forEach(unvisitedPurple::add);
+            unvisited.removeAll(unvisitedPurple);
+        }
 
         Set<Zone> visitedZones = zones.stream()
                 .filter(zone -> visited.contains(zone.getName()))
@@ -104,19 +119,28 @@ public class MonthlyVisitTest {
         Set<Zone> unvisitedZones = zones.stream()
                 .filter(zone -> unvisited.contains(zone.getName()))
                 .collect(Collectors.toSet());
+        Set<Zone> unvisitedPurpleZones = zones.stream()
+                .filter(zone -> unvisitedPurple.contains(zone.getName()))
+                .collect(Collectors.toSet());
     
         try (KMLWriter out = new KMLWriter(filename)) {
             out.writeFolder(municipality + " unvisited");
             unvisitedZones.stream()
                     .sorted(Comparator.comparing(Zone::getName))
                     .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
+            if (!unvisitedPurple.isEmpty()) {
+                out.writeFolder(municipality + " unvisited purple");
+                unvisitedPurpleZones.stream()
+                        .sorted(Comparator.comparing(Zone::getName))
+                        .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
+            }
             out.writeFolder(municipality + " visited");
             visitedZones.stream()
                     .sorted(Comparator.comparing(Zone::getName))
                     .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
         }
         System.out.println(filename + ": " + (unvisitedZones.size() + visitedZones.size()) + " (" + municipalityZones.size() + ')');
-        assertEquals(municipalityZones.size(), unvisitedZones.size() + visitedZones.size());
+        assertEquals(municipalityZones.size(), unvisitedZones.size() + unvisitedPurpleZones.size() + visitedZones.size());
     }
 
     private static Monthly getMonthly() throws Exception {
