@@ -29,4 +29,12 @@ public class Round {
         JSONString start = (JSONString) obj.getValue(START);
         return new Round(name.stringValue(), start.stringValue());
     }
+
+    @Override
+    public String toString() {
+        return "Round{" +
+                "name='" + name + '\'' +
+                ", start='" + start + '\'' +
+                '}';
+    }
 }
