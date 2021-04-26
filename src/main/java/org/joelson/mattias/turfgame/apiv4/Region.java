@@ -41,4 +41,13 @@ public final class Region {
         }
         return new Region(null, name.stringValue(), id.intValue());
     }
+
+    @Override
+    public String toString() {
+        return "Region{" +
+                "country='" + country + '\'' +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
