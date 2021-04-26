@@ -6,8 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
@@ -18,11 +24,17 @@ public final class URLReader {
     }
 
     public static String getRequest(String request) throws IOException {
-        URL url = new URL(request);
-        URLConnection connection = url.openConnection();
-
-        try (InputStream input = connection.getInputStream()) {
-            return readStream(input);
+        try {
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .uri(new URI(request))
+                    .GET()
+                    .build();
+            HttpResponse<String> httpResponse = HttpClient.newBuilder()
+                    .build()
+                    .send(httpRequest, BodyHandlers.ofString());
+            return httpResponse.body();
+        } catch (URISyntaxException | InterruptedException e) {
+            throw new IOException(e);
         }
     }
 
