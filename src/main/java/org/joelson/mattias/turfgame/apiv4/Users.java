@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public final class Users {
     
-    private static final String USERS_REQUEST = "http://api.turfgame.com/v4/users"; //NON-NLS
+    private static final String USERS_REQUEST = "https://api.turfgame.com/v4/users"; //NON-NLS
     private static final String NAME_PARAMETER = "name"; //NON-NLS
     private static final String ID_PARAMETER = "id"; // NON-NLS
     
@@ -46,5 +46,9 @@ public final class Users {
                 .map(JSONObject.class::cast)
                 .map(User::fromJSON)
                 .collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) throws IOException, ParseException {
+        System.out.println(getUsers((Object[]) args));
     }
 }

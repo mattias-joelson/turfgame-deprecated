@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public final class Rounds {
 
-    private static final String ROUNDS_REQUEST = "http://api.turfgame.com/v4/rounds"; // NON-NLS
+    private static final String ROUNDS_REQUEST = "https://api.turfgame.com/v4/rounds"; // NON-NLS
 
     private Rounds() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");

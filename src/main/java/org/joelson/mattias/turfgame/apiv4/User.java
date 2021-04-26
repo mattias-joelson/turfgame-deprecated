@@ -110,4 +110,21 @@ public class User {
         return new User(name.stringValue(), id.intValue(), region, uniqueZonesTaken.intValue(), pointsPerHour.intValue(), rank.intValue(),
                 totalPoints.intValue(), taken.intValue(), points.intValue(), place.intValue(), country.stringValue());
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", region=" + region +
+                ", uniqueZonesTaken=" + uniqueZonesTaken +
+                ", pointsPerHour=" + pointsPerHour +
+                ", rank=" + rank +
+                ", totalPoints=" + totalPoints +
+                ", taken=" + taken +
+                ", points=" + points +
+                ", place=" + place +
+                ", country='" + country + '\'' +
+                '}';
+    }
 }

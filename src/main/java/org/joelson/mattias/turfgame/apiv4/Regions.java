@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public final class Regions {
 
-    private static final String REGIONS_REQUEST = "http://api.turfgame.com/v4/regions"; //NON-NLS
+    private static final String REGIONS_REQUEST = "https://api.turfgame.com/v4/regions"; //NON-NLS
     private static final String DEFAULT_REGIONS_FILENAME = "regions-all.json"; //NON-NLS
 
     private Regions() throws InstantiationException {
