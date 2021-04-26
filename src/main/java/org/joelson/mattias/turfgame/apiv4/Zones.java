@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public final class Zones {
 
-    private static final String ALL_ZONES_REQUEST = "http://api.turfgame.com/v4/zones/all"; //NON-NLS
+    private static final String ALL_ZONES_REQUEST = "https://api.turfgame.com/v4/zones/all"; //NON-NLS
     private static final String DEFAULT_ZONES_FILENAME = "zones-all.json"; //NON-NLS
     
     private Zones() throws InstantiationException {

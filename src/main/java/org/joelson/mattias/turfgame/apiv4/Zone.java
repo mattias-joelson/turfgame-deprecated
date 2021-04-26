@@ -95,4 +95,19 @@ public final class Zone {
                 latitude.doubleValue(), longitude.doubleValue(), dateCreated,
                 takeoverPoints.intValue(), pointsPerHour.intValue(), totalTakeovers.intValue());
     }
+
+    @Override
+    public String toString() {
+        return "Zone{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", region=" + region +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", takeoverPoints=" + takeoverPoints +
+                ", pointsPerHour=" + pointsPerHour +
+                ", totalTakeovers=" + totalTakeovers +
+                '}';
+    }
 }
