@@ -47,4 +47,8 @@ public final class Users {
                 .map(User::fromJSON)
                 .collect(Collectors.toList());
     }
+
+    public static void main(String[] args) throws IOException, ParseException {
+        System.out.println(getUsers((Object[]) args));
+    }
 }
