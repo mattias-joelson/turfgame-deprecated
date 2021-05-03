@@ -108,7 +108,8 @@ public class TakeDistributionTest {
         if (printZones) {
             System.out.println("median: " + visitMax);
             low.stream()
-                    .sorted(Comparator.comparing(ZoneTakeDistribution::getVisits))
+                    .sorted(Comparator.comparing(ZoneTakeDistribution::getVisits)
+                            .thenComparing(zoneTakeDistribution -> zoneTakeDistribution.getZone().getName()))
                     .map(ZoneTakeDistribution::toKMLPlacemarkNameString)
                     .forEach(System.out::println);
         }
