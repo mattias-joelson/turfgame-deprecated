@@ -18,6 +18,8 @@ import java.util.Set;
 
 public class TakeDistributionTest {
 
+    private static final int PURPLE_LIMIT = 51;
+
     private static class ZoneTakeDistribution {
         private final Zone zone;
         private final int monthlyVisits;
@@ -67,9 +69,12 @@ public class TakeDistributionTest {
             Zone zone = zoneNameMap.get(zoneName);
             MonthlyZone monthlyZone = monthlyNameMap.get(zoneName);
             int visits = visitNameMap.get(zoneName);
+            if (visits >= PURPLE_LIMIT) {
+                continue;
+            }
             int monthlyVisits = (monthlyZone != null) ? monthlyZone.getVisits() : 0;
             int startVisits = visits - monthlyVisits;
-            int visitsRemained = 51 - startVisits;
+            int visitsRemained = PURPLE_LIMIT - startVisits;
             if (visitsRemained > 0) {
                 float percentage = Math.min(100.0f * monthlyVisits / visitsRemained, 100.0f);
                 distributionList.add(new ZoneTakeDistribution(zone, monthlyVisits, visits, percentage));
@@ -127,7 +132,8 @@ public class TakeDistributionTest {
         }
         out.writeFolder(name);
         zones.stream()
-                .sorted(Comparator.comparing(ZoneTakeDistribution::getVisits))
+                .sorted(Comparator.comparing(ZoneTakeDistribution::getVisits)
+                        .thenComparing(zoneTakeDistribution -> zoneTakeDistribution.getZone().getName()))
                 .forEach(zoneTakeDistribution -> writeZone(out, zoneTakeDistribution));
     }
 
