@@ -68,7 +68,7 @@ public class TakeDistributionTest {
         for (String zoneName : zoneNames) {
             Zone zone = zoneNameMap.get(zoneName);
             MonthlyZone monthlyZone = monthlyNameMap.get(zoneName);
-            int visits = visitNameMap.get(zoneName);
+            int visits = (visitNameMap.containsKey(zoneName)) ? visitNameMap.get(zoneName) : 0;
             if (visits >= PURPLE_LIMIT) {
                 continue;
             }
