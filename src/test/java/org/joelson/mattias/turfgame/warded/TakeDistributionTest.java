@@ -81,7 +81,7 @@ public class TakeDistributionTest {
             }
         }
 
-        int current = 24;
+        int current = findNextCurrent(distributionList);
         int nextMaxVisits = distributionList.stream()
                 .filter(zoneTakeDistribution ->  zoneTakeDistribution.getVisits() == current)
                 .mapToInt(ZoneTakeDistribution::getMonthlyVisits)
@@ -89,7 +89,7 @@ public class TakeDistributionTest {
         int takesStart = current - nextMaxVisits;
         float cut = 100.0f * nextMaxVisits / (51 - takesStart);
         float cutPlus = 100.0f * (nextMaxVisits + 1) / (51 - takesStart);
-        float doneRatio = 20.0f;
+        float doneRatio = 20.0f; // FIXME
 
         Set<ZoneTakeDistribution> below = new HashSet<>();
         Set<ZoneTakeDistribution> next = new HashSet<>();
@@ -125,6 +125,23 @@ public class TakeDistributionTest {
                     .map(ZoneTakeDistribution::toKMLPlacemarkNameString)
                     .forEach(System.out::println);
         }
+    }
+
+    private static int findNextCurrent(List<ZoneTakeDistribution> distributionList) {
+        int[] zoneCount = new int[52];
+        distributionList.forEach(zoneTakeDistribution -> zoneCount[Math.min(51, zoneTakeDistribution.getVisits())] += 1);
+        int last = 0;
+        for (int step = 0; step < 51; step += 1) {
+            if (zoneCount[step] == 0) {
+                last = step + 1;
+            } else if (step >= last + 4) {
+                return last;
+            }
+        }
+        return distributionList.stream()
+                .filter(zoneTakeDistribution -> zoneTakeDistribution.getMonthlyVisits() > 0)
+                .mapToInt(ZoneTakeDistribution::getVisits)
+                .min().orElseThrow();
     }
 
     private static Map<String, MonthlyZone> toNameMap(List<MonthlyZone> monthlyZones) {
