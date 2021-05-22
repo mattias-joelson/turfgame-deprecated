@@ -81,38 +81,45 @@ public class TakeDistributionTest {
             }
         }
 
-        int lowestVisits = distributionList.stream()
-                .filter(zoneTakeDistribution -> zoneTakeDistribution.getMonthlyVisits() > 0)
-                .mapToInt(ZoneTakeDistribution::getVisits)
-                .min().orElseThrow();
-        float visitMax = (float) distributionList.stream()
-                .filter(zoneTakeDistribution -> zoneTakeDistribution.getVisits() == lowestVisits)
-                .mapToDouble(ZoneTakeDistribution::getPercentage)
-                .max().orElseThrow();
+        int current = 24;
+        int nextMaxVisits = distributionList.stream()
+                .filter(zoneTakeDistribution ->  zoneTakeDistribution.getVisits() == current)
+                .mapToInt(ZoneTakeDistribution::getMonthlyVisits)
+                .max().orElse(0);
+        int takesStart = current - nextMaxVisits;
+        float cut = 100.0f * nextMaxVisits / (51 - takesStart);
+        float cutPlus = 100.0f * (nextMaxVisits + 1) / (51 - takesStart);
+        float doneRatio = 20.0f;
 
-        Set<ZoneTakeDistribution> low = new HashSet<>();
-        Set<ZoneTakeDistribution> median = new HashSet<>();
-        Set<ZoneTakeDistribution> high = new HashSet<>();
+        Set<ZoneTakeDistribution> below = new HashSet<>();
+        Set<ZoneTakeDistribution> next = new HashSet<>();
+        Set<ZoneTakeDistribution> above = new HashSet<>();
+        Set<ZoneTakeDistribution> done = new HashSet<>();
 
         distributionList.forEach(zoneTakeDistribution -> {
-            if (zoneTakeDistribution.getPercentage() < visitMax) {
-                low.add(zoneTakeDistribution);
-            } else if (zoneTakeDistribution.getPercentage() > visitMax) {
-                high.add(zoneTakeDistribution);
+            if (zoneTakeDistribution.getPercentage() < cut || zoneTakeDistribution.getVisits() < current) {
+                below.add(zoneTakeDistribution);
+            } else if (zoneTakeDistribution.getPercentage() < cutPlus) {
+                next.add(zoneTakeDistribution);
+            } else if (zoneTakeDistribution.getPercentage() < doneRatio) {
+                above.add(zoneTakeDistribution);
             } else {
-                median.add(zoneTakeDistribution);
+                done.add(zoneTakeDistribution);
             }
         });
 
         KMLWriter out = new KMLWriter(filename);
-        writeDistributionSet(out, low, "low");
-        writeDistributionSet(out, median, "median");
-        writeDistributionSet(out, high, "high");
+        writeDistributionSet(out, below, "below");
+        writeDistributionSet(out, next, "next");
+        writeDistributionSet(out, above, "above");
+        writeDistributionSet(out, done, "done");
         out.close();
 
         if (printZones) {
-            System.out.println("median: " + visitMax);
-            low.stream()
+            System.out.println("cut: " + cut);
+            System.out.println("cutPlus: " + cutPlus);
+            distributionList.stream()
+                    .filter(zoneTakeDistribution -> zoneTakeDistribution.getPercentage() < cutPlus || zoneTakeDistribution.getVisits() < current)
                     .sorted(Comparator.comparing(ZoneTakeDistribution::getVisits)
                             .thenComparing(zoneTakeDistribution -> zoneTakeDistribution.getZone().getName()))
                     .map(ZoneTakeDistribution::toKMLPlacemarkNameString)
