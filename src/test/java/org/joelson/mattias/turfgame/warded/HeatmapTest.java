@@ -362,7 +362,8 @@ public class HeatmapTest {
             return;
         }
         List<Entry<String, Integer>> sortedZones = zoneMap.entrySet().stream()
-                .sorted(Entry.<String, Integer>comparingByValue().thenComparing(Entry.comparingByKey())).collect(Collectors.toList());
+                .sorted(Entry.<String, Integer>comparingByValue().thenComparing(Entry.comparingByKey()))
+                .collect(Collectors.toList());
         int takes = 0;
         int zones = 0;
         for (Entry<String, Integer> entry : sortedZones) {
@@ -372,7 +373,7 @@ public class HeatmapTest {
             if (entry.getValue() == takes) {
                 System.out.println(entry.getValue() + " - " + entry.getKey());
                 zones += 1;
-            } else if (zones < 10 || entry.getValue() < WardedCategories.RED.getTakes()) {
+            } else if (zones < 20 || entry.getValue() < WardedCategories.RED.getTakes()) {
                 System.out.println(entry.getValue() + " - " + entry.getKey());
                 takes = entry.getValue();
                 zones += 1;
