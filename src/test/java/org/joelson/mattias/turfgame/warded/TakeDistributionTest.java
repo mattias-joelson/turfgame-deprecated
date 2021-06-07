@@ -89,7 +89,7 @@ public class TakeDistributionTest {
         int takesStart = current - nextMaxVisits;
         float cut = 100.0f * nextMaxVisits / (51 - takesStart);
         float cutPlus = 100.0f * (nextMaxVisits + 1) / (51 - takesStart);
-        float doneRatio = 20.0f; // FIXME
+        float doneRatio = 700.0f / 30.0f; // FIXME 7 / 31 * 100
 
         Set<ZoneTakeDistribution> below = new HashSet<>();
         Set<ZoneTakeDistribution> next = new HashSet<>();
