@@ -31,7 +31,7 @@ public class FeedsReader {
 //        System.out.println(array);
         for (JSONValue value : array.getElements()) {
             JSONObject object = (JSONObject) value;
-            System.out.println("    " + object.getValue("time"));
+            System.out.println("    " + object.getValue("time") + " - " + object.getValue("type"));
         }
     }
 }

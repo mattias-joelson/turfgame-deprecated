@@ -55,7 +55,7 @@ public final class Zones {
             }
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_hh-mm-ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
         while (Instant.now().isBefore(end)) {
             try {
                 Instant instant = Instant.now();
