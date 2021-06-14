@@ -1,13 +1,11 @@
 package org.joelson.mattias.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JSONArray;
-import org.joelson.mattias.turfgame.util.JSONObject;
+import org.joelson.mattias.turfgame.util.JacksonUtil;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class Rounds {
 
@@ -17,14 +15,11 @@ public final class Rounds {
         throw new InstantiationException("Should not be instantiated!");
     }
 
-    public static List<Round> readRounds() throws IOException, ParseException {
+    public static List<Round> readRounds() throws IOException {
         return fromJSON(URLReader.getRequest(ROUNDS_REQUEST));
     }
 
-    static List<Round> fromJSON(String s) throws ParseException {
-        return JSONArray.parseArray(s).stream()
-                .map(JSONObject.class::cast)
-                .map(Round::fromJSON)
-                .collect(Collectors.toList());
+    static List<Round> fromJSON(String s) {
+        return Arrays.asList(JacksonUtil.readValue(s, Round[].class));
     }
 }

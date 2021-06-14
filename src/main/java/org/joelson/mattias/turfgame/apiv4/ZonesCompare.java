@@ -3,7 +3,6 @@ package org.joelson.mattias.turfgame.apiv4;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class ZonesCompare {
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
         if (args.length < 2) {
             System.out.println(String.format("Usage:\n\t%s zonefile1.json zonefile2.json", ZonesCompare.class.getName()));
             return;
@@ -61,7 +60,7 @@ public class ZonesCompare {
         return String.format("%d - %s", region.getId(), region.getName());
     }
 
-    private static List<Zone> readZones(Path file) throws IOException, ParseException {
+    private static List<Zone> readZones(Path file) throws IOException {
         return Zones.fromJSON(Files.readString(file));
     }
 }

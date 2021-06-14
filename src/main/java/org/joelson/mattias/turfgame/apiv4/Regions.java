@@ -1,16 +1,14 @@
 package org.joelson.mattias.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JSONArray;
-import org.joelson.mattias.turfgame.util.JSONObject;
+import org.joelson.mattias.turfgame.util.JacksonUtil;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class Regions {
 
@@ -21,7 +19,7 @@ public final class Regions {
         throw new InstantiationException("Should not be instantiated!");
     }
 
-    public static List<Region> readRegions() throws IOException, ParseException {
+    public static List<Region> readRegions() throws IOException {
         return fromJSON(getAllRegionsJSON());
     }
     
@@ -33,10 +31,7 @@ public final class Regions {
         Files.writeString(Path.of(DEFAULT_REGIONS_FILENAME), getAllRegionsJSON(), StandardCharsets.UTF_8);
     }
 
-    static List<Region> fromJSON(String s) throws ParseException {
-        return JSONArray.parseArray(s).stream()
-                .map(JSONObject.class::cast)
-                .map(Region::fromJSON)
-                .collect(Collectors.toList());
+    static List<Region> fromJSON(String s) {
+        return Arrays.asList(JacksonUtil.readValue(s, Region[].class));
     }
 }
