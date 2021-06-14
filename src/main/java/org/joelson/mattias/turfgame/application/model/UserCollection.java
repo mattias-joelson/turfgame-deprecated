@@ -5,7 +5,6 @@ import org.joelson.mattias.turfgame.apiv4.Users;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,7 @@ public class UserCollection {
         return dbEntityManager.getUsers();
     }
     
-    public void updateUsers(Iterable<String> usernames) throws IOException, ParseException {
+    public void updateUsers(Iterable<String> usernames) throws IOException {
         List<UserData> existingUsers = getUsers();
         Map<String, UserData> userMap = createUserMap(existingUsers);
         List<String> unknownUsernames = new ArrayList<>();

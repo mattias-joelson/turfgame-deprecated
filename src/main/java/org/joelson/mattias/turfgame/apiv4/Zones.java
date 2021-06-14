@@ -1,21 +1,19 @@
 package org.joelson.mattias.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JSONArray;
-import org.joelson.mattias.turfgame.util.JSONObject;
+import org.joelson.mattias.turfgame.util.JacksonUtil;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class Zones {
 
@@ -26,7 +24,7 @@ public final class Zones {
         throw new InstantiationException("Should not be instantiated!");
     }
 
-    public static List<Zone> readAllZones() throws IOException, ParseException {
+    public static List<Zone> readAllZones() throws IOException {
         return fromJSON(getAllZonesJSON());
     }
 
@@ -86,10 +84,7 @@ public final class Zones {
         return Instant.from(zonedDateTime);
     }
 
-    public static List<Zone> fromJSON(String s) throws ParseException {
-        return JSONArray.parseArray(s).stream()
-                .map(JSONObject.class::cast)
-                .map(Zone::fromJSON)
-                .collect(Collectors.toList());
+    public static List<Zone> fromJSON(String s) {
+        return Arrays.asList(JacksonUtil.readValue(s, Zone[].class));
     }
 }

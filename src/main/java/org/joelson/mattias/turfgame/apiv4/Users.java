@@ -1,16 +1,18 @@
 package org.joelson.mattias.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JSONArray;
-import org.joelson.mattias.turfgame.util.JSONObject;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import org.joelson.mattias.turfgame.util.JacksonUtil;
 import org.joelson.mattias.turfgame.util.URLReader;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public final class Users {
     
@@ -22,33 +24,36 @@ public final class Users {
         throw new InstantiationException("Should not be instantiated!");
     }
     
-    public static List<User> getUsers(Object... inputObjects) throws IOException, ParseException {
+    public static List<User> getUsers(Object... inputObjects) throws IOException {
         if (inputObjects.length == 0) {
             return Collections.emptyList();
         }
-        List<JSONObject> objects = new ArrayList<>(inputObjects.length);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        StringWriter writer = new StringWriter();
+        JsonFactory factory = new JsonFactory();
+        JsonGenerator generator = factory.createGenerator(stream, JsonEncoding.UTF8);
+        generator.writeStartArray();
         for (Object obj : inputObjects) {
+            generator.writeStartObject();
             if (obj instanceof String) {
-                objects.add(JSONObject.of(Map.of(NAME_PARAMETER, obj)));
+                generator.writeStringField(NAME_PARAMETER, (String) obj);
             } else if (obj instanceof Integer) {
-                objects.add(JSONObject.of(Map.of(ID_PARAMETER, obj)));
+                generator.writeNumberField(ID_PARAMETER, (Integer) obj);
             } else {
                 throw new IllegalArgumentException("Unknown input object type " + obj.getClass());
             }
+            generator.writeEndObject();
         }
-        JSONArray array = JSONArray.of(objects.toArray(JSONObject[]::new));
-        String json = String.valueOf(array);
-        return fromJSON(URLReader.postRequest(USERS_REQUEST, json));
+        generator.writeEndArray();
+        generator.close();
+        return fromJSON(URLReader.postRequest(USERS_REQUEST, stream.toString(StandardCharsets.UTF_8)));
     }
 
-    static List<User> fromJSON(String s) throws ParseException {
-        return JSONArray.parseArray(s).stream()
-                .map(JSONObject.class::cast)
-                .map(User::fromJSON)
-                .collect(Collectors.toList());
+    static List<User> fromJSON(String s) {
+        return Arrays.asList(JacksonUtil.readValue(s, User[].class));
     }
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
         System.out.println(getUsers((Object[]) args));
     }
 }

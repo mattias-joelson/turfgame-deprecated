@@ -1,9 +1,7 @@
 package org.joelson.mattias.turfgame.apiv5;
 
-import org.joelson.mattias.turfgame.util.JSONArray;
-import org.joelson.mattias.turfgame.util.JSONObject;
-import org.joelson.mattias.turfgame.util.JSONString;
-import org.joelson.mattias.turfgame.util.JSONValue;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.joelson.mattias.turfgame.util.JacksonUtil;
 import org.joelson.mattias.turfgame.util.TimeUtil;
 import org.joelson.mattias.turfgame.util.URLReader;
 
@@ -11,7 +9,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -66,12 +63,10 @@ public class Feeds {
         return URLReader.getRequest(FEEDS_REQUEST + '/' + feed + afterDate);
     }
 
-    private static Instant getLastEntryTime(String json) throws ParseException {
-        JSONArray array = JSONArray.parseArray(json);
+    private static Instant getLastEntryTime(String json) {
         Instant latest = null;
-        for (JSONValue value : array.getElements()) {
-            JSONObject object = (JSONObject) value;
-            String timeStamp = ((JSONString) object.getValue("time")).stringValue();
+        for (JsonNode node : JacksonUtil.readValue(json, JsonNode[].class)) {
+            String timeStamp = node.get("time").asText();
             Instant instant = TimeUtil.turfAPITimestampToInstant(timeStamp);
             if (latest == null || instant.isAfter(latest)) {
                 latest = instant;

@@ -1,20 +1,9 @@
 package org.joelson.mattias.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JSONNumber;
-import org.joelson.mattias.turfgame.util.JSONObject;
-import org.joelson.mattias.turfgame.util.JSONString;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class Zone {
-
-    private static final String NAME = "name";
-    private static final String ID = "id";
-    private static final String REGION = "region";
-    private static final String LATITIUDE = "latitude";
-    private static final String LONGITUDE = "longitude";
-    private static final String DATE_CREATED = "dateCreated";
-    private static final String TAKEOVER_POINTS = "takeoverPoints";
-    private static final String POINTS_PER_HOUR = "pointsPerHour";
-    private static final String TOTAL_TAKEOVERS = "totalTakeovers";
 
     private final String name;
     private final int id;
@@ -26,8 +15,17 @@ public final class Zone {
     private final int pointsPerHour;
     private final int totalTakeovers;
 
-    private Zone(String name, int id, Region region, double latitude, double longitude, String dateCreated,
-                 int takeoverPoints, int pointsPerHour, int totalTakeovers) {
+    @JsonCreator
+    private Zone(
+            @JsonProperty("name") String name,
+            @JsonProperty("id") int id,
+            @JsonProperty("region") Region region,
+            @JsonProperty("latitude") double latitude,
+            @JsonProperty("longitude") double longitude,
+            @JsonProperty("dateCreated") String dateCreated,
+            @JsonProperty("takeoverPoints") int takeoverPoints,
+            @JsonProperty("pointsPerHour") int pointsPerHour,
+            @JsonProperty("totalTakeovers") int totalTakeovers) {
         this.name = name;
         this.id = id;
         this.region = region;
@@ -73,27 +71,6 @@ public final class Zone {
 
     public int getTotalTakeovers() {
         return totalTakeovers;
-    }
-
-    static Zone fromJSON(JSONObject obj) {
-        JSONString name = (JSONString) obj.getValue(NAME);
-        JSONNumber id = (JSONNumber) obj.getValue(ID);
-        Region region = null;
-        if (obj.containsName(REGION)) {
-            region = Region.fromJSON((JSONObject) obj.getValue(REGION));
-        }
-        JSONNumber latitude = (JSONNumber) obj.getValue(LATITIUDE);
-        JSONNumber longitude = (JSONNumber) obj.getValue(LONGITUDE);
-        JSONNumber takeoverPoints = (JSONNumber) obj.getValue(TAKEOVER_POINTS);
-        JSONNumber pointsPerHour = (JSONNumber) obj.getValue(POINTS_PER_HOUR);
-        JSONNumber totalTakeovers = (JSONNumber) obj.getValue(TOTAL_TAKEOVERS);
-        String dateCreated = null;
-        if (obj.containsName(DATE_CREATED)) {
-            dateCreated = ((JSONString) obj.getValue(DATE_CREATED)).stringValue();
-        }
-        return new Zone(name.stringValue(), id.intValue(), region,
-                latitude.doubleValue(), longitude.doubleValue(), dateCreated,
-                takeoverPoints.intValue(), pointsPerHour.intValue(), totalTakeovers.intValue());
     }
 
     @Override

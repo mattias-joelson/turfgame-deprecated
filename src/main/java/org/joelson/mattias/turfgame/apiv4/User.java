@@ -1,22 +1,9 @@
 package org.joelson.mattias.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JSONNumber;
-import org.joelson.mattias.turfgame.util.JSONObject;
-import org.joelson.mattias.turfgame.util.JSONString;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
-    
-    private static final String NAME = "name";
-    private static final String ID = "id";
-    public static final String REGION = "region";
-    public static final String UNIQUE_ZONES_TAKEN = "uniqueZonesTaken";
-    public static final String POINTS_PER_HOUR = "pointsPerHour";
-    public static final String RANK = "rank";
-    public static final String TOTAL_POINTS = "totalPoints";
-    public static final String TAKEN = "taken";
-    public static final String POINTS = "points";
-    public static final String PLACE = "place";
-    public static final String COUNTRY = "country";
     
     private final String name;
     private final int id;
@@ -31,9 +18,20 @@ public class User {
     private final String country;
     // TODO medals
     // TODO zones
-    
-    public User(String name, int id, Region region, int uniqueZonesTaken, int pointsPerHour, int rank, int totalPoints, int taken, int points, int place,
-            String country) {
+
+    @JsonCreator
+    public User(
+            @JsonProperty("name") String name,
+            @JsonProperty("id") int id,
+            @JsonProperty("region") Region region,
+            @JsonProperty("uniqueZonesTaken") int uniqueZonesTaken,
+            @JsonProperty("pointsPerHour") int pointsPerHour,
+            @JsonProperty("rank") int rank,
+            @JsonProperty("totalPoints") int totalPoints,
+            @JsonProperty("taken") int taken,
+            @JsonProperty("points") int points,
+            @JsonProperty("place") int place,
+            @JsonProperty("country") String country) {
         this.name = name;
         this.id = id;
         this.region = region;
@@ -89,26 +87,6 @@ public class User {
     
     public String getCountry() {
         return country;
-    }
-
-    static User fromJSON(JSONObject obj) {
-        JSONString name = (JSONString) obj.getValue(NAME);
-        JSONNumber id = (JSONNumber) obj.getValue(ID);
-        Region region = null;
-        if (obj.containsName(REGION)) {
-            region = Region.fromJSON((JSONObject) obj.getValue(REGION));
-        }
-        JSONNumber uniqueZonesTaken = (JSONNumber) obj.getValue(UNIQUE_ZONES_TAKEN);
-        JSONNumber pointsPerHour = (JSONNumber) obj.getValue(POINTS_PER_HOUR);
-        JSONNumber rank = (JSONNumber) obj.getValue(RANK);
-        JSONNumber totalPoints = (JSONNumber) obj.getValue(TOTAL_POINTS);
-        JSONNumber taken = (JSONNumber) obj.getValue(TAKEN);
-        JSONNumber points = (JSONNumber) obj.getValue(POINTS);
-        JSONNumber place = (JSONNumber) obj.getValue(PLACE);
-        JSONString country = (JSONString) obj.getValue(COUNTRY);
-        
-        return new User(name.stringValue(), id.intValue(), region, uniqueZonesTaken.intValue(), pointsPerHour.intValue(), rank.intValue(),
-                totalPoints.intValue(), taken.intValue(), points.intValue(), place.intValue(), country.stringValue());
     }
 
     @Override
