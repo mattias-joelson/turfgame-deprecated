@@ -11,11 +11,11 @@ import org.joelson.mattias.turfgame.lundkvist.Municipality;
 import org.joelson.mattias.turfgame.warded.TakenZones;
 import org.joelson.mattias.turfgame.zundin.Today;
 
+import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.PersistenceException;
 
 public class ApplicationActions {
     
@@ -52,19 +51,19 @@ public class ApplicationActions {
         System.exit(0);
     }
     
-    public Void readZones() throws IOException, ParseException {
+    public Void readZones() throws IOException {
         List<Zone> zones = Zones.readAllZones();
         applicationData.getZones().updateZones(Instant.now().truncatedTo(ChronoUnit.SECONDS), zones);
         return null;
     }
     
-    public Void readZonesFromFile(Path zonesFile, Instant instant) throws IOException, ParseException {
+    public Void readZonesFromFile(Path zonesFile, Instant instant) throws IOException {
         List<Zone> zones = Zones.fromJSON(Files.readString(zonesFile));
         applicationData.getZones().updateZones(instant.truncatedTo(ChronoUnit.SECONDS), zones);
         return null;
     }
 
-    public Void readMunicipalityFromFile(Path municipalityFile) throws IOException, ParseException {
+    public Void readMunicipalityFromFile(Path municipalityFile) throws IOException {
         String file = Files.readString(municipalityFile);
         String name = Municipality.nameFromHTML(file);
         Map<String, Boolean> zoneMap = Municipality.fromHTML(file);
@@ -77,7 +76,7 @@ public class ApplicationActions {
         return null;
     }
 
-    public Void readTodayFromFile(Path todayFile, String username, String date) throws IOException, ParseException {
+    public Void readTodayFromFile(Path todayFile, String username, String date) throws IOException {
         String file = Files.readString(todayFile);
         Today today = Today.fromHTML(username, date, file);
         Set<String> usernames = new HashSet<>(today.getZones().size() + 1);
@@ -94,7 +93,7 @@ public class ApplicationActions {
         }
     }
 
-    public Void readWardedFromFile(Path wardedFile) throws IOException, ParseException {
+    public Void readWardedFromFile(Path wardedFile) throws IOException {
         String file = Files.readString(wardedFile);
         String userName = TakenZones.getUserNameFromHTML(file);
         Map<String, Integer> visits = TakenZones.fromHTML(file);

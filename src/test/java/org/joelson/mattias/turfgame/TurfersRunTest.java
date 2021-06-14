@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,13 +54,13 @@ public class TurfersRunTest {
     }
 
     @Test
-    public void writeDanderyd() throws IOException, ParseException {
+    public void writeDanderyd() throws IOException {
         try (KMLWriter writer = new KMLWriter("dandebet.kml")) {
             writeRun(writer, "Dandebet", getDandebetZones());
         }
     }
 
-    public static Stream<String> getDandebetZones() throws IOException, ParseException {
+    public static Stream<String> getDandebetZones() throws IOException {
         Set<String> omitZones = Set.of("BlötaEneby", "Edsviken", "Tranpiren");
         return MunicipalityTest.getDanderydZones().keySet().stream().filter(s -> !omitZones.contains(s)).sorted();
     }

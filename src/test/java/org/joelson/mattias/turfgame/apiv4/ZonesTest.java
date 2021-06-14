@@ -3,6 +3,7 @@ package org.joelson.mattias.turfgame.apiv4;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -172,7 +173,7 @@ public class ZonesTest {
         zones.forEach(zone -> assertEquals(zone.getName(), (long) points.get(zone.getPointsPerHour()), (long) zone.getTakeoverPoints()));
     }
 
-    public static List<Zone> getAllZones() throws IOException, ParseException {
+    public static List<Zone> getAllZones() throws IOException {
         return URLReaderTest.readProperties("zones-all.json", Zones::fromJSON);
     }
     

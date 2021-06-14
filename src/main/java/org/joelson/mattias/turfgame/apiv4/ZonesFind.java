@@ -3,7 +3,6 @@ package org.joelson.mattias.turfgame.apiv4;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.util.List;
 
 public final class ZonesFind {
@@ -12,7 +11,7 @@ public final class ZonesFind {
         throw new InstantiationException("Should not be instantiated"); //NON-NLS
     }
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
         if (args.length < 2) {
             System.out.println(String.format("Usage:\n\t%s zone_name file [files...]", ZonesFind.class)); //NON-NLS
             return;
