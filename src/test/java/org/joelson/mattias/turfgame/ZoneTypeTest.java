@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +84,7 @@ public class ZoneTypeTest {
         }
     }
 
-    private static List<String> getZoneNames() throws IOException, ParseException {
+    private static List<String> getZoneNames() throws IOException {
         return TurfersRunTest.getDandebetZones().collect(Collectors.toList());
     }
     
