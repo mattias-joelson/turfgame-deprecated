@@ -1,12 +1,9 @@
 package org.joelson.mattias.turfgame.zundin;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
-import org.joelson.mattias.turfgame.util.JSONArray;
-import org.joelson.mattias.turfgame.util.JSONNumber;
-import org.joelson.mattias.turfgame.util.JSONObject;
-import org.joelson.mattias.turfgame.util.JSONString;
-import org.joelson.mattias.turfgame.util.JSONValue;
+import org.joelson.mattias.turfgame.util.JacksonUtil;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.junit.Test;
@@ -39,12 +36,12 @@ public class Flipp08MissionTest {
         Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(zones);
 
         File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
-        List<JSONObject> flips = new ArrayList<>();
+        List<JsonNode> flips = new ArrayList<>();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             String line;
             while ((line = in.readLine()) != null) {
                 //System.out.println("Parsing " + line);
-                JSONObject flip = (JSONObject) JSONValue.parse(line);
+                JsonNode flip = JacksonUtil.readValue(line, JsonNode.class);
                 flips.add(flip);
             }
         }
@@ -52,24 +49,25 @@ public class Flipp08MissionTest {
         Monthly monthly = MonthlyTest.getMonthly();
         int totalZoneCount = 0;
         int totalTakenCount = 0;
-        for (JSONObject flip : flips) {
-            String flipName = ((JSONString) flip.getValue("name")).stringValue();
-            int flipZoneCount = ((JSONNumber) flip.getValue("zoneCount")).intValue();
-            JSONArray array = (JSONArray) flip.getValue("zones");
+        for (JsonNode flip : flips) {
+            String flipName = flip.get("name").asText();
+            int flipZoneCount = flip.get("zoneCount").asInt();
+            JsonNode array = flip.get("zones");
             int count = 0;
             Set<String> flipZoneNames = new HashSet<>();
             boolean zoneNameInput = false;
-            for (JSONValue value : array.getElements()) {
+            for (int i = 0; i < array.size(); i += 1) {
+                JsonNode value = array.get(i);
                 Zone zone;
-                if (value instanceof JSONString) {
-                    String zoneName = ((JSONString) value).stringValue();
+                if (value.canConvertToInt()) {
+                    int zoneId = value.asInt();
+                    zone = zoneIdMap.get(zoneId);
+                    assertNotNull("Zone '" + zoneId + "' not found!", zone);
+                } else {
+                    String zoneName = value.asText();
                     zone = zoneMap.get(zoneName);
                     assertNotNull("Zone '" + zoneName + "' not found!", zone);
                     zoneNameInput = true;
-                } else {
-                    int zoneNumber = ((JSONNumber) value).intValue();
-                    zone = zoneIdMap.get(zoneNumber);
-                    assertNotNull("Zone '" + zoneNumber + "' not found!", zone);
                 }
                 flipZoneNames.add(zone.getName());
                 count += 1;
@@ -91,55 +89,56 @@ public class Flipp08MissionTest {
         List<Zone> zones = ZonesTest.getAllZones();
         Map<String, Zone> zoneMap = ZoneUtil.toNameMap(zones);
         Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(zones);
-        
+
         File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
-        List<JSONObject> flips = new ArrayList<>();
+        List<JsonNode> flips = new ArrayList<>();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             String line;
             while ((line = in.readLine()) != null) {
                 //System.out.println("Parsing " + line);
-                JSONObject flip = (JSONObject) JSONValue.parse(line);
+                JsonNode flip = JacksonUtil.readValue(line, JsonNode.class);
                 flips.add(flip);
             }
         }
-        
+
         try (KMLWriter outAll = new KMLWriter("flipp08-all.kml");
                 KMLWriter outRemaining = new KMLWriter("flipp08-remaining.kml")) {
-    
+
             outAll.writeFolder("Nollåttaflippen - alla zoner");
-    
+
             int roundRobin = flips.size() / 10 + ((flips.size() % 10 > 0) ? 1 : 0);
             List<KMLWriter> roundRobinMaps = new ArrayList<>(roundRobin);
             for (int i = 0; i < roundRobin; i += 1) {
                 roundRobinMaps.add(new KMLWriter("flipp-08-round-" + i + ".kml"));
             }
-    
+
             int totalZoneCount = 0;
             int takenZoneCount = 0;
             Set<String> uniqueZoneNames = new HashSet<>();
             Map<String, String> allTakenZones = new HashMap<>();
             Map<String, String> allRemainingZones = new HashMap<>();
-            for (JSONObject flip : flips) {
-                String flipName = ((JSONString) flip.getValue("name")).stringValue();
+            for (JsonNode flip : flips) {
+                String flipName = flip.get("name").asText();
                 //System.out.println("Processing " + flipName);
-                int flipZoneCount = ((JSONNumber) flip.getValue("zoneCount")).intValue();
-                boolean flipZoneTaken = ((JSONString) flip.getValue("taken")).stringValue().equals("true");
+                int flipZoneCount = flip.get("zoneCount").asInt();
+                boolean flipZoneTaken = flip.get("taken").asBoolean();
                 //System.out.println("  Taken " + flipZoneTaken);
-                JSONArray array = (JSONArray) flip.getValue("zones");
+                JsonNode array = flip.get("zones");
                 int count = 0;
                 Set<String> flipZoneNames = new HashSet<>();
                 boolean zoneNameInput = false;
-                for (JSONValue value : array.getElements()) {
+                for (int i = 0; i < array.size(); i += 1) {
+                    JsonNode value = array.get(i);
                     Zone zone;
-                    if (value instanceof JSONString) {
-                        String zoneName = ((JSONString) value).stringValue();
+                    if (value.canConvertToInt()) {
+                        int zoneId = value.asInt();
+                        zone = zoneIdMap.get(zoneId);
+                        assertNotNull("Zone '" + zoneId + "' not found!", zone);
+                    } else {
+                        String zoneName = value.asText();
                         zone = zoneMap.get(zoneName);
                         assertNotNull("Zone '" + zoneName + "' not found!", zone);
                         zoneNameInput = true;
-                    } else {
-                        int zoneNumber = ((JSONNumber) value).intValue();
-                        zone = zoneIdMap.get(zoneNumber);
-                        assertNotNull("Zone '" + zoneNumber + "' not found!", zone);
                     }
                     assertFalse(uniqueZoneNames.contains(zone.getName()));
                     uniqueZoneNames.add(zone.getName());
@@ -159,7 +158,7 @@ public class Flipp08MissionTest {
                 }
                 assertEquals(flipZoneCount, count);
                 //System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
-        
+
                 totalZoneCount += count;
                 if (flipZoneTaken) {
                     flipZoneNames.forEach(name -> allTakenZones.put(name, flipName + ": " + name));
