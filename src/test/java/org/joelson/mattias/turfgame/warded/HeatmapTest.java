@@ -3,6 +3,7 @@ package org.joelson.mattias.turfgame.warded;
 import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
+import org.joelson.mattias.turfgame.util.CSVWriter;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
@@ -11,6 +12,7 @@ import org.joelson.mattias.turfgame.zundin.MonthlyTest;
 import org.joelson.mattias.turfgame.zundin.MonthlyZone;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -321,6 +323,18 @@ public class HeatmapTest {
         writeHeatmapFolder(out, zoneMaps.get(WardedCategories.VIOLET.getTakes()), "violet");
         out.close();
 
+        String filenamePrefix = filename.substring(0, filename.indexOf(".kml"));
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.UNTAKEN.getTakes()), filenamePrefix + "_untaken");
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.GREEN.getTakes()), filenamePrefix + "_green");
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.YELLOW.getTakes()), filenamePrefix + "_yellow");
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.ORANGE.getTakes()), filenamePrefix + "_orange");
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.RED_21.getTakes()), filenamePrefix + "_red_21-26");
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.RED_27.getTakes()), filenamePrefix + "_red_27-32");
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.RED_33.getTakes()), filenamePrefix + "_red_33-38");
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.RED_39.getTakes()), filenamePrefix + "_red_39-44");
+        writeHeatmapFolder(zoneMaps.get(HeatmapCategories.RED_45.getTakes()), filenamePrefix + "_red_45-50");
+        writeHeatmapFolder(zoneMaps.get(WardedCategories.VIOLET.getTakes()), filenamePrefix + "_violet");
+
         int[][] zoneCountArray = IntStream.range(0, zoneTakes.length)
                 .mapToObj(i -> new int[] { i, zoneTakes[i]}).sorted(Comparator.comparingInt(a -> a[1])).toArray(int[][]::new);
         int max = zoneCountArray[51][1];
@@ -407,6 +421,20 @@ public class HeatmapTest {
                 .sorted(HeatmapTest::compareEntries)
                 .forEach(zoneCountEntry -> out.writePlacemark(String.format("%d - %s", zoneCountEntry.getValue(), zoneCountEntry.getKey().getName()),
                         "", zoneCountEntry.getKey().getLongitude(), zoneCountEntry.getKey().getLatitude()));
+    }
+
+    private void writeHeatmapFolder(Map<Zone, Integer> zoneCounts, String fileName) {
+        if (zoneCounts.isEmpty()) {
+            return;
+        }
+        try (CSVWriter out = new CSVWriter(fileName + ".csv")) {
+            zoneCounts.entrySet().stream()
+                    .sorted(HeatmapTest::compareEntries)
+                    .forEach(zoneCountEntry -> out.writePlacemark(String.format("%d - %s", zoneCountEntry.getValue(), zoneCountEntry.getKey().getName()),
+                            zoneCountEntry.getKey().getLongitude(), zoneCountEntry.getKey().getLatitude()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static int compareEntries(Entry<Zone, Integer> o1, Entry<Zone, Integer> o2) {
