@@ -3,14 +3,12 @@ package org.joelson.mattias.turfgame.zundin;
 import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
-import org.joelson.mattias.turfgame.util.CSVWriter;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.joelson.mattias.turfgame.warded.HeatmapTest;
 import org.joelson.mattias.turfgame.warded.TakenZoneTest;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -143,22 +141,22 @@ public class MonthlyVisitTest {
         System.out.println(filename + ": " + (unvisitedZones.size() + visitedZones.size()) + " (" + municipalityZones.size() + ')');
         assertEquals(municipalityZones.size(), unvisitedZones.size() + unvisitedPurpleZones.size() + visitedZones.size());
 
-        String filePrefix = filename.substring(0, filename.indexOf(".kml"));
-        try (CSVWriter out = new CSVWriter(filePrefix + "_unvisited.csv")) {
-            unvisitedZones.stream()
-                    .sorted(Comparator.comparing(Zone::getName))
-                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
-        }
-        try (CSVWriter out = new CSVWriter(filePrefix + "_unvisited_purple.csv")) {
-            unvisitedPurpleZones.stream()
-                    .sorted(Comparator.comparing(Zone::getName))
-                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
-        }
-        try (CSVWriter out = new CSVWriter(filePrefix + "_visited.csv")) {
-            visitedZones.stream()
-                    .sorted(Comparator.comparing(Zone::getName))
-                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
-        }
+//        String filePrefix = filename.substring(0, filename.indexOf(".kml"));
+//        try (CSVWriter out = new CSVWriter(filePrefix + "_unvisited.csv")) {
+//            unvisitedZones.stream()
+//                    .sorted(Comparator.comparing(Zone::getName))
+//                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
+//        }
+//        try (CSVWriter out = new CSVWriter(filePrefix + "_unvisited_purple.csv")) {
+//            unvisitedPurpleZones.stream()
+//                    .sorted(Comparator.comparing(Zone::getName))
+//                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
+//        }
+//        try (CSVWriter out = new CSVWriter(filePrefix + "_visited.csv")) {
+//            visitedZones.stream()
+//                    .sorted(Comparator.comparing(Zone::getName))
+//                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
+//        }
     }
 
     private static Monthly getMonthly() throws Exception {
