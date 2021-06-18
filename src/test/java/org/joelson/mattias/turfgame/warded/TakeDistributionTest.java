@@ -2,14 +2,12 @@ package org.joelson.mattias.turfgame.warded;
 
 import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
-import org.joelson.mattias.turfgame.util.CSVWriter;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.joelson.mattias.turfgame.zundin.MonthlyTest;
 import org.joelson.mattias.turfgame.zundin.MonthlyZone;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -122,12 +120,12 @@ public class TakeDistributionTest {
         writeDistributionSet(out, done, "done");
         out.close();
 
-        String filePrefix = filename.substring(0, filename.indexOf(".kml"));
-        writeDistributionSet(below, filePrefix + "_below");
-        writeDistributionSet(next, filePrefix + "_next");
-        writeDistributionSet(above, filePrefix + "_above");
-        writeDistributionSet(done, filePrefix + "_done");
-
+//        String filePrefix = filename.substring(0, filename.indexOf(".kml"));
+//        writeDistributionSet(below, filePrefix + "_below");
+//        writeDistributionSet(next, filePrefix + "_next");
+//        writeDistributionSet(above, filePrefix + "_above");
+//        writeDistributionSet(done, filePrefix + "_done");
+//
         if (printZones) {
             System.out.println("cut: " + cut);
             System.out.println("cutPlus: " + cutPlus);
@@ -181,25 +179,25 @@ public class TakeDistributionTest {
                 zoneTakeDistribution.getZone().getLongitude(),
                 zoneTakeDistribution.getZone().getLatitude());
     }
-
-    private static void writeDistributionSet(Set<ZoneTakeDistribution> zones, String fileName) {
-        if (zones.isEmpty()) {
-            return;
-        }
-        try (CSVWriter out = new CSVWriter(fileName + ".csv")) {
-            zones.stream()
-                    .sorted(Comparator.comparing(ZoneTakeDistribution::getVisits)
-                            .thenComparing(zoneTakeDistribution -> zoneTakeDistribution.getZone().getName()))
-                    .forEach(zoneTakeDistribution -> writeZone(out, zoneTakeDistribution));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void writeZone(CSVWriter out, ZoneTakeDistribution zoneTakeDistribution) {
-        out.writePlacemark(
-                zoneTakeDistribution.toCSVPlacemarkNameString(),
-                zoneTakeDistribution.getZone().getLongitude(),
-                zoneTakeDistribution.getZone().getLatitude());
-    }
+//
+//    private static void writeDistributionSet(Set<ZoneTakeDistribution> zones, String fileName) {
+//        if (zones.isEmpty()) {
+//            return;
+//        }
+//        try (CSVWriter out = new CSVWriter(fileName + ".csv")) {
+//            zones.stream()
+//                    .sorted(Comparator.comparing(ZoneTakeDistribution::getVisits)
+//                            .thenComparing(zoneTakeDistribution -> zoneTakeDistribution.getZone().getName()))
+//                    .forEach(zoneTakeDistribution -> writeZone(out, zoneTakeDistribution));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private static void writeZone(CSVWriter out, ZoneTakeDistribution zoneTakeDistribution) {
+//        out.writePlacemark(
+//                zoneTakeDistribution.toCSVPlacemarkNameString(),
+//                zoneTakeDistribution.getZone().getLongitude(),
+//                zoneTakeDistribution.getZone().getLatitude());
+//    }
 }
