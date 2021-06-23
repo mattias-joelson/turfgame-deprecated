@@ -1,9 +1,12 @@
 package org.joelson.mattias.turfgame.apiv4;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.joelson.mattias.turfgame.util.FilesUtil;
 import org.joelson.mattias.turfgame.util.JacksonUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,6 +16,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class FeedsReader {
 
@@ -24,40 +29,70 @@ public class FeedsReader {
         SortedSet<JsonNode> feedNodes = new TreeSet<>(new FeedNodeComparator());
         for (String filename : args) {
             System.out.println("*** Reading " + filename);
-            List<JsonNode> fileNodes = readFeedFile(Path.of(filename));
-            List<FeedObject> objects = new ArrayList<>();
-            for (JsonNode fileNode : fileNodes) {
-                switch (fileNode.get("type").asText()) {
-                    case "chat":
-                        objects.add(JacksonUtil.treeToValue(fileNode, ChatFeed.class));
-                        break;
-                    case "medal":
-                        objects.add(JacksonUtil.treeToValue(fileNode, MedalFeed.class));
-                        break;
-                    case "takeover":
-                        objects.add(JacksonUtil.treeToValue(fileNode, TakeoverFeed.class));
-                        break;
-                    case "zone":
-                        objects.add(JacksonUtil.treeToValue(fileNode, ZoneFeed.class));
-                        break;
-                    default:
-                        throw new RuntimeException("Unknown type " + fileNode.get("type").asText());
-                }
+            Path feedPath = Path.of(filename);
+            if (FilesUtil.isZipFile(feedPath)) {
+                ZipFile zipFile = new ZipFile(feedPath.toFile());
+                zipFile.stream().forEach(zipEntry -> readFeedNodes(feedNodes, readZipEntry(feedPath, zipFile, zipEntry)));
+            } else {
+                readFeedNodes(feedNodes, readFeedFile(feedPath));
             }
-            for (JsonNode fileNode : fileNodes) {
-                if (feedNodes.contains(fileNode)) {
-                    System.out.println("    Already contains node " + fileNode);
-                } else {
-                    feedNodes.add(fileNode);
-                }
+        }
+    }
+
+    private static void readFeedNodes(SortedSet<JsonNode> feedNodes, List<JsonNode> fileNodes) {
+        List<FeedObject> objects = new ArrayList<>();
+        for (JsonNode fileNode : fileNodes) {
+            switch (fileNode.get("type").asText()) {
+                case "chat":
+                    objects.add(JacksonUtil.treeToValue(fileNode, ChatFeed.class));
+                    break;
+                case "medal":
+                    objects.add(JacksonUtil.treeToValue(fileNode, MedalFeed.class));
+                    break;
+                case "takeover":
+                    objects.add(JacksonUtil.treeToValue(fileNode, TakeoverFeed.class));
+                    break;
+                case "zone":
+                    objects.add(JacksonUtil.treeToValue(fileNode, ZoneFeed.class));
+                    break;
+                default:
+                    throw new RuntimeException("Unknown type " + fileNode.get("type").asText());
+            }
+        }
+        for (JsonNode fileNode : fileNodes) {
+            if (feedNodes.contains(fileNode)) {
+                System.out.println("    Already contains node " + fileNode);
+            } else {
+                feedNodes.add(fileNode);
             }
         }
     }
 
     private static List<JsonNode> readFeedFile(Path feedPath) throws IOException {
-        String content = Files.readString(feedPath);
+        return readJsonNodes(feedPath.toString(), Files.readString(feedPath));
+    }
+
+    private static List<JsonNode> readZipEntry(Path feedPath, ZipFile zipFile, ZipEntry zipEntry) {
+        System.out.println("  * Reading " + zipEntry.getName());
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(zipFile.getInputStream(zipEntry)));
+            List<String> rows = new ArrayList<>();
+            String row;
+            while ((row = reader.readLine()) != null) {
+                rows.add(row);
+            }
+            String content = String.join("\n", rows);
+            return readJsonNodes(feedPath + " -> " + zipEntry.getName(), content);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+            return Collections.emptyList();
+        }
+    }
+
+    private static List<JsonNode> readJsonNodes(String path, String content) {
         if (content.startsWith("<html>")) {
-            System.err.println("--- File " + feedPath + " contains no data!");
+            System.err.println("--- File " + path + " contains no data!");
             return Collections.emptyList();
         }
         List<JsonNode> nodes = Arrays.asList(JacksonUtil.readValue(content, JsonNode[].class));

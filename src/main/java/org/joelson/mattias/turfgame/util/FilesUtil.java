@@ -2,9 +2,8 @@ package org.joelson.mattias.turfgame.util;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -44,5 +43,22 @@ public final class FilesUtil {
     
     public static BufferedWriter newDefaultWriter(String... filenameParts) throws IOException {
         return Files.newBufferedWriter(createParentDirectory(filenamePath(filenameParts)), DEFAULT_OPEN_OPTIONS);
+    }
+
+    public static boolean isZipFile(Path path) {
+        try (InputStream in = Files.newInputStream(path)) {
+            byte[] header = new byte[4];
+            in.read(header);
+            if (header[0] == 0x50 && header[1] == 0x4B) {
+                if ((header[2] == 0x03 && header[3] == 0x04)
+                        || (header[2] == 0x05 && header[3] == 0x06)
+                        || (header[2] == 0x07 && header[3] == 0x08)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
