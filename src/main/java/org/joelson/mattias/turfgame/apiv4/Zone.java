@@ -2,6 +2,7 @@ package org.joelson.mattias.turfgame.apiv4;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joelson.mattias.turfgame.util.StringUtil;
 
 public final class Zone {
 
@@ -14,6 +15,9 @@ public final class Zone {
     private final int takeoverPoints;
     private final int pointsPerHour;
     private final int totalTakeovers;
+    private final User previousOwner;
+    private final User currentOwner;
+    private final String dateLastTaken;
 
     @JsonCreator
     private Zone(
@@ -25,7 +29,11 @@ public final class Zone {
             @JsonProperty("dateCreated") String dateCreated,
             @JsonProperty("takeoverPoints") int takeoverPoints,
             @JsonProperty("pointsPerHour") int pointsPerHour,
-            @JsonProperty("totalTakeovers") int totalTakeovers) {
+            @JsonProperty("totalTakeovers") int totalTakeovers,
+            @JsonProperty("previousOwner") User previousOwner,
+            @JsonProperty("currentOwner") User currentOwner,
+            @JsonProperty("dateLastTaken") String dateLastTaken
+    ) {
         this.name = name;
         this.id = id;
         this.region = region;
@@ -35,6 +43,9 @@ public final class Zone {
         this.takeoverPoints = takeoverPoints;
         this.pointsPerHour = pointsPerHour;
         this.totalTakeovers = totalTakeovers;
+        this.previousOwner = previousOwner;
+        this.currentOwner = currentOwner;
+        this.dateLastTaken = dateLastTaken;
     }
 
     public String getName() {
@@ -73,18 +84,33 @@ public final class Zone {
         return totalTakeovers;
     }
 
+    public User getPreviousOwner() {
+        return previousOwner;
+    }
+
+    public User getCurrentOwner() {
+        return currentOwner;
+    }
+
+    public String getDateLastTaken() {
+        return dateLastTaken;
+    }
+
     @Override
     public String toString() {
-        return "Zone{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                ", region=" + region +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", dateCreated='" + dateCreated + '\'' +
-                ", takeoverPoints=" + takeoverPoints +
-                ", pointsPerHour=" + pointsPerHour +
-                ", totalTakeovers=" + totalTakeovers +
-                '}';
+        return "Zone{"
+                + "name=" + StringUtil.printable(name)
+                + ", id=" + id
+                + ", region=" + region
+                + ", latitude=" + latitude
+                + ", longitude=" + longitude
+                + ", dateCreated=" + StringUtil.printable(dateCreated)
+                + ", takeoverPoints=" + takeoverPoints
+                + ", pointsPerHour=" + pointsPerHour
+                + ", totalTakeovers=" + totalTakeovers
+                + ", previousOwner=" + previousOwner
+                + ", currentOwner=" + currentOwner
+                + ", dateLastTaken=" + StringUtil.printable(dateLastTaken)
+                + '}';
     }
 }

@@ -6,7 +6,9 @@ import org.joelson.mattias.turfgame.util.JacksonUtil;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
@@ -23,6 +25,25 @@ public class FeedsReader {
         for (String filename : args) {
             System.out.println("*** Reading " + filename);
             List<JsonNode> fileNodes = readFeedFile(Path.of(filename));
+            List<FeedObject> objects = new ArrayList<>();
+            for (JsonNode fileNode : fileNodes) {
+                switch (fileNode.get("type").asText()) {
+                    case "chat":
+                        objects.add(JacksonUtil.treeToValue(fileNode, ChatFeed.class));
+                        break;
+                    case "medal":
+                        objects.add(JacksonUtil.treeToValue(fileNode, MedalFeed.class));
+                        break;
+                    case "takeover":
+                        objects.add(JacksonUtil.treeToValue(fileNode, TakeoverFeed.class));
+                        break;
+                    case "zone":
+                        objects.add(JacksonUtil.treeToValue(fileNode, ZoneFeed.class));
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown type " + fileNode.get("type").asText());
+                }
+            }
             for (JsonNode fileNode : fileNodes) {
                 if (feedNodes.contains(fileNode)) {
                     System.out.println("    Already contains node " + fileNode);
@@ -34,13 +55,17 @@ public class FeedsReader {
     }
 
     private static List<JsonNode> readFeedFile(Path feedPath) throws IOException {
-        List<JsonNode> nodes = Arrays.asList(JacksonUtil.readValue(Files.readString(feedPath), JsonNode[].class));
+        String content = Files.readString(feedPath);
+        if (content.startsWith("<html>")) {
+            System.err.println("--- File " + feedPath + " contains no data!");
+            return Collections.emptyList();
+        }
+        List<JsonNode> nodes = Arrays.asList(JacksonUtil.readValue(content, JsonNode[].class));
         nodes.sort(new FeedNodeComparator());
         return nodes;
     }
 
     private static class FeedNodeComparator implements Comparator<JsonNode> {
-
 
         @Override
         public int compare(JsonNode o1, JsonNode o2) {

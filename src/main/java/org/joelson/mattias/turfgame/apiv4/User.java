@@ -2,11 +2,15 @@ package org.joelson.mattias.turfgame.apiv4;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joelson.mattias.turfgame.util.StringUtil;
+
+import java.util.Arrays;
 
 public class User {
     
     private final String name;
     private final int id;
+    private final String country;
     private final Region region;
     private final int uniqueZonesTaken;
     private final int pointsPerHour;
@@ -15,14 +19,15 @@ public class User {
     private final int taken;
     private final int points;
     private final int place;
-    private final String country;
-    // TODO medals
-    // TODO zones
+    private final int blocktime;
+    private final int[] medals;
+    private final int[] zones;
 
     @JsonCreator
     public User(
             @JsonProperty("name") String name,
             @JsonProperty("id") int id,
+            @JsonProperty("country") String country,
             @JsonProperty("region") Region region,
             @JsonProperty("uniqueZonesTaken") int uniqueZonesTaken,
             @JsonProperty("pointsPerHour") int pointsPerHour,
@@ -31,9 +36,13 @@ public class User {
             @JsonProperty("taken") int taken,
             @JsonProperty("points") int points,
             @JsonProperty("place") int place,
-            @JsonProperty("country") String country) {
+            @JsonProperty("blocktime") int blocktime,
+            @JsonProperty("medals") int[] medals,
+            @JsonProperty("zones") int[] zones
+    ) {
         this.name = name;
         this.id = id;
+        this.country = country;
         this.region = region;
         this.uniqueZonesTaken = uniqueZonesTaken;
         this.pointsPerHour = pointsPerHour;
@@ -42,7 +51,9 @@ public class User {
         this.taken = taken;
         this.points = points;
         this.place = place;
-        this.country = country;
+        this.blocktime = blocktime;
+        this.medals = medals;
+        this.zones = zones;
     }
     
     public String getName() {
@@ -52,7 +63,11 @@ public class User {
     public int getId() {
         return id;
     }
-    
+
+    public String getCountry() {
+        return country;
+    }
+
     public Region getRegion() {
         return region;
     }
@@ -84,25 +99,36 @@ public class User {
     public int getPlace() {
         return place;
     }
-    
-    public String getCountry() {
-        return country;
+
+    public int getBlocktime() {
+        return blocktime;
+    }
+
+    public int[] getMedals() {
+        return medals;
+    }
+
+    public int[] getZones() {
+        return zones;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                ", region=" + region +
-                ", uniqueZonesTaken=" + uniqueZonesTaken +
-                ", pointsPerHour=" + pointsPerHour +
-                ", rank=" + rank +
-                ", totalPoints=" + totalPoints +
-                ", taken=" + taken +
-                ", points=" + points +
-                ", place=" + place +
-                ", country='" + country + '\'' +
-                '}';
+        return "User{"
+                + "name=" + StringUtil.printable(name)
+                + ", id=" + id
+                + ", country=" + StringUtil.printable(country)
+                + ", region=" + region
+                + ", uniqueZonesTaken=" + uniqueZonesTaken
+                + ", pointsPerHour=" + pointsPerHour
+                + ", rank=" + rank
+                + ", totalPoints=" + totalPoints
+                + ", taken=" + taken
+                + ", points=" + points
+                + ", place=" + place
+                + ", blocktime=" + blocktime
+                + ", medals=" + Arrays.toString(medals)
+                + ", zones=" + Arrays.toString(zones)
+                + '}';
     }
 }
