@@ -2,6 +2,10 @@ package org.joelson.mattias.turfgame.apiv4;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joelson.mattias.turfgame.util.StringUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class Region {
 
@@ -11,12 +15,12 @@ public final class Region {
 
     @JsonCreator
     private Region(
-            @JsonProperty("country") String country,
-            @JsonProperty("name") String name,
+            @Nullable @JsonProperty("country") String country,
+            @Nonnull @JsonProperty("name") String name,
             @JsonProperty("id") int id,
             @JsonProperty("regionLord") User regionLord) {
-        this.country = country;
-        this.name = name;
+        this.country = StringUtil.requireNullOrNonEmpty(country);
+        this.name = StringUtil.requireNotNullAndNotTrimmedEmpty(name);
         this.id = id;
     }
 
@@ -34,10 +38,10 @@ public final class Region {
 
     @Override
     public String toString() {
-        return "Region{" +
-                "country='" + country + '\'' +
-                ", name='" + name + '\'' +
-                ", id=" + id +
-                '}';
+        return "Region{"
+                + "country=" + StringUtil.printable(country)
+                + ", name=" + StringUtil.printable(name)
+                + ", id=" + id
+                + '}';
     }
 }

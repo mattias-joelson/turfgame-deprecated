@@ -50,4 +50,8 @@ public final class StringUtil {
         }
         return s;
     }
+
+    public static String printable(String s) {
+        return (s == null) ? "null" : '\'' + s + '\'';
+    }
 }
