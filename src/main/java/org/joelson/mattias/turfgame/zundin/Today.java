@@ -3,8 +3,10 @@ package org.joelson.mattias.turfgame.zundin;
 import org.joelson.mattias.turfgame.util.URLReader;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class Today {
@@ -35,7 +37,7 @@ public class Today {
     }
 
     public static Today fromZundin(String userName, String date) throws IOException {
-        String request = "http://frut.zundin.se/today.php?userid=" + userName + "&model=" + date;
+        String request = "https://frut.zundin.se/today.php?userid=" + userName + "&date=" + date;
         return fromHTML(userName, date, URLReader.getRequest(request));
     }
 

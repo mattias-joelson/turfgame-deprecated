@@ -27,7 +27,7 @@ public class TodayZone {
         this.date = validString(date);
         this.eagerTime = eagerTime;
         this.zoneName = validString(zoneName);
-        this.areaName = validString(areaName);
+        this.areaName = Objects.requireNonNull(areaName);
         this.tp = validNumber(tp, 32); // revisit halves tp
         this.pph = validNumber(pph, -1);
         this.activity = validString(activity);
