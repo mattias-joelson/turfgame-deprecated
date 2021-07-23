@@ -2,7 +2,6 @@ package org.joelson.mattias.turfgame.roundanalyze;
 
 import org.joelson.mattias.turfgame.apiv4.Zone;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,11 +11,13 @@ public class UserStats {
     private final User user;
     private final List<SessionStats> sessionStats;
     private final Stats stats;
+    private final ZoneStats zoneStats;
 
     public UserStats(User user, Map<Integer, Zone> zoneIdMap) {
         this.user = user;
         sessionStats = analyzeSessions(user.getSessions(), zoneIdMap);
         stats = sumSessions(sessionStats);
+        zoneStats = new ZoneStats(user);
     }
 
     public User getUser() {
@@ -36,6 +37,8 @@ public class UserStats {
         System.out.println("Number of sessions: " + sessionStats.size());
         System.out.println();
         stats.prettyPrint();
+        System.out.println();
+        zoneStats.prettyPrint();
     }
 
     private static List<SessionStats> analyzeSessions(List<Session> sessions, Map<Integer, Zone> zoneIdMap) {
