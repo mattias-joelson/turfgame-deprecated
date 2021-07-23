@@ -2,6 +2,7 @@ package org.joelson.mattias.turfgame.roundanalyze;
 
 import org.joelson.mattias.turfgame.apiv4.Zone;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +38,15 @@ public class User {
         addVisit(take);
     }
 
-    public void addAssist(LocalDateTime dateTime, Zone zone) {
-        addVisit(new Assist(dateTime, zone.getId(), zone.getTakeoverPoints()));
+    public void addTake(LocalDateTime dateTime, Zone zone, boolean neutralized, Duration duration) {
+        Take take = new Take(dateTime, zone.getId(), zone.getTakeoverPoints(), neutralized, zone.getPointsPerHour());
+        take.lost(dateTime.plus(duration));
+        addVisit(take);
+    }
+
+    public void addAssist(LocalDateTime dateTime, Zone zone, boolean neutralized) {
+        int points = (neutralized) ? zone.getTakeoverPoints() + 50 : zone.getTakeoverPoints();
+        addVisit(new Assist(dateTime, zone.getId(), points));
     }
 
     public void addRevisit(LocalDateTime dateTime, Zone zone) {
