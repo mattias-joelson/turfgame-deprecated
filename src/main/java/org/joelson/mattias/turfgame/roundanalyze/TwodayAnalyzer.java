@@ -39,66 +39,35 @@ public class TwodayAnalyzer {
         Path roundZoneFile = Path.of("../turfgame-history/zones/zones_2021-07-03_23-09.json");
         Path currentZoneFile = Path.of("../turfgame-history/zones/zones_2021-07-17_21-21.json");
 
-        //Map<String, Zone> zoneMap = createZoneMap(roundZoneFile, currentZoneFile);
         Map<Integer, Zone> zoneMap = ZoneUtil.toIdMap(Zones.fromJSON(Files.readString(roundZoneFile)));
         Map<String, List<String>> userFilesMap = createUserFilesMap(args);
         userFilesMap.forEach((user, filenames) -> analyzeUser(user, filenames, zoneMap, roundNumber, roundStart, roundEnd));
     }
-
-//    private static Map<String, Zone> createZoneMap(Path roundZoneFile, Path currentZoneFile) throws IOException {
-//        Map<Integer, Zone> currentZones = ZoneUtil.toIdMap(Zones.fromJSON(Files.readString(currentZoneFile)));
-//        return Zones.fromJSON(Files.readString(roundZoneFile)).stream()
-//                .collect(Collectors.toMap(zone -> currentZones.get(zone.getId()).getName(), Function.identity()));
-//    }
 
     private static Map<String, List<String>> createUserFilesMap(String[] filenames) {
         return Arrays.stream(filenames)
                 .collect(Collectors.groupingBy(filename -> getUser(filename)));
     }
 
-    private static void analyzeUser(String username, List<String> filenames, Map<Integer, Zone> zoneMap,
+    private static void analyzeUser(String username, List<String> filenames, Map<Integer, Zone> zoneIdMap,
                                     int roundNumber, LocalDateTime roundStart, LocalDateTime roundEnd) {
         User user = new User(username);
         filenames = filenames.stream()
                 .sorted(Comparator.comparing(filename -> getDate(filename)))
                 .collect(Collectors.toList());
         filenames.stream()
-                .forEach(filename -> analyzeDay(user, filename, zoneMap, roundNumber, roundStart, roundEnd));
+                .forEach(filename -> analyzeDay(user, filename, zoneIdMap, roundNumber, roundStart, roundEnd));
         int sessionNumber = 1;
-        Map<Integer, Zone> zoneIdMap = zoneMap.values().stream()
-                .collect(Collectors.toMap(Zone::getId, Function.identity()));
-        for (Session session : user.getSessions()) {
-            List<Visit> visits = session.getVisits();
-            String duration = visits.size() > 1 ? String.format("from %s to %s", TODAY_DATE_FORMATTER.format(visits.get(0).getTime()), TODAY_DATE_FORMATTER.format(visits.get(visits.size() - 1).getTime())) : TODAY_DATE_FORMATTER.format(visits.get(0).getTime());
-            System.out.println("Session " + sessionNumber + " : " + duration);
-            int takePoints = 0;
-            int totalPoints = 0;
-            int neutralized = 0;
-            double distance = 0.0f;
-            Zone previousZone = null;
-            for (int i = 0; i < visits.size(); i += 1) {
-                Visit visit = visits.get(i);
-                takePoints += visit.getTp();
-                totalPoints += visit.getPoints();
-                if (visit instanceof Take && ((Take) visit).isNeutralized()) {
-                    neutralized += 1;
-                }
-                Zone currentZone = zoneIdMap.get(visit.getZoneId());
-                if (previousZone != null) {
-                    distance += ZoneUtil.calcDistance(previousZone, currentZone);
-                }
-                previousZone = currentZone;
-            }
-            System.out.println("    visits:       " + visits.size());
-            System.out.println("    take points:  " + takePoints);
-            System.out.println("    total points: " + totalPoints);
-            System.out.println("    neutralized:  " + neutralized);
-            System.out.println("    distance:     " + distance);
+        UserStats userStats = new UserStats(user, zoneIdMap);
+        for (SessionStats sessionStats : userStats.getSessionStats()) {
+            sessionStats.prettyPrint(sessionNumber);
             sessionNumber += 1;
+            System.out.println();
         }
+        userStats.prettyPrint();
     }
 
-    private static void analyzeDay(User user, String filename, Map<Integer, Zone> zoneMap,
+    private static void analyzeDay(User user, String filename, Map<Integer, Zone> zoneIdMap,
                                    int roundNumber, LocalDateTime roundStart, LocalDateTime roundEnd) {
         Twoday twoday;
         try {
@@ -114,7 +83,7 @@ public class TwodayAnalyzer {
                     if (dateTime.isBefore(roundStart) || dateTime.isAfter(roundEnd)) {
                         return;
                     }
-                    Zone zone = zoneMap.get(twodayZone.getZoneId());
+                    Zone zone = zoneIdMap.get(twodayZone.getZoneId());
                     switch (twodayZone.getActivity()) {
                         case "Takeover":
                             if (zone.getTakeoverPoints() != twodayZone.getTP() || zone.getPointsPerHour() != twodayZone.getPPH()) {
