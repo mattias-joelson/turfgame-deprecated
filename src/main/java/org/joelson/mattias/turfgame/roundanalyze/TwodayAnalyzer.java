@@ -5,10 +5,13 @@ import org.joelson.mattias.turfgame.apiv4.Zones;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.joelson.mattias.turfgame.zundin.Today;
 import org.joelson.mattias.turfgame.zundin.TodayZone;
+import org.joelson.mattias.turfgame.zundin.Twoday;
+import org.joelson.mattias.turfgame.zundin.TwodayZone;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +22,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class TodayAnalyzer {
+public class TwodayAnalyzer {
+
+    private static final String DURATION_DAYS_STRING = "&nbsp;days&nbsp;";
 
     public static void main(String[] args) throws IOException {
 
@@ -34,23 +39,24 @@ public class TodayAnalyzer {
         Path roundZoneFile = Path.of("../turfgame-history/zones/zones_2021-07-03_23-09.json");
         Path currentZoneFile = Path.of("../turfgame-history/zones/zones_2021-07-17_21-21.json");
 
-        Map<String, Zone> zoneMap = createZoneMap(roundZoneFile, currentZoneFile);
+        //Map<String, Zone> zoneMap = createZoneMap(roundZoneFile, currentZoneFile);
+        Map<Integer, Zone> zoneMap = ZoneUtil.toIdMap(Zones.fromJSON(Files.readString(roundZoneFile)));
         Map<String, List<String>> userFilesMap = createUserFilesMap(args);
         userFilesMap.forEach((user, filenames) -> analyzeUser(user, filenames, zoneMap, roundNumber, roundStart, roundEnd));
     }
 
-    private static Map<String, Zone> createZoneMap(Path roundZoneFile, Path currentZoneFile) throws IOException {
-        Map<Integer, Zone> currentZones = ZoneUtil.toIdMap(Zones.fromJSON(Files.readString(currentZoneFile)));
-        return Zones.fromJSON(Files.readString(roundZoneFile)).stream()
-                .collect(Collectors.toMap(zone -> currentZones.get(zone.getId()).getName(), Function.identity()));
-    }
+//    private static Map<String, Zone> createZoneMap(Path roundZoneFile, Path currentZoneFile) throws IOException {
+//        Map<Integer, Zone> currentZones = ZoneUtil.toIdMap(Zones.fromJSON(Files.readString(currentZoneFile)));
+//        return Zones.fromJSON(Files.readString(roundZoneFile)).stream()
+//                .collect(Collectors.toMap(zone -> currentZones.get(zone.getId()).getName(), Function.identity()));
+//    }
 
     private static Map<String, List<String>> createUserFilesMap(String[] filenames) {
         return Arrays.stream(filenames)
                 .collect(Collectors.groupingBy(filename -> getUser(filename)));
     }
 
-    private static void analyzeUser(String username, List<String> filenames, Map<String, Zone> zoneMap,
+    private static void analyzeUser(String username, List<String> filenames, Map<Integer, Zone> zoneMap,
                                     int roundNumber, LocalDateTime roundStart, LocalDateTime roundEnd) {
         User user = new User(username);
         filenames = filenames.stream()
@@ -92,47 +98,77 @@ public class TodayAnalyzer {
         }
     }
 
-    private static void analyzeDay(User user, String filename, Map<String, Zone> zoneMap,
+    private static void analyzeDay(User user, String filename, Map<Integer, Zone> zoneMap,
                                    int roundNumber, LocalDateTime roundStart, LocalDateTime roundEnd) {
-        Today today;
+        Twoday twoday;
         try {
-            today = Today.fromHTML(user.getUsername(), getDate(filename), Files.readString(Path.of(filename)));
+            twoday = Twoday.fromHTML(user.getUsername(), getDate(filename), Files.readString(Path.of(filename)));
         } catch (IOException e) {
             System.out.println("Error reading " + filename + " - " + e.getMessage());
             e.printStackTrace();
             return;
         }
-        today.getZones()
-                .forEach(todayZone -> {
-                    LocalDateTime dateTime = getLocalDateTime(todayZone);
+        twoday.getZones()
+                .forEach(twodayZone -> {
+                    LocalDateTime dateTime = getLocalDateTime(twodayZone);
                     if (dateTime.isBefore(roundStart) || dateTime.isAfter(roundEnd)) {
                         return;
                     }
-                    Zone zone = zoneMap.get(todayZone.getZoneName());
-                    switch (todayZone.getActivity()) {
+                    Zone zone = zoneMap.get(twodayZone.getZoneId());
+                    switch (twodayZone.getActivity()) {
                         case "Takeover":
-                            user.addTake(dateTime, zone, todayZone.getUserId().isEmpty());
+                            if (zone.getTakeoverPoints() != twodayZone.getTP() || zone.getPointsPerHour() != twodayZone.getPPH()) {
+//                                throw new IllegalStateException(String.format("%s: Zone(%d,+%d) id=%d name=%s differs from TwodayZone(%d,+%d)",
+//                                        dateTime, zone.getTakeoverPoints(), zone.getPointsPerHour(), zone.getId(), zone.getName(),
+//                                        twodayZone.getTP(), twodayZone.getPPH()));
+                                System.out.println(String.format("%s: Zone(%d,+%d) id=%d name=%s differs from TwodayZone(%d,+%d)",
+                                        dateTime, zone.getTakeoverPoints(), zone.getPointsPerHour(), zone.getId(), zone.getName(),
+                                        twodayZone.getTP(), twodayZone.getPPH()));
+                            }
+                            user.addTake(dateTime, zone, twodayZone.isNeutralized(), getDuration(twodayZone));
                             break;
                         case "Assist":
-                            // today does not correctly show neutralized assists - they get wrong TP
-                            user.addAssist(dateTime, zone, false);
+                            if (zone.getTakeoverPoints() != twodayZone.getTP()) {
+//                                throw new IllegalStateException(String.format("%s: Zone(%d)  id=%d name=%s differs from TwodayZone(%d)",
+//                                        dateTime, zone.getTakeoverPoints(), zone.getId(), zone.getName(), twodayZone.getTP()));
+                                System.out.println(String.format("%s: Zone(%d)  id=%d name=%s differs from TwodayZone(%d)",
+                                        dateTime, zone.getTakeoverPoints(), zone.getId(), zone.getName(), twodayZone.getTP()));
+                            }
+                            user.addAssist(dateTime, zone, twodayZone.isNeutralized());
                             break;
                         case "Revisit":
+                            if (zone.getTakeoverPoints() / 2 != twodayZone.getTP()) {
+//                                throw new IllegalStateException(String.format("Zone(%d) revisit differs from TwodayZone(%d)",
+//                                        zone.getTakeoverPoints(), twodayZone.getTP()));
+                                System.out.println(String.format("Zone(%d) revisit differs from TwodayZone(%d)",
+                                        zone.getTakeoverPoints(), twodayZone.getTP()));
+                            }
                             user.addRevisit(dateTime, zone);
                             break;
-                        case "Lost":
-                            user.addLoss(dateTime, zone);
-                            break;
                         default:
-                            throw new IllegalArgumentException("Unknown activity " + todayZone.getActivity());
+                            throw new IllegalArgumentException("Unknown activity " + twodayZone.getActivity());
                     }
                 });
     }
 
     private static final DateTimeFormatter TODAY_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private static LocalDateTime getLocalDateTime(TodayZone todayZone) {
-        return LocalDateTime.parse(todayZone.getDate(), TODAY_DATE_FORMATTER);
+    private static LocalDateTime getLocalDateTime(TwodayZone twodayZone) {
+        return LocalDateTime.parse(twodayZone.getDate(), TODAY_DATE_FORMATTER);
+    }
+
+    private static Duration getDuration(TwodayZone twodayZone) {
+        String durationString = twodayZone.getDuration();
+        int daysIndex = durationString.indexOf(DURATION_DAYS_STRING);
+        int days = 0;
+        if (daysIndex >= 0) {
+            days = Integer.parseInt(durationString.substring(0, daysIndex));
+            durationString = durationString.substring(daysIndex + DURATION_DAYS_STRING.length());
+        }
+        return Duration.ofDays(days)
+                .plusHours(Integer.parseInt(durationString.substring(0, 2)))
+                .plusMinutes(Integer.parseInt(durationString.substring(3, 5)))
+                .plusSeconds(Integer.parseInt(durationString.substring(6)));
     }
 
     private static String getUser(String filename) {
