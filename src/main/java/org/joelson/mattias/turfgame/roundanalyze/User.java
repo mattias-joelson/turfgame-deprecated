@@ -45,8 +45,7 @@ public class User {
     }
 
     public void addAssist(LocalDateTime dateTime, Zone zone, boolean neutralized) {
-        int points = (neutralized) ? zone.getTakeoverPoints() + 50 : zone.getTakeoverPoints();
-        addVisit(new Assist(dateTime, zone.getId(), points));
+        addVisit(new Assist(dateTime, zone.getId(), zone.getTakeoverPoints(), neutralized));
     }
 
     public void addRevisit(LocalDateTime dateTime, Zone zone) {
