@@ -80,13 +80,15 @@ public class Stats {
     }
 
     public void prettyPrint() {
-        System.out.printf("Visits:   %4d%n", takes + assists + revisits);
+        int visits = takes + assists + revisits;
+        System.out.printf("Visits:   %4d%n", visits);
         System.out.printf("Takes:    %4d (%d neutrals)%n", takes, neutralTakes);
         System.out.printf("Assists:  %4d (%d neutrals)%n", assists, neutralAssists);
         System.out.printf("Revisits: %4d%n", revisits);
         System.out.println();
-        System.out.printf("Points:          %7d (PPV %d)%n", takesPoint + assistsTP + revisitsTP,
-                (takesPoint + assistsTP + revisitsTP) / (takes + assists + revisits));
+        int points = takesPoint + assistsTP + revisitsTP;
+        System.out.printf("Points:          %7d (PPV %d)%n", points,
+                (points) / (visits));
         System.out.printf("Take points:     %7d (TP %d, PPT %d)%n",
                 takesPoint, takesTP, (takes > 0) ? takesPoint / takes : 0);
         System.out.printf("Assist points:   %7d (PPA %d)%n", assistsTP, (assists > 0) ? assistsTP / assists : 0);
@@ -94,6 +96,12 @@ public class Stats {
         System.out.println();
         System.out.printf("Duration: %s%n", durationString(duration));
         System.out.printf("Distance: %.2f km%n", distance / 1000);
+        if (duration.getSeconds() > 0) {
+            float hours = duration.getSeconds() / 3600.0f;
+            System.out.printf("Speed:    %.2f km/h%n", (distance / 1000) / hours);
+            System.out.printf("Visits:   %.2f visits/h%n", visits / hours);
+            System.out.printf("Points:   %.2f points/h%n", points / hours);
+        }
         System.out.println();
         System.out.printf("Northernmost zone: %s%n", zoneString(northernmost));
         System.out.printf("Southernmost zone: %s%n", zoneString(southernmost));
@@ -102,6 +110,11 @@ public class Stats {
         System.out.println();
         System.out.printf("Distance north-south: %.2f km%n", ZoneUtil.calcDistance(northernmost, southernmost) / 1000);
         System.out.printf("Distance east-west:   %.2f km%n", ZoneUtil.calcDistance(easternmost, westernmost) / 1000);
+        System.out.println();
+        System.out.printf("Box distance north-south: %.2f km%n",
+                ZoneUtil.calcDistance(northernmost.getLatitude(), northernmost.getLongitude(), southernmost.getLatitude(), northernmost.getLongitude()) / 1000);
+        System.out.printf("Box distance east-west: %.2f km%n",
+                ZoneUtil.calcDistance(easternmost.getLatitude(), easternmost.getLongitude(), easternmost.getLatitude(), westernmost.getLongitude()) / 1000);
     }
 
     private static String durationString(Duration duration) {
