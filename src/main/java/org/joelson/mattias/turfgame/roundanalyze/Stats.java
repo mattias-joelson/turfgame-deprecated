@@ -102,6 +102,9 @@ public class Stats {
             System.out.printf("Visits:   %.2f visits/h%n", visits / hours);
             System.out.printf("Points:   %.2f points/h%n", points / hours);
         }
+        if (distance > 0) {
+            System.out.printf("          %.2f points/km%n", points / (distance / 1000));
+        }
         System.out.println();
         System.out.printf("Northernmost zone: %s%n", zoneString(northernmost));
         System.out.printf("Southernmost zone: %s%n", zoneString(southernmost));
