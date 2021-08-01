@@ -61,9 +61,10 @@ public final class StatisticsInitializer {
 
         Region uppsala = new Region(142, "Uppsala", sweden);
         statistics.addRegion(uppsala);
-        addMunicipality(statistics, stockholm, "Heby kommun");
-        addMunicipality(statistics, stockholm, "Knivsta kommun");
-        addMunicipality(statistics, stockholm, "Tierps kommun");
+        addMunicipality(statistics, uppsala, "Heby kommun");
+        addMunicipality(statistics, uppsala, "Håbo");
+        addMunicipality(statistics, uppsala, "Knivsta kommun");
+        addMunicipality(statistics, uppsala, "Tierps kommun");
         addMunicipality(statistics, uppsala, "Uppsala kommun");
         addMunicipality(statistics, uppsala, "Älvkarleby kommun");
         addMunicipality(statistics, uppsala, "Östhammars kommun");

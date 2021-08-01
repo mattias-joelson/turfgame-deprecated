@@ -86,15 +86,27 @@ public class TakeDistributionTest {
             }
         }
 
-        int current = findNextCurrent(distributionList);
-        int nextMaxVisits = distributionList.stream()
-                .filter(zoneTakeDistribution ->  zoneTakeDistribution.getVisits() == current)
+        int currentCalc = findNextCurrent(distributionList);
+        int nextMaxVisitsCalc = distributionList.stream()
+                .filter(zoneTakeDistribution ->  zoneTakeDistribution.getVisits() == currentCalc)
                 .mapToInt(ZoneTakeDistribution::getMonthlyVisits)
-                .max().orElse(0);
+                .filter(value -> value > 0)
+                .min().orElse(0);
+        System.out.println("currentCalc=" + currentCalc);
+        System.out.println("nextMaxVisitsCalc=" + nextMaxVisitsCalc);
+        System.out.println("*** Using calc!");
+        int current = currentCalc;
+        int nextMaxVisits = nextMaxVisitsCalc;
+//        System.out.println("*** Using constants!");
+//        int current = 43;
+//        int nextMaxVisits = 8;
+        System.out.println("current=" + current);
+        System.out.println("nextMaxVisits=" + nextMaxVisits);
         int takesStart = current - nextMaxVisits;
         float cut = 100.0f * nextMaxVisits / (51 - takesStart);
         float cutPlus = 100.0f * (nextMaxVisits + 1) / (51 - takesStart);
-        float doneRatio = 700.0f / 30.0f; // FIXME 7 / 31 * 100
+        float doneRatio = 600.0f / 16.0f;//25.0f;//700.0f / 30.0f; // FIXME 7 / 31 * 100
+        System.out.println("doneRatio=" + doneRatio);
 
         Set<ZoneTakeDistribution> below = new HashSet<>();
         Set<ZoneTakeDistribution> next = new HashSet<>();
@@ -104,7 +116,7 @@ public class TakeDistributionTest {
         distributionList.forEach(zoneTakeDistribution -> {
             if (zoneTakeDistribution.getPercentage() < cut || zoneTakeDistribution.getVisits() < current) {
                 below.add(zoneTakeDistribution);
-            } else if (zoneTakeDistribution.getPercentage() < cutPlus) {
+            } else if (zoneTakeDistribution.getPercentage() < cutPlus || zoneTakeDistribution.getVisits() < current + 5) {
                 next.add(zoneTakeDistribution);
             } else if (zoneTakeDistribution.getPercentage() < doneRatio) {
                 above.add(zoneTakeDistribution);
