@@ -13,12 +13,12 @@ public class TwodayScraper {
 
 
     public static void main(String[] args) throws IOException {
-        int round = 132;
-        LocalDate startDate = LocalDate.of(2021, Month.JUNE, 6);
-        LocalDate endDate = LocalDate.of(2021, Month.JUNE, 6);
+        int round = 133;
+        LocalDate startDate = LocalDate.of(2021, Month.JULY, 4);
+        LocalDate endDate = LocalDate.of(2021, Month.AUGUST, 1);
         String[] users = new String[] {
-                "Welshman", "Aicar", "fearglas", "jösses...då", "0beroff",
-                "deej", "GW007", "PastaPutin", "Lindhardt", "Jonte67"
+                "Xtrmrunner", "0beroff", "Welshman", "Cruachan", "fearglas",
+                "jösses...då", "FeTaTo", "stefanx46", "Pilgrim", "Jonte67"
         };
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
             for (String user : users) {
