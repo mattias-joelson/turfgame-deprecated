@@ -91,7 +91,7 @@ public class FeedsReader {
     }
 
     private static List<JsonNode> readJsonNodes(String path, String content) {
-        if (content.startsWith("<html>")) {
+        if (content.isEmpty() || content.startsWith("<html>")) {
             System.err.println("--- File " + path + " contains no data!");
             return Collections.emptyList();
         }
