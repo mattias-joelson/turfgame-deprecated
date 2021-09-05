@@ -1,0 +1,18 @@
+ 900 +
+     |                                                    *
+     |                                                    *
+     |                                                    *
+     |                                                    *
+     :                                                    :
+   5 +                                                    *
+     |                                                    *
+     |   *                                                *
+     |   **                                               *
+     |  ****      *  *           *       *                *
+     +-+----+----+----+----+----+----+----+----+----+----+-
+       0    5   10   15   20   25   30   35   40   45   50
+File:            circle_heatmap.kml
+Takes to orange: 60 (7 zones)
+Takes to red:    147 (9 zones)
+Takes to violet: 459 (11 zones)
+Total takes:     74687

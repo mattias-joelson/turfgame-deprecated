@@ -17,6 +17,10 @@ public final class StatisticsInitializer {
         Country sweden = new Country("se");
         statistics.addCountry(sweden);
 
+        Region gotland = new Region(138, "Gotland", sweden);
+        statistics.addRegion(gotland);
+        addMunicipality(statistics, gotland, "Gotland");
+
         Region gavleborg = new Region(144, "Gävleborg", sweden);
         statistics.addRegion(gavleborg);
         addMunicipality(statistics, gavleborg, "Bollnäs kommun");
@@ -44,10 +48,12 @@ public final class StatisticsInitializer {
         addMunicipality(statistics, stockholm, "Botkyrka kommun");
         addMunicipality(statistics, stockholm, "Danderyds kommun");
         addMunicipality(statistics, stockholm, "Ekerö kommun");
+        addMunicipality(statistics, stockholm, "Haninge kommun");
         addMunicipality(statistics, stockholm, "Huddinge kommun");
         addMunicipality(statistics, stockholm, "Järfälla kommun");
         addMunicipality(statistics, stockholm, "Lidingö kommun");
         addMunicipality(statistics, stockholm, "Nacka kommun");
+        addMunicipality(statistics, stockholm, "Nynäshamns kommun");
         addMunicipality(statistics, stockholm, "Salems kommun");
         addMunicipality(statistics, stockholm, "Sigtuna kommun");
         addMunicipality(statistics, stockholm, "Solna kommun");

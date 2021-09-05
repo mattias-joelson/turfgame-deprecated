@@ -1,14 +1,17 @@
 package org.joelson.mattias.turfgame.lundkvist;
 
 import org.joelson.mattias.turfgame.apiv4.Zone;
+import org.joelson.mattias.turfgame.apiv4.Zones;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
+import org.joelson.mattias.turfgame.warded.HeatmapTest;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -19,14 +22,14 @@ public class MunicipalityTest {
     @Test
     public void readSolna() throws Exception {
         Map<String, Boolean> zones = getSolnaZones();
-        assertEquals(207, zones.size());
+        assertEquals(208, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(207, taken);
+        assertEquals(208, taken);
     }
     
     @Test
@@ -53,6 +56,23 @@ public class MunicipalityTest {
             }
         }
         assertEquals(107, taken);
+    }
+
+    @Test
+    public void circleZonesSorted() throws Exception {
+        System.out.println("Circle zones in date order");
+        List<Zone> zones = getZonesSorted(HeatmapTest.getCircleZones(), Comparator.comparing(Zone::getDateCreated));
+        IntStream.range(0, zones.size())
+                .forEach(i -> System.out.println(String.format("%3d - %s, %s",
+                        i + 1, zones.get(i).getName(), zones.get(i).getDateCreated())));
+    }
+
+    private List<Zone> getZonesSorted(Set<String> filterZones, Comparator<Zone> comparator) throws Exception {
+        List<Zone> zones = ZonesTest.getAllZones();
+        return zones.stream()
+                .filter(zone -> filterZones.contains(zone.getName()))
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
     
     @Test
