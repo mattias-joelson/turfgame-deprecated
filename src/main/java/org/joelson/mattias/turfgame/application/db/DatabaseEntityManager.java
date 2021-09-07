@@ -371,6 +371,47 @@ public class DatabaseEntityManager {
         }
     }
 
+
+    public List<VisitData> getAllVisits() {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return visitRegistry.findAll()
+                    .map(visit -> getVisitData(visit.getUser().toData(), visit))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private VisitData getVisitDataOld(VisitEntity visit) {
+        TakeEntity take = visit.getTake();
+        Instant when = take.getWhen();
+        ZoneEntity zone = take.getZone();
+        ZoneHistoryEntity zoneHistory = zoneHistoryRegistry.findLatestBefore(zone, when);
+        if (zoneHistory == null) {
+            System.out.println("Zone " + zone.getName() + " stored after visit data.");
+            zoneHistory = zoneHistoryRegistry.findLatest(zone);
+        }
+        ZonePointsHistoryEntity zonePointsHistory = zonePointsHistoryRegistry.findLatestBefore(zone, when);
+        if (zonePointsHistory == null) {
+            System.out.println("Zone " + zone.getName() + " stored after visit data.");
+            zonePointsHistory = zonePointsHistoryRegistry.findLatest(zone);
+        }
+
+        ZoneData zoneData = new ZoneData(zone.getId(), zone.getName(), zoneHistory.getRegion().toData(), zoneHistory.getDateCreated(),
+                zoneHistory.getLatitude(), zoneHistory.getLongitude(), zonePointsHistory.getTp(), zonePointsHistory.getPph());
+        UserData userData = visit.getUser().toData();
+        switch (visit.getType()) {
+            case TAKE:
+                return new TakeData(zoneData, when, userData, getVisitDuration(visit));
+            case ASSIST:
+                UserEntity taker = take.getTakeVisit().getUser();
+                return new AssistData(zoneData, when, taker.toData(), userData);
+            case REVISIT:
+                return new RevisitData(zoneData, when, userData);
+            default:
+                throw new IllegalStateException("Unknown visit type " + visit.getType());
+        }
+    }
+
     private Duration getVisitDuration(VisitEntity visit) {
         Optional<TakeEntity> loss = takeRegistry.findAfter(visit.getTake().getZone(), visit.getTake().getWhen()).findFirst();
         if(loss.isPresent()) {

@@ -22,7 +22,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ZoneOwnershipGraphModel {
@@ -92,6 +94,30 @@ public class ZoneOwnershipGraphModel {
         if (last != null) {
             currentZoneOwnership.add(new ZoneOwnershipData(last, sumZones, sumPph));
         }
+        if (chart != null) {
+            chart.getXYPlot().setDataset(getDataSet());
+            updateTimeAxis();
+        }
+    }
+
+    public void updateSelectedUserNew(UserData selectedUser) {
+        List<TakeData> takes = visits.getAllVisits().stream()
+                .filter(visitData -> visitData instanceof TakeData)
+                .map(visitData -> (TakeData) visitData)
+                .sorted(Comparator.comparing(TakeData::getWhen))
+                .collect(Collectors.toList());
+        Set<String> ownedZones = new HashSet<>();
+        List<ZoneOwnershipData> changes = new ArrayList<>();
+        for (TakeData take : takes) {
+            if (take.getTaker().equals(selectedUser)) {
+                changes.add(new ZoneOwnershipData(take.getWhen(), 1, take.getPph()));
+                ownedZones.add(take.getZone().getName());
+            } else if (ownedZones.contains(take.getZone().getName())) {
+                changes.add(new ZoneOwnershipData(take.getWhen(), -1, -take.getPph()));
+                ownedZones.remove(take.getZone().getName());
+            }
+        }
+        // med mera
         if (chart != null) {
             chart.getXYPlot().setDataset(getDataSet());
             updateTimeAxis();
