@@ -21,9 +21,9 @@ public class Feeds {
     private static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     public static void main(String[] args) {
-        new Thread(() -> handleFeed("takeover", "feeds_takeover_%s.json")).start();
-        new Thread(() -> handleFeed("medal+chat", "feeds_medal_chat_%s.json")).start();
-        new Thread(() -> handleFeed("zone", "feeds_zone_%s.json")).start();
+        new Thread(() -> handleFeed("takeover", "feeds_takeover_%s.%sjson")).start();
+        new Thread(() -> handleFeed("medal+chat", "feeds_medal_chat_%s.%sjson")).start();
+        new Thread(() -> handleFeed("zone", "feeds_zone_%s.%sjson")).start();
     }
 
     private static void handleFeed(String feed, String filenamePattern) {
@@ -77,10 +77,15 @@ public class Feeds {
 
     private static Path getFilePath(String filenamePattern, Instant lastEntryTime) throws IOException {
         String timeString = toTimeString(lastEntryTime);
-        String name = String.format(filenamePattern, timeString);
+        String name = String.format(filenamePattern, timeString, "");
         Path filePath = Path.of(".", name);
         if (Files.exists(filePath)) {
-            filePath = Files.createTempFile(Path.of("."), name.substring(0, name.indexOf(".json") + 1), ".json");
+            String nowString = toTimeString(Instant.now());
+            name = String.format(filenamePattern, timeString, nowString + '.');
+            filePath = Path.of(".", name);
+            if (Files.exists(filePath)) {
+                filePath = Files.createTempFile(Path.of("."), name.substring(0, name.indexOf(".json") + 1), ".json");
+            }
         }
         return filePath;
     }
