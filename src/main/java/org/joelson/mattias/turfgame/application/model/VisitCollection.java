@@ -25,6 +25,10 @@ public class VisitCollection {
     public List<VisitData> getVisits(UserData user) {
         return dbEntity.getVisits(user);
     }
+
+    public List<VisitData> getAllVisits() {
+        return dbEntity.getAllVisits();
+    }
     
     public void updateVisits(Today today) {
         Map<String, UserData> userMap = getUsers(today);

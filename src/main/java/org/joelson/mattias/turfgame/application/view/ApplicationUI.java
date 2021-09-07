@@ -91,6 +91,10 @@ public class ApplicationUI {
         return SessionTableActionCreator.create(this);
     }
 
+    Action statisticsAction() {
+        return StatisticsActionCreator.create(this);
+    }
+
     Action zoneOwnershipGraphAction() {
         return ZoneOwnershipGraphActionCreator.create(this);
     }

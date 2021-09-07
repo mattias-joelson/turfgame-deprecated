@@ -36,6 +36,7 @@ final class MenuBuilder {
         addMenuItem(statisticsMenu, applicationUI.userTableAction());
         addMenuItem(statisticsMenu, applicationUI.visitTableAction());
         addMenuItem(statisticsMenu, applicationUI.sessionTableAction());
+        addMenuItem(statisticsMenu, applicationUI.statisticsAction());
         addMenuItem(statisticsMenu, applicationUI.zoneOwnershipGraphAction());
         addMenuItem(statisticsMenu, applicationUI.zoneTakeGraphAction());
         addMenuItem(statisticsMenu, applicationUI.uniqueRoundZoneGraphAction());

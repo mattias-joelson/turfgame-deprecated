@@ -94,18 +94,18 @@ public class TakeDistributionTest {
                 .min().orElse(0);
         System.out.println("currentCalc=" + currentCalc);
         System.out.println("nextMaxVisitsCalc=" + nextMaxVisitsCalc);
-        System.out.println("*** Using calc!");
-        int current = currentCalc;
-        int nextMaxVisits = nextMaxVisitsCalc;
-//        System.out.println("*** Using constants!");
-//        int current = 43;
-//        int nextMaxVisits = 8;
+//        System.out.println("*** Using calc!");
+//        int current = currentCalc;
+//        int nextMaxVisits = nextMaxVisitsCalc;
+        System.out.println("*** Using constants!");
+        int current = 51;
+        int nextMaxVisits = 7;
         System.out.println("current=" + current);
         System.out.println("nextMaxVisits=" + nextMaxVisits);
         int takesStart = current - nextMaxVisits;
         float cut = 100.0f * nextMaxVisits / (51 - takesStart);
         float cutPlus = 100.0f * (nextMaxVisits + 1) / (51 - takesStart);
-        float doneRatio = 600.0f / 16.0f;//25.0f;//700.0f / 30.0f; // FIXME 7 / 31 * 100
+        float doneRatio = 700.0f / 7.0f;//25.0f;//700.0f / 30.0f; // FIXME 7 / 31 * 100
         System.out.println("doneRatio=" + doneRatio);
 
         Set<ZoneTakeDistribution> below = new HashSet<>();

@@ -308,6 +308,18 @@ public class HeatmapTest {
         int toViolet = countTakes(zoneTakes, WardedCategories.VIOLET);
         int toVioletZones = countZones(zoneTakes, WardedCategories.VIOLET);
 
+        Map<Zone, Integer> nextZones = new HashMap<>();
+        for (int i = 0; i < zoneTakes.length - 1; i += 1) {
+            if (zoneTakes[i] >= 10) {
+                int next = i;
+                int nextMax = Math.min(next + 4, 50);
+                for (int j = next; j <= nextMax; j += 1) {
+                    Map<Zone, Integer> map = zoneMaps.get(j);
+
+                }
+            }
+        }
+
         KMLWriter out = new KMLWriter(filename);
         writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.UNTAKEN.getTakes()), "untaken");
         writeHeatmapFolder(out, zoneMaps.get(HeatmapCategories.GREEN.getTakes()), "green");
