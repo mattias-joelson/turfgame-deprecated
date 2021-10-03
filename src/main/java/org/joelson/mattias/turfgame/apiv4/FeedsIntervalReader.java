@@ -84,6 +84,14 @@ public class FeedsIntervalReader {
         String nodeType = fileNodes.get(0).get("type").asText();
         if (nodeType.equals("takeover")) {
             type = FeedType.TAKEOVER;
+//            boolean assists = false;
+//            for (JsonNode fileNode : fileNodes) {
+//                if (fileNode.get("assists") != null) {
+//                    assists = true;
+//                    break;
+//                }
+//            }
+//            System.out.println("TAKE assists=" + assists);
         } else if (nodeType.equals("zone")) {
             type = FeedType.ZONE;
         }
@@ -128,9 +136,8 @@ public class FeedsIntervalReader {
             }
             String content = String.join("\n", rows);
             return readJsonNodes(feedPath + " -> " + zipEntry.getName(), content);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            System.exit(-1);
             return Collections.emptyList();
         }
     }
