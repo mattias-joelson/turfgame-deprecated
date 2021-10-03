@@ -70,6 +70,11 @@ public class MonthlyVisitTest {
     }
 
     @Test
+    public void combinedFlippVisitTest() throws Exception {
+        visitMunicipalityTest("flipp", "flipp_month.kml", Flipp08MissionTest.getFlippZones(), true);
+    }
+
+    @Test
     public void combinedNonSnurrTest() throws Exception {
         Set<String> combinedZones = HeatmapTest.getDSSZones();
         List<Integer> remainingZones = MissionTest.readSolnaSnurrZones();

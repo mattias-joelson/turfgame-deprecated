@@ -29,6 +29,43 @@ import static org.junit.Assert.assertNotNull;
 
 public class Flipp08MissionTest {
 
+    public static Set<String> getFlippZones() throws Exception {
+        List<Zone> zones = ZonesTest.getAllZones();
+        Map<String, Zone> zoneMap = ZoneUtil.toNameMap(zones);
+        Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(zones);
+
+        File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
+        List<JsonNode> flips = new ArrayList<>();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = in.readLine()) != null) {
+                JsonNode flip = JacksonUtil.readValue(line, JsonNode.class);
+                flips.add(flip);
+            }
+        }
+
+        Set<String> flippZoneNames = new HashSet<>();
+        for (JsonNode flip : flips) {
+            JsonNode array = flip.get("zones");
+            for (int i = 0; i < array.size(); i += 1) {
+                JsonNode value = array.get(i);
+                Zone zone;
+                if (value.canConvertToInt()) {
+                    int zoneId = value.asInt();
+                    zone = zoneIdMap.get(zoneId);
+                    assertNotNull("Zone '" + zoneId + "' not found!", zone);
+                } else {
+                    String zoneName = value.asText();
+                    zone = zoneMap.get(zoneName);
+                    assertNotNull("Zone '" + zoneName + "' not found!", zone);
+                }
+                flippZoneNames.add(zone.getName());
+            }
+        }
+
+        return flippZoneNames;
+    }
+
     @Test
     public void flipp08MonthProgressTest() throws Exception {
         List<Zone> zones = ZonesTest.getAllZones();
