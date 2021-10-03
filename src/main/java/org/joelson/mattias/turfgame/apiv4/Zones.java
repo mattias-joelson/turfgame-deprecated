@@ -66,7 +66,7 @@ public final class Zones {
             } catch (IOException e) {
                 System.out.println(Instant.now() + ": " + e);
             }
-            Instant until = Instant.now().plusSeconds(5 * 60);
+            Instant until = Instant.now().plusSeconds(30 * 60);
             while (Instant.now().isBefore(until)) {
                 System.out.println("Sleeping at " + Instant.now());
                 try {
