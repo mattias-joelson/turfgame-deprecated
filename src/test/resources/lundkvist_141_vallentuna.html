@@ -1,3 +1,4 @@
+
 <html lang="sv"><head><title>Visa zoner i kommuner</title><style type="text/css">
 label {
     font: normal 12px arial !important;
@@ -48,195 +49,196 @@ option.noZones {
     position:fixed;
 }
 </style>
-<meta http-equiv="content-language" content="sv">
-<link rel="stylesheet" href="/css/theme.default.css">
-<!-- load jQuery and tablesorter scripts -->
-<script type="text/javascript" src="/script/jquery-1.12.0.min.js"></script>
-<script type="text/javascript" src="/script/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="/script/jquery.tablesorter.widgets.js"></script>
+    <meta http-equiv="content-language" content="sv">
+    <link rel="stylesheet" href="/css/theme.default.css">
+    <!-- load jQuery and tablesorter scripts -->
+    <script type="text/javascript" src="/script/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="/script/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="/script/jquery.tablesorter.widgets.js"></script>
 
-<link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/image/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/image/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/image/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon-16x16.png">
 
 </head>
 <body>
 
 <div id="list">
-<form name="mainform" action="" method="GET">
-<div class='info'><a href='https://turf.lundkvist.com/en/'>English</a><br>
-</div><table><tr><td><label>Turfare:</label></td>
-<td rowspan='2' style='vertical-align:bottom'><div id='medal'></div></td>
-</tr>
-<tr><td><input type='text' id=user name=user value='0beroff'></td>
-</tr></table>
-<div class='info'>Tagit 4019 av 96618 zoner och 25 av 325 regioner.<br>
-</div>&nbsp;<select name=country id=country onchange='countryChanged()'><option value='0' >Välj land eller typ</option><option value='#ALLA#' >Alla mina</option><option value='#' >Världen</option><option value='se' selected>Sverige</option><option value='dk' >Danmark</option><option value='fi' >Finland</option><option value='no' >Norge</option><option value='is' >Island</option><option value='nl' >Nederländerna</option><option value='gb' >Storbritannien</option><option value='de' >Tyskland</option><option value='kr' >Sydkorea</option><option value='us' >USA</option><option value='jp' >Japan</option><option value='SP23' >Bergstoppar</option><option value='SP08' >Broar</option><option value='SP22' >Nationalparker</option><option value='SP09' >Heliga zoner</option><option value='SP13' >Järnvägsstationer</option><option value='SP21' >Monument</option><option value='SP16' >Ruin</option><option value='SP14' >Slott</option><option value='SP03' >Vattenzoner</option><option value='SP06' >Vinnarzoner</option><option value='SP15' >Världsarv</option><option value='ESK' >En Skånsk Klassiker</option><option value='VBK' >Västerbottens Turf-klassiker</option><option value='FTT' >Aldrig tagna</option></select>
-&nbsp;<a href='Kommunkarta.php?id=80119&country=se' target='#KommunKarta#'>Visa kommunkarta</a><br>
-<div class='info'>Tagit 4008 zoner av 40444 i 159 av 290 kommuner och 21 av 21 regioner.</div>
-&nbsp;<select name=region id=region onchange='regionChanged()'>
-<option value='0'>Välj region</option>
-<option value='136'  >Blekinge (5 / 715 / 1%)</option>
-<option value='129'  >Dalarna (8 / 1848 / 0%)</option>
-<option value='138'  >Gotland (130 / 333 / 39%)</option>
-<option value='144'  >Gävleborg (20 / 1386 / 1%)</option>
-<option value='134'  >Halland (1 / 1111 / 0%)</option>
-<option value='128'  >Jämtland (7 / 909 / 1%)</option>
-<option value='133'  >Jönköping (4 / 1785 / 0%)</option>
-<option value='137'  >Kalmar (26 / 1576 / 2%)</option>
-<option value='147'  >Kronoberg (6 / 924 / 1%)</option>
-<option value='126'  >Norrbotten (2 / 1397 / 0%)</option>
-<option value='135'  >Skåne (22 / 4060 / 1%)</option>
-<option value='141' selected >Stockholm (3248 / 5539 / 59%)</option>
-<option value='140'  >Södermanland (10 / 1430 / 1%)</option>
-<option value='142'  >Uppsala (93 / 1742 / 5%)</option>
-<option value='130'  >Värmland (9 / 1859 / 0%)</option>
-<option value='127'  >Västerbotten (182 / 1821 / 10%)</option>
-<option value='145'  >Västernorrland (13 / 1075 / 1%)</option>
-<option value='143'  >Västmanland (37 / 1791 / 2%)</option>
-<option value='132'  >Västra Götaland (160 / 5568 / 3%)</option>
-<option value='131'  >Örebro (18 / 1779 / 1%)</option>
-<option value='139'  >Östergötland (7 / 1796 / 0%)</option>
-</select>
-&nbsp;&nbsp;
-<select name=city id=city onchange='this.form.submit()'>
-<option value='0'>Välj kommun/area</option>
-<option value='#ALLA#' >Alla kommuner</option>
-<option value='#ORANGE#' >Orange kommuner</option>
-<option value='#EJGUL#' >Ej tidigare gul</option>
-<option value='Botkyrka'  >Botkyrka (29 / 196 / 15%)</option>
-<option value='Danderyd'  class='allZones'>Danderyd (135 / 135 / 100%)</option>
-<option value='Ekerö'  >Ekerö (79 / 111 / 71%)</option>
-<option value='Haninge'  >Haninge (21 / 245 / 9%)</option>
-<option value='Huddinge'  >Huddinge (142 / 315 / 45%)</option>
-<option value='Järfälla'  class='allZones'>Järfälla (258 / 258 / 100%)</option>
-<option value='Lidingö'  class='allZonesLost'>Lidingö (122 / 130 / 94%)</option>
-<option value='Nacka'  >Nacka (68 / 321 / 21%)</option>
-<option value='Norrtälje'  >Norrtälje (1 / 175 / 1%)</option>
-<option value='Nykvarn'  >Nykvarn (1 / 64 / 2%)</option>
-<option value='Nynäshamn'  >Nynäshamn (7 / 111 / 6%)</option>
-<option value='Salem'  >Salem (2 / 78 / 3%)</option>
-<option value='Sigtuna'  >Sigtuna (21 / 137 / 15%)</option>
-<option value='Sollentuna'  class='allZones'>Sollentuna (218 / 218 / 100%)</option>
-<option value='Solna'  class='allZones'>Solna (208 / 208 / 100%)</option>
-<option value='Stockholm'  class='allZones'>Stockholm (1427 / 1427 / 100%)</option>
-<option value='Sundbyberg'  class='allZones'>Sundbyberg (107 / 107 / 100%)</option>
-<option value='Södertälje'  >Södertälje (2 / 282 / 1%)</option>
-<option value='Tyresö'  >Tyresö (1 / 172 / 1%)</option>
-<option value='Täby'  class='allZonesLost'>Täby (195 / 198 / 98%)</option>
-<option value='Upplands Väsby'  class='allZones'>Upplands Väsby (120 / 120 / 100%)</option>
-<option value='Upplands-Bro'  >Upplands-Bro (7 / 129 / 5%)</option>
-<option value='Vallentuna' selected >Vallentuna (63 / 92 / 68%)</option>
-<option value='Vaxholm'  >Vaxholm (10 / 70 / 14%)</option>
-<option value='Värmdö'  >Värmdö (1 / 123 / 1%)</option>
-<option value='Österåker'  >Österåker (3 / 117 / 3%)</option>
-</select><div class='info'>Tagit zoner i 26 av 26 kommuner, varav 7 kommuner där alla zoner är tagna.</div>
-<div class='info'><a href='help.php' target='#MyHelp#'>Hjälp&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='List.php?user=0beroff' target='#List#'>Sammanställning&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='ListRegions.php?user=0beroff' target='#RegList#'>Regionslista&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='ListRegions2.php?user=0beroff' target='#RegList#'>Kommunlista&nbsp;</a></div>
-<div class='info'><a href='EskList.php?user=0beroff' target='#EskList#'>En Skånsk Klassiker&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='EskList2.php' target='#EskList#'>Klassikerzoner&nbsp;</a></div>
-<div class='info'><a href='VbkList.php?user=0beroff' target='#VbkList#'>Västerbottens Turf-klassiker&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='VbkList2.php' target='#VbkList#'>VBK-zoner&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='Landskarta.php?id=80119' target='#WorldMap#'>Världskarta&nbsp;</a></div>
-<div class='info'><a href='TopList7Hills.php' target='#ShChallenge#'>7 Hills of Edinburgh challenge&nbsp;</a></div>
-<div class='info'><a href='MyStats.php?user=0beroff' target='#MyStats#'>Min statistik</a>&nbsp;&nbsp;<a href='AssistTurf.php' target='#AssistTurf#'>Assistturf</a></div>
-<div class='info'><a href='TopListCities.php' target='#TopListCities#'>Topplista kommuner</a>&nbsp;&nbsp;<a href='TopListYellow.php' target='#TopListYellow#'>Topplista gula</a>&nbsp;&nbsp;<a href='TopListFtt.php?user=0beroff' target='#FttList#'>Topplista FTT</a></div>
-<div class='info'><input name=showTaken id='showTaken' type='checkbox' onclick='setMarkers(this, "green")' checked>Tagna&nbsp;&nbsp;<input name=showUntaken id=showUntaken  type='checkbox' onclick='setMarkers(this, "red")' checked>Otagna&nbsp;&nbsp;<input name=showMe id=showMe  type='checkbox' onclick='setIAmHere(this)' checked>Jag är här&nbsp;&nbsp;<a href='GetZonefile.php?user=0beroff&country=se&region=141&city=Vallentuna&zones=alla'>Spara alla&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='GetZonefile.php?user=0beroff&country=se&region=141&city=Vallentuna&zones=unika'>Spara tagna&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='GetZonefile.php?user=0beroff&country=se&region=141&city=Vallentuna&zones=otagna'>Spara otagna&nbsp;</a>&nbsp;&nbsp;&nbsp;</div>
-<div><table id='zoneTable' class='tablesorter'><thead><tr><th>Zon</th><th>Typ</th><th style='text-align:right'>tp</th><th style='text-align:right'>pph</th><th style='text-align:right'>Tagningar</th><th>Tagen</th></tr><tr><th class='sorter-false'>Summa</th><th class='sorter-false'>&nbsp;</th><th class='sorter-false' style='text-align:right'>15040</th><th class='sorter-false' style='text-align:right'>224</th><th class='sorter-false' style='text-align:right'>66561</th><th class='sorter-false'>&nbsp;</th></tr></thead>
-<tbody><tr ><td><a href='https://turfgame.com/map/Angarnsfögel' TARGET='Angarnsfögel'>Angarnsfögel</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>9</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/AngarnsKyrka' TARGET='AngarnsKyrka'>AngarnsKyrka</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>113</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Angarnssjö' TARGET='Angarnssjö'>Angarnssjö</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>145</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/ArkilsTing' TARGET='ArkilsTing'>ArkilsTing</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>388</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/BathHill' TARGET='BathHill'>BathHill</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>502</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Bergsjön' TARGET='Bergsjön'>Bergsjön</a></td><td style='text-align:center'><img src='/image/Vattenzon.png' alt='Vattenzon' height='16' width='16'><span style='display:none'>1</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>26</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Bergstornet' TARGET='Bergstornet'>Bergstornet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>390</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Bullerbytorg' TARGET='Bullerbytorg'>Bullerbytorg</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1156</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Byle' TARGET='Byle'>Byle</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>642</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Bällsta' TARGET='Bällsta'>Bällsta</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1279</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Bällstabridge' TARGET='Bällstabridge'>Bällstabridge</a></td><td style='text-align:center'><img src='/image/Brozon.png' alt='Brozon' height='16' width='16'><span style='display:none'>3</span>&nbsp;&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>764</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/BällstaSoccer' TARGET='BällstaSoccer'>BällstaSoccer</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>921</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Collarcity' TARGET='Collarcity'>Collarcity</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2268</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/CongoQueen' TARGET='CongoQueen'>CongoQueen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>147</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/CrimeBath' TARGET='CrimeBath'>CrimeBath</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>230</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/CrimeBridge' TARGET='CrimeBridge'>CrimeBridge</a></td><td style='text-align:center'><img src='/image/Brozon.png' alt='Brozon' height='16' width='16'><span style='display:none'>3</span>&nbsp;&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1464</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Dragonvreten' TARGET='Dragonvreten'>Dragonvreten</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1404</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Ekebyfält' TARGET='Ekebyfält'>Ekebyfält</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1139</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/ExermanHersby' TARGET='ExermanHersby'>ExermanHersby</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>42</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/FieldInMiddle' TARGET='FieldInMiddle'>FieldInMiddle</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>951</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/FixerUpper' TARGET='FixerUpper'>FixerUpper</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>5</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/FogZone' TARGET='FogZone'>FogZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1262</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Forestsauce' TARGET='Forestsauce'>Forestsauce</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>12</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Frisbeezon' TARGET='Frisbeezon'>Frisbeezon</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>720</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Gobbledygook' TARGET='Gobbledygook'>Gobbledygook</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>310</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Granbyhällen' TARGET='Granbyhällen'>Granbyhällen</a></td><td style='text-align:center'><img src='/image/Ruinzon.png' alt='Ruin' height='16' width='16'><span style='display:none'>5</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>74</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/GulaSparven' TARGET='GulaSparven'>GulaSparven</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>205</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/GurraPlurra' TARGET='GurraPlurra'>GurraPlurra</a></td><td style='text-align:center'><img src='/image/Vattenzon.png' alt='Vattenzon' height='16' width='16'><span style='display:none'>1</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>37</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Hagakorset' TARGET='Hagakorset'>Hagakorset</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1067</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Halkrisk' TARGET='Halkrisk'>Halkrisk</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>168</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/HammerHill' TARGET='HammerHill'>HammerHill</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>2015</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Högdalatoppen' TARGET='Högdalatoppen'>Högdalatoppen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>16</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Kaffeknorrar' TARGET='Kaffeknorrar'>Kaffeknorrar</a></td><td style='text-align:center'><img src='/image/Monumentzon.png' alt='Monumentzon' height='16' width='16'><span style='display:none'>7</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>31</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Kantarellboll' TARGET='Kantarellboll'>Kantarellboll</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>389</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Karbyboule' TARGET='Karbyboule'>Karbyboule</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>522</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/KarbyCrossing' TARGET='KarbyCrossing'>KarbyCrossing</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>611</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Kragstalund' TARGET='Kragstalund'>Kragstalund</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>185</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Kulla' TARGET='Kulla'>Kulla</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>542</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/KvinnansZon' TARGET='KvinnansZon'>KvinnansZon</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>916</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Lindholmen' TARGET='Lindholmen'>Lindholmen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>369</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Lingonzon' TARGET='Lingonzon'>Lingonzon</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>286</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Lingsbergkrok' TARGET='Lingsbergkrok'>Lingsbergkrok</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>680</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/MannensZon' TARGET='MannensZon'>MannensZon</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1326</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/MtKarl' TARGET='MtKarl'>MtKarl</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1052</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/MuraTegel' TARGET='MuraTegel'>MuraTegel</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1742</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/NäraSkog' TARGET='NäraSkog'>NäraSkog</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>651</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Orkesta' TARGET='Orkesta'>Orkesta</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>25</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Ormsta' TARGET='Ormsta'>Ormsta</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>922</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/OrmstaStation' TARGET='OrmstaStation'>OrmstaStation</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1778</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/PuffTheMagic' TARGET='PuffTheMagic'>PuffTheMagic</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>484</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/PuhIngetL' TARGET='PuhIngetL'>PuhIngetL</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>774</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/RasberryPath' TARGET='RasberryPath'>RasberryPath</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>547</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/RoseBattles' TARGET='RoseBattles'>RoseBattles</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>772</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Sjöbryggan' TARGET='Sjöbryggan'>Sjöbryggan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1428</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Sjökullarna' TARGET='Sjökullarna'>Sjökullarna</a></td><td style='text-align:center'><img src='/image/Ruinzon.png' alt='Ruin' height='16' width='16'><span style='display:none'>5</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>4</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Slånbäret' TARGET='Slånbäret'>Slånbäret</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>453</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Smultronet' TARGET='Smultronet'>Smultronet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>922</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Snapptuna' TARGET='Snapptuna'>Snapptuna</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>549</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/SpongeWoods' TARGET='SpongeWoods'>SpongeWoods</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>473</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/SpårlösaKårar' TARGET='SpårlösaKårar'>SpårlösaKårar</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>67</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/SunDownTownRd' TARGET='SunDownTownRd'>SunDownTownRd</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>550</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Svallen' TARGET='Svallen'>Svallen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1034</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/SwampThing' TARGET='SwampThing'>SwampThing</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>387</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Takpannan' TARGET='Takpannan'>Takpannan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>482</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Tallhammar' TARGET='Tallhammar'>Tallhammar</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>127</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Technodungen' TARGET='Technodungen'>Technodungen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1086</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/TheKyrkRuins' TARGET='TheKyrkRuins'>TheKyrkRuins</a></td><td style='text-align:center'><img src='/image/Ruinzon.png' alt='Ruin' height='16' width='16'><span style='display:none'>5</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>839</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Toftestabadet' TARGET='Toftestabadet'>Toftestabadet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>292</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Tretti7-17' TARGET='Tretti7-17'>Tretti7-17</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>709</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Trädgårdsstan' TARGET='Trädgårdsstan'>Trädgårdsstan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>180</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/TunaTracks' TARGET='TunaTracks'>TunaTracks</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>839</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Tvåsjuttiett' TARGET='Tvåsjuttiett'>Tvåsjuttiett</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1319</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Uppställning' TARGET='Uppställning'>Uppställning</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>944</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Utförsbacken' TARGET='Utförsbacken'>Utförsbacken</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>246</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/UthamraZone' TARGET='UthamraZone'>UthamraZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1995</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Utvägen' TARGET='Utvägen'>Utvägen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>257</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Vallbostrand' TARGET='Vallbostrand'>Vallbostrand</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1396</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/VallboUdde' TARGET='VallboUdde'>VallboUdde</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>76</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/VallEkeby' TARGET='VallEkeby'>VallEkeby</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>933</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/VallenAir' TARGET='VallenAir'>VallenAir</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>320</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/VallenITuna' TARGET='VallenITuna'>VallenITuna</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1753</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/VallenOrmsta' TARGET='VallenOrmsta'>VallenOrmsta</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1385</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/VtunaCentrum' TARGET='VtunaCentrum'>VtunaCentrum</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>3693</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/VTunaKyrka' TARGET='VTunaKyrka'>VTunaKyrka</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1964</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/WallEnTun' TARGET='WallEnTun'>WallEnTun</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>812</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/Wasakullen' TARGET='Wasakullen'>Wasakullen</a></td><td style='text-align:center'><img src='/image/Monumentzon.png' alt='Monumentzon' height='16' width='16'><span style='display:none'>7</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>33</td><td class='sorter-false'>Nej</td></tr>
-<tr ><td><a href='https://turfgame.com/map/WhatYesChurch' TARGET='WhatYesChurch'>WhatYesChurch</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>119</td><td class='sorter-false'>Nej</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/ZX201905' TARGET='ZX201905'>ZX201905</a></td><td style='text-align:center'><img src='/image/Vinnarzon.png' alt='Vinnarzon' height='16' width='16'><span style='display:none'>2</span>&nbsp;&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>446</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Åbyberg' TARGET='Åbyberg'>Åbyberg</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>737</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/ÅbyField' TARGET='ÅbyField'>ÅbyField</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>2231</td><td class='sorter-false'>Ja</td></tr>
-<tr class='takenZone'><td><a href='https://turfgame.com/map/Ängsodling' TARGET='Ängsodling'>Ängsodling</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>528</td><td class='sorter-false'>Ja</td></tr>
-<tr ><td><a href='https://turfgame.com/map/ÖssebyGarn' TARGET='ÖssebyGarn'>ÖssebyGarn</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>478</td><td class='sorter-false'>Nej</td></tr>
-</tbody></table></div>
-</form>
+    <form name="mainform" action="" method="GET">
+        <div class='info'><a href='https://turf.lundkvist.com/en/'>English</a><br>
+        </div><table><tr><td><label>Turfare:</label></td>
+        <td rowspan='2' style='vertical-align:bottom'><div id='medal'></div></td>
+    </tr>
+        <tr><td><input type='text' id=user name=user value='0beroff'></td>
+        </tr></table>
+        <div class='info'>Tagit 4027 av 97169 zoner och 25 av 325 regioner.<br>
+        </div>&nbsp;<select name=country id=country onchange='countryChanged()'><option value='0' >Välj land eller typ</option><option value='#ALLA#' >Alla mina</option><option value='#' >Världen</option><option value='se' selected>Sverige</option><option value='dk' >Danmark</option><option value='fi' >Finland</option><option value='no' >Norge</option><option value='is' >Island</option><option value='nl' >Nederländerna</option><option value='gb' >Storbritannien</option><option value='de' >Tyskland</option><option value='kr' >Sydkorea</option><option value='us' >USA</option><option value='jp' >Japan</option><option value='SP23' >Bergstoppar</option><option value='SP08' >Broar</option><option value='SP22' >Nationalparker</option><option value='SP09' >Heliga zoner</option><option value='SP13' >Järnvägsstationer</option><option value='SP21' >Monument</option><option value='SP16' >Ruin</option><option value='SP14' >Slott</option><option value='SP03' >Vattenzoner</option><option value='SP06' >Vinnarzoner</option><option value='SP15' >Världsarv</option><option value='ESK' >En Skånsk Klassiker</option><option value='VBK' >Västerbottens Turf-klassiker</option><option value='FTT' >Aldrig tagna</option></select>
+        &nbsp;<a href='Kommunkarta.php?id=80119&country=se' target='#KommunKarta#'>Visa kommunkarta</a><br>
+        <div class='info'>Tagit 4016 zoner av 40604 i 159 av 290 kommuner och 21 av 21 regioner.</div>
+        &nbsp;<select name=region id=region onchange='regionChanged()'>
+        <option value='0'>Välj region</option>
+        <option value='136'  >Blekinge (5 / 715 / 1%)</option>
+        <option value='129'  >Dalarna (8 / 1853 / 0%)</option>
+        <option value='138'  >Gotland (130 / 333 / 39%)</option>
+        <option value='144'  >Gävleborg (20 / 1388 / 1%)</option>
+        <option value='134'  >Halland (1 / 1121 / 0%)</option>
+        <option value='128'  >Jämtland (7 / 918 / 1%)</option>
+        <option value='133'  >Jönköping (4 / 1788 / 0%)</option>
+        <option value='137'  >Kalmar (26 / 1586 / 2%)</option>
+        <option value='147'  >Kronoberg (6 / 928 / 1%)</option>
+        <option value='126'  >Norrbotten (2 / 1404 / 0%)</option>
+        <option value='135'  >Skåne (22 / 4074 / 1%)</option>
+        <option value='141' selected >Stockholm (3256 / 5566 / 58%)</option>
+        <option value='140'  >Södermanland (10 / 1433 / 1%)</option>
+        <option value='142'  >Uppsala (93 / 1749 / 5%)</option>
+        <option value='130'  >Värmland (9 / 1864 / 0%)</option>
+        <option value='127'  >Västerbotten (182 / 1826 / 10%)</option>
+        <option value='145'  >Västernorrland (13 / 1075 / 1%)</option>
+        <option value='143'  >Västmanland (37 / 1794 / 2%)</option>
+        <option value='132'  >Västra Götaland (160 / 5594 / 3%)</option>
+        <option value='131'  >Örebro (18 / 1789 / 1%)</option>
+        <option value='139'  >Östergötland (7 / 1806 / 0%)</option>
+    </select>
+        &nbsp;&nbsp;
+        <select name=city id=city onchange='this.form.submit()'>
+            <option value='0'>Välj kommun/area</option>
+            <option value='#ALLA#' >Alla kommuner</option>
+            <option value='#ORANGE#' >Orange kommuner</option>
+            <option value='#EJGUL#' >Ej tidigare gul</option>
+            <option value='Botkyrka'  >Botkyrka (29 / 198 / 15%)</option>
+            <option value='Danderyd'  class='allZones'>Danderyd (135 / 135 / 100%)</option>
+            <option value='Ekerö'  >Ekerö (79 / 112 / 71%)</option>
+            <option value='Haninge'  >Haninge (21 / 246 / 9%)</option>
+            <option value='Huddinge'  >Huddinge (142 / 318 / 45%)</option>
+            <option value='Järfälla'  class='allZones'>Järfälla (258 / 258 / 100%)</option>
+            <option value='Lidingö'  class='allZonesLost'>Lidingö (123 / 130 / 95%)</option>
+            <option value='Nacka'  >Nacka (68 / 322 / 21%)</option>
+            <option value='Norrtälje'  >Norrtälje (1 / 177 / 1%)</option>
+            <option value='Nykvarn'  >Nykvarn (1 / 65 / 2%)</option>
+            <option value='Nynäshamn'  >Nynäshamn (7 / 112 / 6%)</option>
+            <option value='Salem'  >Salem (2 / 79 / 3%)</option>
+            <option value='Sigtuna'  >Sigtuna (21 / 137 / 15%)</option>
+            <option value='Sollentuna'  class='allZones'>Sollentuna (218 / 218 / 100%)</option>
+            <option value='Solna'  class='allZones'>Solna (208 / 208 / 100%)</option>
+            <option value='Stockholm'  class='allZones'>Stockholm (1427 / 1427 / 100%)</option>
+            <option value='Sundbyberg'  class='allZones'>Sundbyberg (107 / 107 / 100%)</option>
+            <option value='Södertälje'  >Södertälje (2 / 288 / 1%)</option>
+            <option value='Tyresö'  >Tyresö (1 / 173 / 1%)</option>
+            <option value='Täby'  class='allZones'>Täby (200 / 200 / 100%)</option>
+            <option value='Upplands Väsby'  class='allZones'>Upplands Väsby (120 / 120 / 100%)</option>
+            <option value='Upplands-Bro'  >Upplands-Bro (7 / 130 / 5%)</option>
+            <option value='Vallentuna' selected >Vallentuna (65 / 93 / 70%)</option>
+            <option value='Vaxholm'  >Vaxholm (10 / 71 / 14%)</option>
+            <option value='Värmdö'  >Värmdö (1 / 124 / 1%)</option>
+            <option value='Österåker'  >Österåker (3 / 118 / 3%)</option>
+        </select><div class='info'>Tagit zoner i 26 av 26 kommuner, varav 8 kommuner där alla zoner är tagna.</div>
+        <div class='info'><a href='help.php' target='#MyHelp#'>Hjälp&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='List.php?user=0beroff' target='#List#'>Sammanställning&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='ListRegions.php?user=0beroff' target='#RegList#'>Regionslista&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='ListRegions2.php?user=0beroff' target='#RegList#'>Kommunlista&nbsp;</a></div>
+        <div class='info'><a href='EskList.php?user=0beroff' target='#EskList#'>En Skånsk Klassiker&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='EskList2.php' target='#EskList#'>Klassikerzoner&nbsp;</a></div>
+        <div class='info'><a href='VbkList.php?user=0beroff' target='#VbkList#'>Västerbottens Turf-klassiker&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='VbkList2.php' target='#VbkList#'>VBK-zoner&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='Landskarta.php?id=80119' target='#WorldMap#'>Världskarta&nbsp;</a></div>
+        <div class='info'><a href='TopList7Hills.php' target='#ShChallenge#'>7 Hills of Edinburgh challenge&nbsp;</a></div>
+        <div class='info'><a href='MyStats.php?user=0beroff' target='#MyStats#'>Min statistik</a>&nbsp;&nbsp;<a href='AssistTurf.php' target='#AssistTurf#'>Assistturf</a></div>
+        <div class='info'><a href='TopListCities.php' target='#TopListCities#'>Topplista kommuner</a>&nbsp;&nbsp;<a href='TopListYellow.php' target='#TopListYellow#'>Topplista gula</a>&nbsp;&nbsp;<a href='TopListFtt.php?user=0beroff' target='#FttList#'>Topplista FTT</a></div>
+        <div class='info'><input name=showTaken id='showTaken' type='checkbox' onclick='setMarkers(this, "green")' checked>Tagna&nbsp;&nbsp;<input name=showUntaken id=showUntaken  type='checkbox' onclick='setMarkers(this, "red")' checked>Otagna&nbsp;&nbsp;<input name=showMe id=showMe  type='checkbox' onclick='setIAmHere(this)' checked>Jag är här&nbsp;&nbsp;<a href='GetZonefile.php?user=0beroff&country=se&region=141&city=Vallentuna&showTaken=on&showUntaken=on&showMe=on&zones=alla'>Spara alla&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='GetZonefile.php?user=0beroff&country=se&region=141&city=Vallentuna&showTaken=on&showUntaken=on&showMe=on&zones=unika'>Spara tagna&nbsp;</a>&nbsp;&nbsp;&nbsp;<a href='GetZonefile.php?user=0beroff&country=se&region=141&city=Vallentuna&showTaken=on&showUntaken=on&showMe=on&zones=otagna'>Spara otagna&nbsp;</a>&nbsp;&nbsp;&nbsp;</div>
+        <div><table id='zoneTable' class='tablesorter'><thead><tr><th>Zon</th><th>Typ</th><th style='text-align:right'>tp</th><th style='text-align:right'>pph</th><th style='text-align:right'>Tagningar</th><th>Tagen</th></tr><tr><th class='sorter-false'>Summa</th><th class='sorter-false'>&nbsp;</th><th class='sorter-false' style='text-align:right'>15525</th><th class='sorter-false' style='text-align:right'>205</th><th class='sorter-false' style='text-align:right'>68182</th><th class='sorter-false'>&nbsp;</th></tr></thead>
+            <tbody><tr ><td><a href='https://turfgame.com/map/Angarnsfögel' TARGET='Angarnsfögel'>Angarnsfögel</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>15</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/AngarnsKyrka' TARGET='AngarnsKyrka'>AngarnsKyrka</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>128</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Angarnssjö' TARGET='Angarnssjö'>Angarnssjö</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>151</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/ArkilsTing' TARGET='ArkilsTing'>ArkilsTing</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>399</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/BathHill' TARGET='BathHill'>BathHill</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>529</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Bergsjön' TARGET='Bergsjön'>Bergsjön</a></td><td style='text-align:center'><img src='/image/Vattenzon.png' alt='Vattenzon' height='16' width='16'><span style='display:none'>1</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>26</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Bergstornet' TARGET='Bergstornet'>Bergstornet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>399</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Blåbärsslån' TARGET='Blåbärsslån'>Blåbärsslån</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>6</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Bullerbytorg' TARGET='Bullerbytorg'>Bullerbytorg</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1195</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Byle' TARGET='Byle'>Byle</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>646</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Bällsta' TARGET='Bällsta'>Bällsta</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1307</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Bällstabridge' TARGET='Bällstabridge'>Bällstabridge</a></td><td style='text-align:center'><img src='/image/Brozon.png' alt='Brozon' height='16' width='16'><span style='display:none'>3</span>&nbsp;&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>787</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/BällstaSoccer' TARGET='BällstaSoccer'>BällstaSoccer</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>931</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Collarcity' TARGET='Collarcity'>Collarcity</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>2289</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/CongoQueen' TARGET='CongoQueen'>CongoQueen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>155</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/CrimeBath' TARGET='CrimeBath'>CrimeBath</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>233</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/CrimeBridge' TARGET='CrimeBridge'>CrimeBridge</a></td><td style='text-align:center'><img src='/image/Brozon.png' alt='Brozon' height='16' width='16'><span style='display:none'>3</span>&nbsp;&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1478</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Dragonvreten' TARGET='Dragonvreten'>Dragonvreten</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1443</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Ekebyfält' TARGET='Ekebyfält'>Ekebyfält</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1185</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/ExermanHersby' TARGET='ExermanHersby'>ExermanHersby</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>42</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/FieldInMiddle' TARGET='FieldInMiddle'>FieldInMiddle</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>959</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/FixerUpper' TARGET='FixerUpper'>FixerUpper</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>7</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/FogZone' TARGET='FogZone'>FogZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1285</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Forestsauce' TARGET='Forestsauce'>Forestsauce</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>21</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Frisbeezon' TARGET='Frisbeezon'>Frisbeezon</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>742</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Gobbledygook' TARGET='Gobbledygook'>Gobbledygook</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>314</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Granbyhällen' TARGET='Granbyhällen'>Granbyhällen</a></td><td style='text-align:center'><img src='/image/Ruinzon.png' alt='Ruin' height='16' width='16'><span style='display:none'>5</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>76</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/GulaSparven' TARGET='GulaSparven'>GulaSparven</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>222</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/GurraPlurra' TARGET='GurraPlurra'>GurraPlurra</a></td><td style='text-align:center'><img src='/image/Vattenzon.png' alt='Vattenzon' height='16' width='16'><span style='display:none'>1</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>38</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Hagakorset' TARGET='Hagakorset'>Hagakorset</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1087</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Halkrisk' TARGET='Halkrisk'>Halkrisk</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>175</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/HammerHill' TARGET='HammerHill'>HammerHill</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2069</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Högdalatoppen' TARGET='Högdalatoppen'>Högdalatoppen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>16</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Kaffeknorrar' TARGET='Kaffeknorrar'>Kaffeknorrar</a></td><td style='text-align:center'><img src='/image/Monumentzon.png' alt='Monumentzon' height='16' width='16'><span style='display:none'>7</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>32</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Kantarellboll' TARGET='Kantarellboll'>Kantarellboll</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>404</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Karbyboule' TARGET='Karbyboule'>Karbyboule</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>526</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/KarbyCrossing' TARGET='KarbyCrossing'>KarbyCrossing</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>620</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Kragstalund' TARGET='Kragstalund'>Kragstalund</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>209</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Kulla' TARGET='Kulla'>Kulla</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>551</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/KvinnansZon' TARGET='KvinnansZon'>KvinnansZon</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>930</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Lindholmen' TARGET='Lindholmen'>Lindholmen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>372</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Lingonzon' TARGET='Lingonzon'>Lingonzon</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>291</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Lingsbergkrok' TARGET='Lingsbergkrok'>Lingsbergkrok</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>700</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/MannensZon' TARGET='MannensZon'>MannensZon</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1346</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/MtKarl' TARGET='MtKarl'>MtKarl</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1067</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/MuraTegel' TARGET='MuraTegel'>MuraTegel</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1780</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/NäraSkog' TARGET='NäraSkog'>NäraSkog</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>686</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Orkesta' TARGET='Orkesta'>Orkesta</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>28</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Ormsta' TARGET='Ormsta'>Ormsta</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>948</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/OrmstaStation' TARGET='OrmstaStation'>OrmstaStation</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1791</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/PuffTheMagic' TARGET='PuffTheMagic'>PuffTheMagic</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>500</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/PuhIngetL' TARGET='PuhIngetL'>PuhIngetL</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>797</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/RasberryPath' TARGET='RasberryPath'>RasberryPath</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>564</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/RoseBattles' TARGET='RoseBattles'>RoseBattles</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>790</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Sjöbryggan' TARGET='Sjöbryggan'>Sjöbryggan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>1450</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Sjökullarna' TARGET='Sjökullarna'>Sjökullarna</a></td><td style='text-align:center'><img src='/image/Ruinzon.png' alt='Ruin' height='16' width='16'><span style='display:none'>5</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>8</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Slånbäret' TARGET='Slånbäret'>Slånbäret</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>471</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Smultronet' TARGET='Smultronet'>Smultronet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>943</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Snapptuna' TARGET='Snapptuna'>Snapptuna</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>577</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/SpongeWoods' TARGET='SpongeWoods'>SpongeWoods</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>487</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/SpårlösaKårar' TARGET='SpårlösaKårar'>SpårlösaKårar</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>68</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/SunDownTownRd' TARGET='SunDownTownRd'>SunDownTownRd</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>566</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Svallen' TARGET='Svallen'>Svallen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1060</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/SwampThing' TARGET='SwampThing'>SwampThing</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>398</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Takpannan' TARGET='Takpannan'>Takpannan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>521</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Tallhammar' TARGET='Tallhammar'>Tallhammar</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>144</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Technodungen' TARGET='Technodungen'>Technodungen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1118</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/TheKyrkRuins' TARGET='TheKyrkRuins'>TheKyrkRuins</a></td><td style='text-align:center'><img src='/image/Ruinzon.png' alt='Ruin' height='16' width='16'><span style='display:none'>5</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>856</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Toftestabadet' TARGET='Toftestabadet'>Toftestabadet</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>300</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Tretti7-17' TARGET='Tretti7-17'>Tretti7-17</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>719</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Trädgårdsstan' TARGET='Trädgårdsstan'>Trädgårdsstan</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>184</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/TunaTracks' TARGET='TunaTracks'>TunaTracks</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>852</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Tvåsjuttiett' TARGET='Tvåsjuttiett'>Tvåsjuttiett</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1361</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Uppställning' TARGET='Uppställning'>Uppställning</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>972</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Utförsbacken' TARGET='Utförsbacken'>Utförsbacken</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>258</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/UthamraZone' TARGET='UthamraZone'>UthamraZone</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2040</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Utvägen' TARGET='Utvägen'>Utvägen</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>269</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Vallbostrand' TARGET='Vallbostrand'>Vallbostrand</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1425</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/VallboUdde' TARGET='VallboUdde'>VallboUdde</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>88</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/VallEkeby' TARGET='VallEkeby'>VallEkeby</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>977</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/VallenAir' TARGET='VallenAir'>VallenAir</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>329</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/VallenITuna' TARGET='VallenITuna'>VallenITuna</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>1796</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/VallenOrmsta' TARGET='VallenOrmsta'>VallenOrmsta</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>155</td><td style='text-align:right'>3</td><td style='text-align:right'>1401</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/VtunaCentrum' TARGET='VtunaCentrum'>VtunaCentrum</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>125</td><td style='text-align:right'>5</td><td style='text-align:right'>3755</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/VTunaKyrka' TARGET='VTunaKyrka'>VTunaKyrka</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2004</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/WallEnTun' TARGET='WallEnTun'>WallEnTun</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>833</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/Wasakullen' TARGET='Wasakullen'>Wasakullen</a></td><td style='text-align:center'><img src='/image/Monumentzon.png' alt='Monumentzon' height='16' width='16'><span style='display:none'>7</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>35</td><td class='sorter-false'>Nej</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/WhatYesChurch' TARGET='WhatYesChurch'>WhatYesChurch</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>123</td><td class='sorter-false'>Nej</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/ZX201905' TARGET='ZX201905'>ZX201905</a></td><td style='text-align:center'><img src='/image/Vinnarzon.png' alt='Vinnarzon' height='16' width='16'><span style='display:none'>2</span>&nbsp;&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>464</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Åbyberg' TARGET='Åbyberg'>Åbyberg</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>749</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/ÅbyField' TARGET='ÅbyField'>ÅbyField</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>140</td><td style='text-align:right'>4</td><td style='text-align:right'>2271</td><td class='sorter-false'>Ja</td></tr>
+            <tr class='takenZone'><td><a href='https://turfgame.com/map/Ängsodling' TARGET='Ängsodling'>Ängsodling</a></td><td style='text-align:center'>&nbsp;</td><td style='text-align:right'>170</td><td style='text-align:right'>2</td><td style='text-align:right'>536</td><td class='sorter-false'>Ja</td></tr>
+            <tr ><td><a href='https://turfgame.com/map/ÖssebyGarn' TARGET='ÖssebyGarn'>ÖssebyGarn</a></td><td style='text-align:center'><img src='/image/Heligzon.png' alt='Helig zon' height='16' width='16'><span style='display:none'>4</span>&nbsp;&nbsp;</td><td style='text-align:right'>185</td><td style='text-align:right'>1</td><td style='text-align:right'>487</td><td class='sorter-false'>Nej</td></tr>
+            </tbody></table></div>
+    </form>
 </div>
 
 <div id="map"></div>
-<script type = "text/javascript" charset = "utf-8" > 
+<script type = "text/javascript" charset = "utf-8" >
 
 var map;
 
@@ -265,9 +267,9 @@ function getLocation() {
 }
 function setCurrentLocation(position) {
     iAmHereMarker = new google.maps.Marker({
-        icon: '/image/currentlocation3.png', 
-        position: {lat: position.coords.latitude, lng: position.coords.longitude}, 
-        map: map, 
+        icon: '/image/currentlocation3.png',
+        position: {lat: position.coords.latitude, lng: position.coords.longitude},
+        map: map,
         visible: true,
         title: 'Här är du',
     });
@@ -329,9 +331,9 @@ function BikeControl(controlDiv, map) {
   });
 }
 
- 
+
 function initMap() {
-//sql= SELECT Min(Longitude) + ((Max(Longitude) - Min(Longitude))/2), Min(Latitude) + ((Max(Latitude) - Min(Latitude))/2)  FROM Zones  WHERE RegionId = ?  AND City = ? 
+//sql= SELECT Min(Longitude) + ((Max(Longitude) - Min(Longitude))/2), Min(Latitude) + ((Max(Latitude) - Min(Latitude))/2)  FROM Zones  WHERE RegionId = ?  AND City = ?
 var myLatLng = {lat: 0, lng: 0};
 map = new google.maps.Map(document.getElementById('map'), {zoom: 12,center: myLatLng});
 var bounds = new google.maps.LatLngBounds();
@@ -371,6 +373,11 @@ bounds.extend(marker.getPosition());
 $(marker).data({imgURL: "/image/green-dot.png", name: "Bergstornet", color: "green"});
 markers.push(marker);
 google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Bergstornet", "Bergstornet");});
+var marker = new google.maps.Marker({icon:  { labelOrigin: new google.maps.Point(0, 0), url: '/image/green-dot.png'},position: {lat: 59.543905, lng: 18.101706}, map: map, title: "Blåbärsslån", visible: true,});
+bounds.extend(marker.getPosition());
+$(marker).data({imgURL: "/image/green-dot.png", name: "Blåbärsslån", color: "green"});
+markers.push(marker);
+google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Blåbärsslån", "Blåbärsslån");});
 var marker = new google.maps.Marker({icon:  { labelOrigin: new google.maps.Point(0, 0), url: '/image/green-dot.png'},position: {lat: 59.536061, lng: 18.066488}, map: map, title: "Bullerbytorg", visible: true,});
 bounds.extend(marker.getPosition());
 $(marker).data({imgURL: "/image/green-dot.png", name: "Bullerbytorg", color: "green"});
@@ -446,9 +453,9 @@ bounds.extend(marker.getPosition());
 $(marker).data({imgURL: "/image/green-dot.png", name: "FogZone", color: "green"});
 markers.push(marker);
 google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/FogZone", "FogZone");});
-var marker = new google.maps.Marker({icon:  { labelOrigin: new google.maps.Point(0, 0), url: '/image/red-dot.png'},position: {lat: 59.507334, lng: 18.052073}, map: map, title: "Forestsauce", visible: true,});
+var marker = new google.maps.Marker({icon:  { labelOrigin: new google.maps.Point(0, 0), url: '/image/green-dot.png'},position: {lat: 59.507334, lng: 18.052073}, map: map, title: "Forestsauce", visible: true,});
 bounds.extend(marker.getPosition());
-$(marker).data({imgURL: "/image/red-dot.png", name: "Forestsauce", color: "red"});
+$(marker).data({imgURL: "/image/green-dot.png", name: "Forestsauce", color: "green"});
 markers.push(marker);
 google.maps.event.addListener(marker, 'click', function() {    window.open("https://turfgame.com/map/Forestsauce", "Forestsauce");});
 var marker = new google.maps.Marker({icon:  { labelOrigin: new google.maps.Point(0, 0), url: '/image/green-dot.png'},position: {lat: 59.543417, lng: 18.07601}, map: map, title: "Frisbeezon", visible: true,});
@@ -861,8 +868,8 @@ $(function(){
             });
         }
     });
-    
-    
+
+
     $("#zoneTable").tablesorter({
         widgets: ["stickyHeaders", "hover"],
         widgetOptions : {
@@ -870,7 +877,7 @@ $(function(){
           stickyHeaders : "tablesorter-stickyHeader"
         }
     });
-    
+
 setMedal('se');});
 
 </script >
