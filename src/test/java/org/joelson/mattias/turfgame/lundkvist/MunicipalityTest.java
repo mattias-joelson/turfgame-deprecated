@@ -48,14 +48,14 @@ public class MunicipalityTest {
     @Test
     public void readSundbyberg() throws Exception {
         Map<String, Boolean> zones = getSundbybergZones();
-        assertEquals(107, zones.size());
+        assertEquals(108, zones.size());
         int taken = 0;
         for (Boolean takenZone : zones.values()) {
             if (takenZone) {
                 taken += 1;
             }
         }
-        assertEquals(107, taken);
+        assertEquals(108, taken);
     }
 
     @Test

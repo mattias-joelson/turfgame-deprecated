@@ -14,6 +14,8 @@ public final class StatisticsInitializer {
 
         Country spain = new Country("es");
         statistics.addCountry(spain);
+        Country finland = new Country("fi");
+        statistics.addCountry(finland);
         Country sweden = new Country("se");
         statistics.addCountry(sweden);
 
@@ -98,6 +100,10 @@ public final class StatisticsInitializer {
         Region orebro = new Region(131, "Örebro", sweden);
         statistics.addRegion(uppsala);
         addMunicipality(statistics, stockholm, "Lindesbergs kommun");
+
+        Region aland = new Region(177, "Åland", finland);
+        statistics.addRegion(aland);
+        addMunicipality(statistics, aland, "Mariehamn");
 
         Region spainRegion = new Region(211, "Spain", spain);
         statistics.addRegion(spainRegion);

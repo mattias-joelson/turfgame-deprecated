@@ -70,6 +70,11 @@ public class MonthlyVisitTest {
     }
 
     @Test
+    public void combinedTrueCircleVisitTest() throws Exception {
+        visitMunicipalityTest("true_circle", "true_circle_month.kml", HeatmapTest.getTrueCircleZones(), true);
+    }
+
+    @Test
     public void combinedFlippVisitTest() throws Exception {
         visitMunicipalityTest("flipp", "flipp_month.kml", Flipp08MissionTest.getFlippZones(), true);
     }
@@ -166,7 +171,7 @@ public class MonthlyVisitTest {
 
     private static Monthly getMonthly() throws Exception {
         //return readProperties("monthly_oberoff_round96.html");
-        return readProperties("monthly_0beroff_round135.html");
+        return readProperties("monthly_0beroff_round136_fairy.html");
     }
     
     private static Monthly readProperties(String resource) throws Exception {
