@@ -66,7 +66,7 @@ public class MonthlyTest {
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
         assertEquals(ROUND, monthly.getRound());
-        assertEquals(589, (monthly.getZones()).size());
+        assertEquals(99, (monthly.getZones()).size());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class MonthlyTest {
     }
 
     public static Monthly getMonthly() throws Exception {
-        return readProperties("monthly_0beroff_round138.html");
+        return readProperties("monthly_0beroff_round139.html");
     }
 
     private static Monthly readProperties(String resource) throws Exception {

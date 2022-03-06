@@ -56,6 +56,7 @@ public final class StatisticsInitializer {
         addMunicipality(statistics, stockholm, "Lidingö kommun");
         addMunicipality(statistics, stockholm, "Nacka kommun");
         addMunicipality(statistics, stockholm, "Nynäshamns kommun");
+        addMunicipality(statistics, stockholm, "Norrtälje kommun");
         addMunicipality(statistics, stockholm, "Salems kommun");
         addMunicipality(statistics, stockholm, "Sigtuna kommun");
         addMunicipality(statistics, stockholm, "Solna kommun");
