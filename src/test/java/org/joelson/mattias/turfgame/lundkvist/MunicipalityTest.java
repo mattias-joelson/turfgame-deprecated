@@ -42,7 +42,7 @@ public class MunicipalityTest {
                 taken += 1;
             }
         }
-        assertEquals(1439, taken);
+        assertEquals(1440, taken);
     }
     
     @Test
