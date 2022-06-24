@@ -103,6 +103,11 @@ public final class StatisticsInitializer {
         statistics.addRegion(vastmanland);
         addMunicipality(statistics, vastmanland, "Västerås");
 
+        Region vastraGotaland = new Region(132, "Västra Götaland", sweden);
+        statistics.addRegion(vastraGotaland);
+        addMunicipality(statistics, vastraGotaland, "Göteborgs kommun");
+        addMunicipality(statistics, vastraGotaland, "Vårgårda kommun");
+
         Region orebro = new Region(131, "Örebro", sweden);
         statistics.addRegion(uppsala);
         addMunicipality(statistics, stockholm, "Lindesbergs kommun");
