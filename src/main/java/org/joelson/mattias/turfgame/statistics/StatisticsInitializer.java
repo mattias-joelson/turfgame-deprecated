@@ -55,6 +55,7 @@ public final class StatisticsInitializer {
         addMunicipality(statistics, stockholm, "Järfälla kommun");
         addMunicipality(statistics, stockholm, "Lidingö kommun");
         addMunicipality(statistics, stockholm, "Nacka kommun");
+        addMunicipality(statistics, stockholm, "Nykvarns kommun");
         addMunicipality(statistics, stockholm, "Nynäshamns kommun");
         addMunicipality(statistics, stockholm, "Norrtälje kommun");
         addMunicipality(statistics, stockholm, "Salems kommun");
@@ -67,6 +68,10 @@ public final class StatisticsInitializer {
         addMunicipality(statistics, stockholm, "Vallentuna kommun");
         addMunicipality(statistics, stockholm, "Upplands Väsby kommun");
         addMunicipality(statistics, stockholm, "Upplands-Bro kommun");
+
+        Region sodermanland = new Region(140, "Södermanland", sweden);
+        statistics.addRegion(sodermanland);
+        addMunicipality(statistics, sodermanland, "Strängnäs kommun");
 
         Region uppsala = new Region(142, "Uppsala", sweden);
         statistics.addRegion(uppsala);
@@ -101,6 +106,7 @@ public final class StatisticsInitializer {
 
         Region vastmanland = new Region(143, "Västmanland", sweden);
         statistics.addRegion(vastmanland);
+        addMunicipality(statistics, vastmanland, "Sala kommun");
         addMunicipality(statistics, vastmanland, "Västerås");
 
         Region vastraGotaland = new Region(132, "Västra Götaland", sweden);
