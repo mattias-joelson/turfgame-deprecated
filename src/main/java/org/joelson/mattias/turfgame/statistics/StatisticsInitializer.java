@@ -64,7 +64,9 @@ public final class StatisticsInitializer {
         addMunicipality(statistics, stockholm, "Sollentuna kommun");
         addMunicipality(statistics, stockholm, "Stockholms kommun");
         addMunicipality(statistics, stockholm, "Sundbybergs kommun");
+        addMunicipality(statistics, stockholm, "Tyresö kommun");
         addMunicipality(statistics, stockholm, "Täby kommun");
+        addMunicipality(statistics, stockholm, "Vaxholms kommun");
         addMunicipality(statistics, stockholm, "Vallentuna kommun");
         addMunicipality(statistics, stockholm, "Upplands Väsby kommun");
         addMunicipality(statistics, stockholm, "Upplands-Bro kommun");
