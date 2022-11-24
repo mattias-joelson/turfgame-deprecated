@@ -1,6 +1,9 @@
 package org.joelson.mattias.turfgame.apiv4;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
@@ -50,6 +53,37 @@ public class FeedsPartitioner {
         System.out.printf("<move %s to %s>%n", partitionDirectory, finalPartition);
         Files.move(partitionDirectory, finalPartition);
         System.out.printf("archive:%n\t7z a %s %s%n", finalPartition.getFileName() + ".zip", finalPartition);
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        Process process = processBuilder.command("\"C:\\Program Files\\7-Zip\\7z.exe\"", "a",
+                finalPartition.getFileName() + ".zip",
+                finalPartition.toString()).start();
+        InputStream inputStream = process.getInputStream();
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader(inputStream));
+        new Thread(() -> {
+            try {
+                System.out.println(inputReader.readLine());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+        try {
+            int status = process.waitFor();
+            System.out.println("status: " + status);
+            if (status == 0) {
+                Files.list(finalPartition).forEach(path -> {
+                    try {
+                        Files.delete(path);
+                        System.out.printf("<removed %s>%n", path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                Files.delete(finalPartition);
+                System.out.printf("<removed %s>%n", finalPartition);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void moveFile(Path partitionDirectory, Path path) {
