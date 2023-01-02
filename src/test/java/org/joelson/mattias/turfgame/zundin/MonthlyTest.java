@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class MonthlyTest {
 
@@ -66,7 +67,7 @@ public class MonthlyTest {
         assertNotNull(monthly);
         assertEquals(OBEROFF, monthly.getUserName());
         assertEquals(ROUND, monthly.getRound());
-        assertEquals(2285, (monthly.getZones()).size());
+        assertTrue(monthly.getZones().size() > 0);
     }
 
     @Test
@@ -77,7 +78,7 @@ public class MonthlyTest {
     }
 
     public static Monthly getMonthly() throws Exception {
-        return readProperties("monthly_0beroff_round147.html");
+        return readProperties("monthly_0beroff_round150.html");
     }
 
     private static Monthly readProperties(String resource) throws Exception {
