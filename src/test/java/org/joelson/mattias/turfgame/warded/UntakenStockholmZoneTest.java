@@ -1,0 +1,48 @@
+package org.joelson.mattias.turfgame.warded;
+
+import org.joelson.mattias.turfgame.apiv5.Zone;
+import org.joelson.mattias.turfgame.apiv5.ZonesTest;
+import org.joelson.mattias.turfgame.util.KMLWriter;
+import org.junit.Test;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class UntakenStockholmZoneTest {
+
+    @Test
+    public void generateStockholmTakeMap() throws Exception {
+        List<Zone> zones = ZonesTest.getAllZones();
+        List<Zone> stockholmZones = zones.stream().filter(zone -> zone.getRegion().getId() == 141).collect(Collectors.toList());
+        Map<String, Integer> takenZones = TakenZoneTest.readTakenZones();
+        List<Zone> untakenStockholmZones = stockholmZones.stream().filter(zone -> !takenZones.containsKey(zone.getName())).collect(Collectors.toList());
+
+        Set<String> yellowMunicipalities = Set.of("Danderyds kommun", "Huddinge kommun", "Järfälla kommun",
+                "Lidingö kommun", "Nacka kommun", "Sollentuna kommun", "Solna kommun", "Stockholms kommun",
+                "Sundbybergs kommun", "Täby kommun", "Upplands Väsby kommun");
+        List<Zone> untakenYellowZones = untakenStockholmZones.stream()
+                .filter(zone -> yellowMunicipalities.contains(zone.getRegion().getArea().getName()))
+                .sorted(Comparator.comparing(Zone::getName))
+                .collect(Collectors.toList());
+
+//        Set<String> municipalities = new HashSet<>();
+//        stockholmZones.stream().map(Zone::getRegion).map(Region::getArea).map(Area::getName).forEach(municipalities::add);
+//        List<String> sortMun = municipalities.stream().sorted().collect(Collectors.toList());
+        //"[Botkyrka kommun, Danderyds kommun, Ekerö kommun, Haninge kommun, Huddinge kommun, Järfälla kommun, Lidingö kommun, Nacka kommun, Norrtälje kommun, Nykvarns kommun, Nynäshamns kommun, Salems kommun, Sigtuna kommun, Sollentuna kommun, Solna kommun, Stockholms kommun, Sundbybergs kommun, Södertälje kommun, Tyresö kommun, Täby kommun, Upplands Väsby kommun, Upplands-Bro kommun, Vallentuna kommun, Vaxholms kommun, Värmdö kommun, Österåkers kommun]]"
+
+        KMLWriter out = new KMLWriter("untaken_stockholm.kml");
+        out.writeFolder("Untaken Orange Municipalities");
+        untakenYellowZones
+                .forEach(zone -> out.writePlacemark(
+                        String.format("%s - %s", zone.getName(), zone.getRegion().getArea().getName()),
+                        "", zone.getLongitude(), zone.getLatitude()));
+        untakenYellowZones
+                .forEach(zone -> System.out.printf("%s - %s%n", zone.getName(), zone.getRegion().getArea().getName()));
+        out.close();
+
+    }
+
+}
