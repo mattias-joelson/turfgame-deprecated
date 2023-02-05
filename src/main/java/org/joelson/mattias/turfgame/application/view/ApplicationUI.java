@@ -28,7 +28,7 @@ public class ApplicationUI {
     private final ApplicationActions applicationActions;
     private final ApplicationData applicationData;
     
-    private final JFrame appplicationFrame;
+    private final JFrame applicationFrame;
     private final JLabel statusLabel;
     private Container currentContent;
     private JFileChooser directoryChooser;
@@ -38,8 +38,8 @@ public class ApplicationUI {
         this.applicationActions = applicationActions;
         this.applicationData = applicationData;
 
-        appplicationFrame = createApplicationFrame();
-        statusLabel = createContent(appplicationFrame.getContentPane());
+        applicationFrame = createApplicationFrame();
+        statusLabel = createContent(applicationFrame.getContentPane());
         clearPane();
     }
     
@@ -181,11 +181,11 @@ public class ApplicationUI {
     }
     
     public void show() {
-        appplicationFrame.setVisible(true);
+        applicationFrame.setVisible(true);
     }
     
     public void dispose() {
-        appplicationFrame.dispose();
+        applicationFrame.dispose();
     }
     
     private JFileChooser getDirectoryChooser() {
@@ -200,7 +200,7 @@ public class ApplicationUI {
     
     Path openDatabaseDialog() {
         getDirectoryChooser().setDialogType(JFileChooser.SAVE_DIALOG);
-        int status = getDirectoryChooser().showDialog(appplicationFrame, OPEN_DATABASE_TEXT);
+        int status = getDirectoryChooser().showDialog(applicationFrame, OPEN_DATABASE_TEXT);
         if (status == JFileChooser.APPROVE_OPTION) {
             return getDirectoryChooser().getSelectedFile().toPath();
         }
@@ -230,7 +230,7 @@ public class ApplicationUI {
     private Path showFileDialog(int dialogType, String approveButtonText) {
         JFileChooser fileChooser = getFileChooser();
         fileChooser.setDialogType(dialogType);
-        int status = fileChooser.showDialog(appplicationFrame, approveButtonText);
+        int status = fileChooser.showDialog(applicationFrame, approveButtonText);
         if (status == JFileChooser.APPROVE_OPTION) {
             return fileChooser.getSelectedFile().toPath();
         }
@@ -242,9 +242,9 @@ public class ApplicationUI {
     }
     
     void setPane(Container container) {
-        appplicationFrame.getContentPane().remove(currentContent);
-        appplicationFrame.getContentPane().add(currentContent = container, BorderLayout.CENTER);
-        appplicationFrame.getContentPane().validate();
+        applicationFrame.getContentPane().remove(currentContent);
+        applicationFrame.getContentPane().add(currentContent = container, BorderLayout.CENTER);
+        applicationFrame.getContentPane().validate();
     }
     
     public void setStatus(String status) {
@@ -261,15 +261,15 @@ public class ApplicationUI {
     }
     
     public void showMessageDialog(String title, String message) {
-        JOptionPane.showMessageDialog(appplicationFrame, message, title, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(applicationFrame, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
     
     void showErrorDialog(String title, String message) {
-        JOptionPane.showMessageDialog(appplicationFrame, message, title, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(applicationFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }
     
     Boolean showYesNoDialog(String title, String message) {
-        int val = JOptionPane.showConfirmDialog(appplicationFrame, message, title, JOptionPane.YES_NO_OPTION);
+        int val = JOptionPane.showConfirmDialog(applicationFrame, message, title, JOptionPane.YES_NO_OPTION);
         switch (val) {
             case JOptionPane.YES_OPTION:
                 return Boolean.TRUE;
@@ -291,7 +291,7 @@ public class ApplicationUI {
         if (initialValue == null) {
             initialValue = "";
         }
-        Object result = JOptionPane.showInputDialog(appplicationFrame, message, title, JOptionPane.PLAIN_MESSAGE, null, null, initialValue);
+        Object result = JOptionPane.showInputDialog(applicationFrame, message, title, JOptionPane.PLAIN_MESSAGE, null, null, initialValue);
         if (result == null) {
             return null;
         }
