@@ -28,6 +28,8 @@ public class UntakenStockholmZoneTest {
                 .sorted(Comparator.comparing(Zone::getName))
                 .collect(Collectors.toList());
 
+        Set<String> untakenMunicipalities = Set.of("Botkyrka kommun", "Ekerö kommun", "Haninge kommun", "Tyresö kommun", "Vaxholms kommun");
+
 //        Set<String> municipalities = new HashSet<>();
 //        stockholmZones.stream().map(Zone::getRegion).map(Region::getArea).map(Area::getName).forEach(municipalities::add);
 //        List<String> sortMun = municipalities.stream().sorted().collect(Collectors.toList());
@@ -41,6 +43,18 @@ public class UntakenStockholmZoneTest {
                         "", zone.getLongitude(), zone.getLatitude()));
         untakenYellowZones
                 .forEach(zone -> System.out.printf("%s - %s%n", zone.getName(), zone.getRegion().getArea().getName()));
+        for (String untakenMunicipality : untakenMunicipalities) {
+            out.writeFolder("Untaken " + untakenMunicipality);
+            List<Zone> untakenMunicipalityZones = untakenStockholmZones.stream()
+                    .filter(zone -> zone.getRegion().getArea().getName().equals(untakenMunicipality))
+                    .sorted(Comparator.comparing(Zone::getName))
+                    .collect(Collectors.toList());
+            untakenMunicipalityZones
+                    .forEach(zone -> out.writePlacemark(
+                            String.format("%s - %s", zone.getName(), zone.getRegion().getArea().getName()),
+                            "", zone.getLongitude(), zone.getLatitude()));
+            System.out.printf("%s: %d untaken zones%n", untakenMunicipality, untakenMunicipalityZones.size());
+        }
         out.close();
 
     }
