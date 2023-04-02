@@ -9,7 +9,9 @@ import org.joelson.mattias.turfgame.warded.HeatmapTest;
 import org.joelson.mattias.turfgame.warded.TakenZoneTest;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -176,5 +178,93 @@ public class MonthlyVisitTest {
     
     private static Monthly readProperties(String resource) throws Exception {
         return URLReaderTest.readProperties(resource, s -> Monthly.fromHTML(OBEROFF, ROUND, s));
+    }
+
+    private static class CombinedVisitZone implements Comparable<CombinedVisitZone> {
+        private final Zone zone;
+        private final int takes;
+        private final boolean visited;
+
+        private CombinedVisitZone(Zone zone, int takes, boolean visited) {
+            this.zone = zone;
+            this.takes = takes;
+            this.visited = visited;
+        }
+
+        @Override
+        public int compareTo(CombinedVisitZone that) {
+            return (this.takes == that.takes)
+                    ? this.zone.getName().compareTo(that.zone.getName())
+                    : this.takes - that.takes;
+        }
+
+        public void write(KMLWriter out) {
+            out.writePlacemark(String.format("%d - %s%s", takes, zone.getName(), visited ? "" : " (unvisited)"),
+                    "", zone.getLongitude(), zone.getLatitude());
+        }
+    }
+    @Test
+    public void combinedCircleVisitHeatmapTest() throws Exception {
+        Set<String> circleZones = HeatmapTest.getCircleZones();
+        Map<String, Integer> takesZones = HeatmapTest.readTakenZones();
+        Set<String> monthlyVisits = getMonthly().getZones().stream().map(MonthlyZone::getName).collect(Collectors.toSet());
+        List<Zone> zones = ZonesTest.getAllZones();
+        Map<String, Zone> zoneMap = new HashMap<>();
+        zones.forEach(zone -> zoneMap.put(zone.getName(), zone));
+
+        List<CombinedVisitZone> untakenZones = new ArrayList<>();
+        List<CombinedVisitZone> yellowZones = new ArrayList<>();
+        List<CombinedVisitZone> orangeZones = new ArrayList<>();
+        List<CombinedVisitZone> redZones = new ArrayList<>();
+        List<CombinedVisitZone> visitedPurpleZones = new ArrayList<>();
+        List<CombinedVisitZone> unvisitedPurpleZones = new ArrayList<>();
+
+        for (String zoneName : circleZones) {
+            Zone zone = zoneMap.get(zoneName);
+            if (takesZones.containsKey(zoneName)) {
+                int takes = takesZones.get(zoneName);
+                boolean visited = monthlyVisits.contains(zoneName);
+                if (takes < 11) {
+                    yellowZones.add(new CombinedVisitZone(zone, takes, visited));
+                } else if (takes < 21) {
+                    orangeZones.add(new CombinedVisitZone(zone, takes, visited));
+                } else if (takes < 51) {
+                    redZones.add(new CombinedVisitZone(zone, takes, visited));
+                } else if (visited){
+                    visitedPurpleZones.add(new CombinedVisitZone(zone, takes, visited));
+                } else {
+                    unvisitedPurpleZones.add(new CombinedVisitZone(zone, takes, visited));
+                }
+            } else {
+                untakenZones.add(new CombinedVisitZone(zone, 0, false));
+            }
+        }
+
+        KMLWriter out = new KMLWriter("circle_combined_month.kml");
+        if (!untakenZones.isEmpty()) {
+            out.writeFolder("Untaken Zones");
+            untakenZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!yellowZones.isEmpty()) {
+            out.writeFolder("Yellow Zones");
+            yellowZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!orangeZones.isEmpty()) {
+            out.writeFolder("Orange Zones");
+            orangeZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!redZones.isEmpty()) {
+            out.writeFolder("Red Zones");
+            redZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!unvisitedPurpleZones.isEmpty()) {
+            out.writeFolder("Unvisited Purple Zones");
+            unvisitedPurpleZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!visitedPurpleZones.isEmpty()) {
+            out.writeFolder("Visited Purple Zones");
+            visitedPurpleZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        out.close();
     }
 }
