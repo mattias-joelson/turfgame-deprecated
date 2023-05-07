@@ -16,6 +16,8 @@ public final class StatisticsInitializer {
         statistics.addCountry(spain);
         Country finland = new Country("fi");
         statistics.addCountry(finland);
+        Country norway = new Country("no");
+        statistics.addCountry(norway);
         Country sweden = new Country("se");
         statistics.addCountry(sweden);
 
@@ -73,6 +75,7 @@ public final class StatisticsInitializer {
 
         Region sodermanland = new Region(140, "Södermanland", sweden);
         statistics.addRegion(sodermanland);
+        addMunicipality(statistics, sodermanland, "Katrineholms kommun");
         addMunicipality(statistics, sodermanland, "Strängnäs kommun");
 
         Region uppsala = new Region(142, "Uppsala", sweden);
@@ -85,6 +88,10 @@ public final class StatisticsInitializer {
         addMunicipality(statistics, uppsala, "Uppsala kommun");
         addMunicipality(statistics, uppsala, "Älvkarleby kommun");
         addMunicipality(statistics, uppsala, "Östhammars kommun");
+
+        Region varmland = new Region(130, "Värmland", sweden);
+        statistics.addRegion(varmland);
+        addMunicipality(statistics, varmland, "Kristinehamns kommun");
 
         Region vasterbotten = new Region(127, "Västerbotten", sweden);
         statistics.addRegion(vasterbotten);
@@ -108,6 +115,8 @@ public final class StatisticsInitializer {
 
         Region vastmanland = new Region(143, "Västmanland", sweden);
         statistics.addRegion(vastmanland);
+        addMunicipality(statistics, vastmanland, "Hallstahammars kommun");
+        addMunicipality(statistics, vastmanland, "Köpings kommun");
         addMunicipality(statistics, vastmanland, "Sala kommun");
         addMunicipality(statistics, vastmanland, "Västerås");
 
@@ -118,11 +127,18 @@ public final class StatisticsInitializer {
 
         Region orebro = new Region(131, "Örebro", sweden);
         statistics.addRegion(uppsala);
+        addMunicipality(statistics, stockholm, "Degerfors kommun");
+        addMunicipality(statistics, stockholm, "Hallsbergs kommun");
         addMunicipality(statistics, stockholm, "Lindesbergs kommun");
 
         Region aland = new Region(177, "Åland", finland);
         statistics.addRegion(aland);
         addMunicipality(statistics, aland, "Mariehamn");
+
+        Region ostlandet = new Region(179, "Østlandet", norway);
+        statistics.addRegion(ostlandet);
+        addMunicipality(statistics, ostlandet, "Kongsvinger");
+        addMunicipality(statistics, ostlandet, "Oslo");
 
         Region spainRegion = new Region(211, "Spain", spain);
         statistics.addRegion(spainRegion);
