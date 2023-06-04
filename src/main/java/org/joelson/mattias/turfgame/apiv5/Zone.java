@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joelson.mattias.turfgame.util.StringUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class Zone {
 
@@ -27,7 +28,7 @@ public class Zone {
             @Nonnull @JsonProperty("region") Region region,
             @JsonProperty("latitude") double latitude,
             @JsonProperty("longitude") double longitude,
-            @Nonnull @JsonProperty("dateCreated") String dateCreated,
+            @Nullable @JsonProperty("dateCreated") String dateCreated,
             @JsonProperty("takeoverPoints") int takeoverPoints,
             @JsonProperty("pointsPerHour") int pointsPerHour,
             @JsonProperty("totalTakeovers") int totalTakeovers
@@ -38,7 +39,7 @@ public class Zone {
         this.region = region;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.dateCreated = StringUtil.requireNotNullAndNotTrimmedEmpty(dateCreated);
+        this.dateCreated = StringUtil.requireNullOrNonEmpty(dateCreated);// requireNotNullAndNotTrimmedEmpty(dateCreated);
         this.takeoverPoints = takeoverPoints;
         this.pointsPerHour = pointsPerHour;
         this.totalTakeovers = totalTakeovers;
