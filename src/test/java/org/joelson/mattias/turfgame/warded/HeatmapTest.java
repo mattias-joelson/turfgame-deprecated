@@ -156,6 +156,7 @@ public class HeatmapTest {
         extraZones.add(zoneIdMap.get(223822).getName());
         extraZones.add(zoneIdMap.get(223824).getName());
         extraZones.add(zoneIdMap.get(275318).getName());
+        extraZones.add(zoneIdMap.get(600868).getName());
         //        extraZones.add("MillHillField");
         //        extraZones.add("RinkebyAllé");
         //        extraZones.add("Gliaskogen");
