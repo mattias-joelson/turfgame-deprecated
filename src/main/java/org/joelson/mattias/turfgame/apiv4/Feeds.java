@@ -21,15 +21,19 @@ public class Feeds {
     private static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     public static void main(String[] args) {
-        new Thread(() -> handleFeed("takeover", "feeds_takeover_%s.%sjson")).start();
-        new Thread(() -> handleFeed("medal+chat", "feeds_medal_chat_%s.%sjson")).start();
-        new Thread(() -> handleFeed("zone", "feeds_zone_%s.%sjson")).start();
+        handleFeeds();
     }
 
-    private static void handleFeed(String feed, String filenamePattern) {
-        Instant lastEntry = null;
+    private static void handleFeeds() {
+        Instant lastTakeEntry = null;
+        Instant lastMedalChatEntry = null;
+        Instant lastZoneEntry = null;
         for (;;) {
-            lastEntry = getFeed(feed, filenamePattern, lastEntry);
+            lastTakeEntry = getFeed("takeover", "feeds_takeover_%s.%sjson", lastTakeEntry);
+            waitBetweenFeeds();
+            lastMedalChatEntry = getFeed("medal+chat", "feeds_medal_chat_%s.%sjson", lastMedalChatEntry);
+            waitBetweenFeeds();
+            lastZoneEntry = getFeed("zone", "feeds_zone_%s.%sjson", lastZoneEntry);
             waitUntilNext();
         }
     }
@@ -93,6 +97,17 @@ public class Feeds {
     private static String toTimeString(Instant instant) {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         return DATE_TIME_FORMATTER.format(localDateTime);
+    }
+
+    private static void waitBetweenFeeds() {
+        Instant until = Instant.now().plusSeconds(5);
+        while (Instant.now().isBefore(until)) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+        }
     }
 
     private static void waitUntilNext() {
