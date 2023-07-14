@@ -23,7 +23,7 @@
         <version>3.7.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
-          <release>11</release>
+          <release>17</release>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
           <failOnWarning>true</failOnWarning>
