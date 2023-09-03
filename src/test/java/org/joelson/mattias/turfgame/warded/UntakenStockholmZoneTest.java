@@ -28,7 +28,7 @@ public class UntakenStockholmZoneTest {
                 .sorted(Comparator.comparing(Zone::getName))
                 .collect(Collectors.toList());
 
-        Set<String> untakenMunicipalities = Set.of("Botkyrka kommun", "Ekerö kommun", "Haninge kommun", "Tyresö kommun", "Vaxholms kommun");
+        List<String> untakenMunicipalities = List.of("Botkyrka kommun", "Ekerö kommun", "Tyresö kommun", "Vaxholms kommun", "Haninge kommun");
 
 //        Set<String> municipalities = new HashSet<>();
 //        stockholmZones.stream().map(Zone::getRegion).map(Region::getArea).map(Area::getName).forEach(municipalities::add);

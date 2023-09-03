@@ -130,6 +130,7 @@ public final class StatisticsInitializer {
         addMunicipality(statistics, stockholm, "Degerfors kommun");
         addMunicipality(statistics, stockholm, "Hallsbergs kommun");
         addMunicipality(statistics, stockholm, "Lindesbergs kommun");
+        addMunicipality(statistics, stockholm, "Örebro kommun");
 
         Region aland = new Region(177, "Åland", finland);
         statistics.addRegion(aland);
