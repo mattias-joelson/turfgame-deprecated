@@ -123,6 +123,8 @@ public class HeatmapTest {
 
         Map<String, Zone> zoneMap = ZoneUtil.toNameMap(ZonesTest.getAllZones());
         Zone krausTorgZone = zoneMap.get("KrausTorg");
+//        double possibleDistance = ZoneUtil.calcDistance(59.441020, 18.004288, krausTorgZone);
+//        System.out.println("possibleDistance: " + possibleDistance);
 
         double maxDistance = getMaxDistance(zoneMap, krausTorgZone);
         System.out.println("Max distance: " + maxDistance);
@@ -149,20 +151,21 @@ public class HeatmapTest {
         Set<String> extraZones = new HashSet<>();
         extraZones.add(zoneIdMap.get(120).getName());
         extraZones.add(zoneIdMap.get(299).getName());
-        extraZones.add(zoneIdMap.get(326).getName());
         extraZones.add(zoneIdMap.get(64100).getName());
         extraZones.add(zoneIdMap.get(94113).getName());
         extraZones.add(zoneIdMap.get(131839).getName());
         extraZones.add(zoneIdMap.get(223822).getName());
-        extraZones.add(zoneIdMap.get(223824).getName());
-        extraZones.add(zoneIdMap.get(275318).getName());
-        extraZones.add(zoneIdMap.get(600868).getName());
         //        extraZones.add("MillHillField");
         //        extraZones.add("RinkebyAllé");
         //        extraZones.add("Gliaskogen");
         List<Entry<String, Double>> extraDistances = getSortedZoneDistances(zoneMap, krausTorgZone, extraZones);
         combinedZones.addAll(extraZones);
         List<Entry<String, Double>> combinedDistances = getSortedZoneDistances(zoneMap, krausTorgZone, combinedZones);
+//        combinedDistances.stream().forEach(stringDoubleEntry -> {
+//            if (stringDoubleEntry.getValue() >= 6600d) {
+//                System.out.println(stringDoubleEntry.getKey() + "("+ zoneMap.get(stringDoubleEntry.getKey()).getId() +"): " + stringDoubleEntry.getValue());
+//            }
+//        });
         //        Set<String> restOfStockholmZones = MunicipalityTest.getStockholmZones().keySet();
         //        restOfStockholmZones.removeAll(combinedZones);
         //        List<Entry<String, Double>> restOfStockholmDistances = getSortedZoneDistances(zoneMap, krausTorgZone, restOfStockholmZones);
@@ -173,12 +176,15 @@ public class HeatmapTest {
     private static double getMaxDistance(Map<String, Zone> zoneMap, Zone origoZone) throws Exception {
         double solnaDistance = getMaxDistance(zoneMap, origoZone, MunicipalityTest.getSolnaZones().keySet());
         List<Entry<String, Double>> solnaZones = getSortedZoneDistances(zoneMap, origoZone, MunicipalityTest.getSolnaZones().keySet());
+//        System.out.println("solnaDistance: " + solnaDistance);
 
         double danderydDistance = getMaxDistance(zoneMap, origoZone, MunicipalityTest.getDanderydZones().keySet());
         List<Entry<String, Double>> danderydZones = getSortedZoneDistances(zoneMap, origoZone, MunicipalityTest.getDanderydZones().keySet());
+//        System.out.println("danderydDistance: " + danderydDistance);
 
         double sundbybergDistance = getMaxDistance(zoneMap, origoZone, MunicipalityTest.getSundbybergZones().keySet());
         List<Entry<String, Double>> sundbybergZones = getSortedZoneDistances(zoneMap, origoZone, MunicipalityTest.getSundbybergZones().keySet());
+//        System.out.println("sundbybergDistance: " + sundbybergDistance);
 
         return Math.max(Math.max(solnaDistance, danderydDistance), Math.max(sundbybergDistance, 6600.0));
     }
