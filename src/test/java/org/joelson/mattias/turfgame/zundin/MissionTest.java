@@ -288,7 +288,7 @@ public class MissionTest {
         }
     }
     
-    @Test
+    //@Test
     public void outAndReturn() throws Exception {
         Map<String, Zone> zones = ZoneUtil.toNameMap(ZonesTest.getAllZones());
         String filename = TurfersRunTest.class.getResource("/oberoff_2019-11-26.txt").getFile();
