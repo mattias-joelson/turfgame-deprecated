@@ -173,6 +173,66 @@ public class HeatmapTest {
         return combinedZones;
     }
 
+    @Test
+    public void adjustedCircleHeatmap() throws Exception {
+        municipalityHeatmap("adjusted_circle_heatmap.kml", readTakenZones(), getAdjustedCircleZones(), true);
+    }
+
+    public static Set<String> getAdjustedCircleZones() throws Exception {
+        Set<String> combinedZones = getDSSZones();
+
+        Map<String, Zone> zoneMap = ZoneUtil.toNameMap(ZonesTest.getAllZones());
+        Zone krausTorgZone = zoneMap.get("Nöjespark");
+//        double possibleDistance = ZoneUtil.calcDistance(59.441020, 18.004288, krausTorgZone);
+//        System.out.println("possibleDistance: " + possibleDistance);
+
+        double maxDistance = getMaxDistance(zoneMap, krausTorgZone);
+        System.out.println("Max distance: " + maxDistance);
+
+        Set<String> stockholmZones = MunicipalityTest.getStockholmZones().keySet().stream()
+                .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
+                .collect(Collectors.toSet());
+        List<Entry<String, Double>> stockholmDistances = getSortedZoneDistances(zoneMap, krausTorgZone, stockholmZones);
+        combinedZones.addAll(stockholmZones);
+        Set<String> sollentunaZones = MunicipalityTest.getSollentunaZones().keySet().stream()
+                .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
+                .collect(Collectors.toSet());
+        combinedZones.addAll(sollentunaZones);
+        Set<String> tabyZones = MunicipalityTest.getTabyZones().keySet().stream()
+                .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
+                .collect(Collectors.toSet());
+        combinedZones.addAll(tabyZones);
+        //        Set<String> lidingoZones = MunicipalityTest.getLidingoZones().keySet().stream()
+        //                .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
+        //                .collect(Collectors.toSet());
+        //        List<Entry<String, Double>> lidingoDistances = getSortedZoneDistances(zoneMap, krausTorgZone, lidingoZones);
+        //        combinedZones.addAll(lidingoZones);
+        Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(ZonesTest.getAllZones());
+        Set<String> extraZones = new HashSet<>();
+        extraZones.add(zoneIdMap.get(120).getName());
+        extraZones.add(zoneIdMap.get(299).getName());
+        extraZones.add(zoneIdMap.get(64100).getName());
+        extraZones.add(zoneIdMap.get(94113).getName());
+        extraZones.add(zoneIdMap.get(131839).getName());
+        extraZones.add(zoneIdMap.get(223822).getName());
+        //        extraZones.add("MillHillField");
+        //        extraZones.add("RinkebyAllé");
+        //        extraZones.add("Gliaskogen");
+        List<Entry<String, Double>> extraDistances = getSortedZoneDistances(zoneMap, krausTorgZone, extraZones);
+        combinedZones.addAll(extraZones);
+        List<Entry<String, Double>> combinedDistances = getSortedZoneDistances(zoneMap, krausTorgZone, combinedZones);
+//        combinedDistances.stream().forEach(stringDoubleEntry -> {
+//            if (stringDoubleEntry.getValue() >= 6600d) {
+//                System.out.println(stringDoubleEntry.getKey() + "("+ zoneMap.get(stringDoubleEntry.getKey()).getId() +"): " + stringDoubleEntry.getValue());
+//            }
+//        });
+        //        Set<String> restOfStockholmZones = MunicipalityTest.getStockholmZones().keySet();
+        //        restOfStockholmZones.removeAll(combinedZones);
+        //        List<Entry<String, Double>> restOfStockholmDistances = getSortedZoneDistances(zoneMap, krausTorgZone, restOfStockholmZones);
+        System.out.println("Zones: " + combinedZones.size());
+        return combinedZones;
+    }
+
     private static double getMaxDistance(Map<String, Zone> zoneMap, Zone origoZone) throws Exception {
         double solnaDistance = getMaxDistance(zoneMap, origoZone, MunicipalityTest.getSolnaZones().keySet());
         List<Entry<String, Double>> solnaZones = getSortedZoneDistances(zoneMap, origoZone, MunicipalityTest.getSolnaZones().keySet());
