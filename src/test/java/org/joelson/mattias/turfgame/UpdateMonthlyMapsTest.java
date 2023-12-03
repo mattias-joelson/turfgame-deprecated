@@ -11,7 +11,7 @@ public class UpdateMonthlyMapsTest {
     @Test
     public void updateMonthlyMapsTest() throws Exception {
         new UntakenStockholmZoneTest().generateStockholmTakeMap();
-        new MonthlyVisitTest().combinedCircleVisitTest();
+        new MonthlyVisitTest().combinedCircleVisitHeatmapTest();
         new TakeDistributionTest().circleTakeDistributionTest();
         new HeatmapTest().circleHeatmap();
     }
