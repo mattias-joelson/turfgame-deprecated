@@ -208,6 +208,7 @@ public class MonthlyVisitTest {
         List<CombinedVisitZone> redZones = new ArrayList<>();
         List<CombinedVisitZone> visitedPurpleZones = new ArrayList<>();
         List<CombinedVisitZone> unvisitedPurpleZones = new ArrayList<>();
+        int numberVisitedZones = 0;
 
         for (String zoneName : circleZones) {
             Zone zone = zoneMap.get(zoneName);
@@ -225,10 +226,14 @@ public class MonthlyVisitTest {
                 } else {
                     unvisitedPurpleZones.add(new CombinedVisitZone(zone, takes, visited));
                 }
+                if (visited) {
+                    numberVisitedZones += 1;
+                }
             } else {
                 untakenZones.add(new CombinedVisitZone(zone, 0, false));
             }
         }
+        System.out.println("Visited zones: " + numberVisitedZones);
 
         KMLWriter out = new KMLWriter("circle_combined_month.kml");
         if (!untakenZones.isEmpty()) {
