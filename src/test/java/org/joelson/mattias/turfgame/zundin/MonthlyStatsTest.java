@@ -1,6 +1,5 @@
 package org.joelson.mattias.turfgame.zundin;
 
-import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +18,7 @@ public class MonthlyStatsTest {
     
     @Before
     public void before() throws Exception {
-        monthly = URLReaderTest.readProperties("monthly_0beroff_round161.html", s -> Monthly.fromHTML("0beroff", 113, s));
+        monthly = MonthlyTest.getMonthly();
     }
     
     @Test
