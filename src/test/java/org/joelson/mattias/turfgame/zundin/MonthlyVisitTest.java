@@ -4,7 +4,6 @@ import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
-import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.joelson.mattias.turfgame.warded.HeatmapTest;
 import org.joelson.mattias.turfgame.warded.TakenZoneTest;
 import org.junit.Test;
@@ -103,7 +102,7 @@ public class MonthlyVisitTest {
     }
 
     private static void visitMunicipalityTest(String municipality, String filename, Set<String> municipalityZones, boolean partitionUnvisited) throws Exception {
-        Monthly monthly = getMonthly();
+        Monthly monthly = MonthlyTest.getMonthly();
         List<Zone> zones = ZonesTest.getAllZones();
     
         Set<String> monthlyVisits = monthly.getZones().stream().map(MonthlyZone::getName).collect(Collectors.toSet());
@@ -171,15 +170,6 @@ public class MonthlyVisitTest {
 //        }
     }
 
-    private static Monthly getMonthly() throws Exception {
-        //return readProperties("monthly_oberoff_round96.html");
-        return readProperties("monthly_0beroff_round161.html");
-    }
-    
-    private static Monthly readProperties(String resource) throws Exception {
-        return URLReaderTest.readProperties(resource, s -> Monthly.fromHTML(OBEROFF, ROUND, s));
-    }
-
     private static class CombinedVisitZone implements Comparable<CombinedVisitZone> {
         private final Zone zone;
         private final int takes;
@@ -207,7 +197,7 @@ public class MonthlyVisitTest {
     public void combinedCircleVisitHeatmapTest() throws Exception {
         Set<String> circleZones = HeatmapTest.getCircleZones();
         Map<String, Integer> takesZones = HeatmapTest.readTakenZones();
-        Set<String> monthlyVisits = getMonthly().getZones().stream().map(MonthlyZone::getName).collect(Collectors.toSet());
+        Set<String> monthlyVisits = MonthlyTest.getMonthly().getZones().stream().map(MonthlyZone::getName).collect(Collectors.toSet());
         List<Zone> zones = ZonesTest.getAllZones();
         Map<String, Zone> zoneMap = new HashMap<>();
         zones.forEach(zone -> zoneMap.put(zone.getName(), zone));
