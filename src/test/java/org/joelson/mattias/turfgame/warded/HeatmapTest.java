@@ -263,6 +263,9 @@ public class HeatmapTest {
     }
 
     private static boolean inDistance(Map<String, Zone> zoneMap, Zone origoZone, double maxDistance, String zoneName) {
+        if (zoneMap.get(zoneName) == null) {
+            throw new NullPointerException("Missing zone \"" + zoneName + "\"!");
+        }
         return ZoneUtil.calcDistance(origoZone, zoneMap.get(zoneName)) <= maxDistance;
     }
 
