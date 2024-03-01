@@ -22,7 +22,7 @@ public class ZonesTest {
     @Test
     public void generateStockholmTakeMap() throws Exception {
         List<Zone> zones = getAllZones();
-        List<Zone> stockholmZones = zones.stream().filter(zone -> zone.getRegion().getId() == 141).collect(Collectors.toList());
+        List<Zone> stockholmZones = zones.stream().filter(zone -> zone.getRegion() != null && zone.getRegion().getId() == 141).collect(Collectors.toList());
         Set<String> municipalities = new HashSet<>();
         stockholmZones.stream().map(Zone::getRegion).map(Region::getArea).map(Area::getName).forEach(municipalities::add);
         assertTrue(true);

@@ -281,7 +281,7 @@ public class HeatmapTest {
         System.out.println("Max distance: " + maxDistance);
 
         Set<String> circleZones = ZonesTest.getAllZones().stream()
-                .filter(zone -> zone.getRegion().getId() == 141)
+                .filter(zone -> zone.getRegion() != null && zone.getRegion().getId() == 141)
                 .filter(zone -> inDistance(zoneMap, krausTorgZone, maxDistance, zone.getName()))
                 .map(Zone::getName)
                 .collect(Collectors.toSet());
