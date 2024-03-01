@@ -1,5 +1,6 @@
 package org.joelson.mattias.turfgame.warded;
 
+import org.joelson.mattias.turfgame.apiv5.Region;
 import org.joelson.mattias.turfgame.apiv5.Zone;
 import org.joelson.mattias.turfgame.apiv5.ZonesTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
@@ -16,7 +17,9 @@ public class UntakenStockholmZoneTest {
     @Test
     public void generateStockholmTakeMap() throws Exception {
         List<Zone> zones = ZonesTest.getAllZones();
-        List<Zone> stockholmZones = zones.stream().filter(zone -> zone.getRegion().getId() == 141).collect(Collectors.toList());
+        List<Zone> stockholmZones = zones.stream()
+                .filter(zone -> zone.getRegion() != null && zone.getRegion().getId() == 141)
+                .collect(Collectors.toList());
         Map<String, Integer> takenZones = TakenZoneTest.readTakenZones();
         List<Zone> untakenStockholmZones = stockholmZones.stream().filter(zone -> !takenZones.containsKey(zone.getName())).collect(Collectors.toList());
 

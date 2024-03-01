@@ -29,6 +29,7 @@ public class ZonesTest {
     @Test
     public void regionNameLengthTest() throws Exception {
         List<Zone> zones = getAllZones();
+        zones = zones.stream().filter(zone -> zone.getRegion() != null).collect(Collectors.toList());
         Set<String> regionNames = new HashSet<>();
         zones.forEach(zone -> regionNames.add(zone.getRegion().getName()));
         Set<String> countryNames = new HashSet<>();

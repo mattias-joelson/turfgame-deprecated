@@ -238,6 +238,9 @@ public class SwedenExplorerTest {
     }
 
     private static boolean isNordicZone(Zone zone) {
+        if (zone.getRegion() == null) {
+            return false;
+        }
         String country = zone.getRegion().getCountry();
         return country != null && (country.equals("se") || country.equals("no") || country.equals("dk") || country.equals("fi"));
     }
