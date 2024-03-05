@@ -112,10 +112,6 @@ public class MunicipalityTest {
         return URLReaderTest.readProperties("lundkvist_141_jarfalla.html", Municipality::fromHTML);
     }
 
-    public static Map<String, Boolean> getLidingoZones() throws Exception {
-        return URLReaderTest.readProperties("lundkvist_141_lidingo.html", Municipality::fromHTML);
-    }
-
     public static Map<String, Boolean> getNackaZones() throws Exception {
         return URLReaderTest.readProperties("lundkvist_141_nacka.html", Municipality::fromHTML);
     }

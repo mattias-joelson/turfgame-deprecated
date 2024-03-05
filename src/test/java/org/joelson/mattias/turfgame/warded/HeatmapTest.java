@@ -142,11 +142,6 @@ public class HeatmapTest {
                 .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
                 .collect(Collectors.toSet());
         combinedZones.addAll(tabyZones);
-        //        Set<String> lidingoZones = MunicipalityTest.getLidingoZones().keySet().stream()
-        //                .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
-        //                .collect(Collectors.toSet());
-        //        List<Entry<String, Double>> lidingoDistances = getSortedZoneDistances(zoneMap, krausTorgZone, lidingoZones);
-        //        combinedZones.addAll(lidingoZones);
         Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(ZonesTest.getAllZones());
         Set<String> extraZones = new HashSet<>();
         extraZones.add(zoneIdMap.get(120).getName());
@@ -202,11 +197,6 @@ public class HeatmapTest {
                 .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
                 .collect(Collectors.toSet());
         combinedZones.addAll(tabyZones);
-        //        Set<String> lidingoZones = MunicipalityTest.getLidingoZones().keySet().stream()
-        //                .filter(zoneName -> inDistance(zoneMap, krausTorgZone, maxDistance, zoneName))
-        //                .collect(Collectors.toSet());
-        //        List<Entry<String, Double>> lidingoDistances = getSortedZoneDistances(zoneMap, krausTorgZone, lidingoZones);
-        //        combinedZones.addAll(lidingoZones);
         Map<Integer, Zone> zoneIdMap = ZoneUtil.toIdMap(ZonesTest.getAllZones());
         Set<String> extraZones = new HashSet<>();
         extraZones.add(zoneIdMap.get(120).getName());
