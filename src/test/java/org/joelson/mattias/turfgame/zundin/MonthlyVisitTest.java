@@ -173,12 +173,12 @@ public class MonthlyVisitTest {
     private static class CombinedVisitZone implements Comparable<CombinedVisitZone> {
         private final Zone zone;
         private final int takes;
-        private final boolean visited;
+        private final int visits;
 
-        private CombinedVisitZone(Zone zone, int takes, boolean visited) {
+        private CombinedVisitZone(Zone zone, int takes, int visits) {
             this.zone = zone;
             this.takes = takes;
-            this.visited = visited;
+            this.visits = visits;
         }
 
         @Override
@@ -189,7 +189,7 @@ public class MonthlyVisitTest {
         }
 
         public void write(KMLWriter out) {
-            out.writePlacemark(String.format("%d - %s%s", takes, zone.getName(), visited ? "" : " (unvisited)"),
+            out.writePlacemark(String.format("%d - %s%s", takes, zone.getName(), (visits > 0) ? " (" + visits + " visits)" : " (unvisited)"),
                     "", zone.getLongitude(), zone.getLatitude());
         }
     }
@@ -197,7 +197,7 @@ public class MonthlyVisitTest {
     public void combinedCircleVisitHeatmapTest() throws Exception {
         Set<String> circleZones = HeatmapTest.getCircleZones();
         Map<String, Integer> takesZones = HeatmapTest.readTakenZones();
-        Set<String> monthlyVisits = MonthlyTest.getMonthly().getZones().stream().map(MonthlyZone::getName).collect(Collectors.toSet());
+        Map<String, Integer> monthlyVisits = MonthlyTest.getMonthly().getZones().stream().collect(Collectors.toMap(MonthlyZone::getName, MonthlyZone::getVisits));
         List<Zone> zones = ZonesTest.getAllZones();
         Map<String, Zone> zoneMap = new HashMap<>();
         zones.forEach(zone -> zoneMap.put(zone.getName(), zone));
@@ -206,34 +206,42 @@ public class MonthlyVisitTest {
         List<CombinedVisitZone> yellowZones = new ArrayList<>();
         List<CombinedVisitZone> orangeZones = new ArrayList<>();
         List<CombinedVisitZone> redZones = new ArrayList<>();
+        List<CombinedVisitZone> visitedOncePurpleZones = new ArrayList<>();
         List<CombinedVisitZone> visitedPurpleZones = new ArrayList<>();
         List<CombinedVisitZone> unvisitedPurpleZones = new ArrayList<>();
+        int numberVisitedOnceZones = 0;
         int numberVisitedZones = 0;
 
         for (String zoneName : circleZones) {
             Zone zone = zoneMap.get(zoneName);
             if (takesZones.containsKey(zoneName)) {
                 int takes = takesZones.get(zoneName);
-                boolean visited = monthlyVisits.contains(zoneName);
+                int visits = (monthlyVisits.containsKey(zoneName)) ? monthlyVisits.get(zoneName) : 0;
                 if (takes < 11) {
-                    yellowZones.add(new CombinedVisitZone(zone, takes, visited));
+                    yellowZones.add(new CombinedVisitZone(zone, takes, visits));
                 } else if (takes < 21) {
-                    orangeZones.add(new CombinedVisitZone(zone, takes, visited));
+                    orangeZones.add(new CombinedVisitZone(zone, takes, visits));
                 } else if (takes < 51) {
-                    redZones.add(new CombinedVisitZone(zone, takes, visited));
-                } else if (visited){
-                    visitedPurpleZones.add(new CombinedVisitZone(zone, takes, visited));
+                    redZones.add(new CombinedVisitZone(zone, takes, visits));
+                } else if (visits >= 2) {
+                    visitedPurpleZones.add(new CombinedVisitZone(zone, takes, visits));
+                } else if (visits == 1) {
+                    visitedOncePurpleZones.add(new CombinedVisitZone(zone, takes, visits));
                 } else {
-                    unvisitedPurpleZones.add(new CombinedVisitZone(zone, takes, visited));
+                    unvisitedPurpleZones.add(new CombinedVisitZone(zone, takes, visits));
                 }
-                if (visited) {
-                    numberVisitedZones += 1;
+                if (visits > 0) {
+                    numberVisitedOnceZones += 1;
+                    if (visits > 1) {
+                        numberVisitedZones += 1;
+                    }
                 }
             } else {
-                untakenZones.add(new CombinedVisitZone(zone, 0, false));
+                untakenZones.add(new CombinedVisitZone(zone, 0, 0));
             }
         }
-        System.out.println("Visited zones: " + numberVisitedZones);
+        System.out.println("Zones visited:                " + numberVisitedOnceZones);
+        System.out.println("Zones visited more than once: " + numberVisitedZones);
 
         KMLWriter out = new KMLWriter("circle_combined_month.kml");
         if (!untakenZones.isEmpty()) {
@@ -255,6 +263,10 @@ public class MonthlyVisitTest {
         if (!unvisitedPurpleZones.isEmpty()) {
             out.writeFolder("Unvisited Purple Zones");
             unvisitedPurpleZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!visitedOncePurpleZones.isEmpty()) {
+            out.writeFolder("Visited Once Purple Zones");
+            visitedOncePurpleZones.stream().sorted().forEach(zone -> zone.write(out));
         }
         if (!visitedPurpleZones.isEmpty()) {
             out.writeFolder("Visited Purple Zones");
