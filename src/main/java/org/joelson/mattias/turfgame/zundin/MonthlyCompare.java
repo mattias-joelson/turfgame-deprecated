@@ -25,7 +25,7 @@ public class MonthlyCompare {
             System.out.println("Comparing " + args[i - 1] + " and " + args[i]);
             Map<String, MonthlyZone> first = monthlyFiles.get(args[i - 1]);
             Map<String, MonthlyZone> second = monthlyFiles.get(args[i]);
-            Set<String> lowered = new HashSet();
+            Set<String> lowered = new HashSet<>();
             Set<String> raised = new HashSet<>();
             Set<String> same = new HashSet<>();
             for (MonthlyZone zone : first.values()) {
