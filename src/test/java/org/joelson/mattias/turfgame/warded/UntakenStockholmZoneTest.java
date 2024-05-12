@@ -33,6 +33,9 @@ public class UntakenStockholmZoneTest {
 
         List<String> untakenMunicipalities = List.of("Ekerö kommun", "Tyresö kommun", "Vaxholms kommun");
 
+        //List<String> sevenSummitsZones = List.of("Bruketbacken", "FlottsbroTop", "Hagatop", "HightopThree", "HillZone", "OakSkiTop", "Väsjöbacken");
+        List<Integer> sevenSummitsZones = List.of(214, 1014, 12075, 24040, 30842, 50285, 75039);
+
 //        Set<String> municipalities = new HashSet<>();
 //        stockholmZones.stream().map(Zone::getRegion).map(Region::getArea).map(Area::getName).forEach(municipalities::add);
 //        List<String> sortMun = municipalities.stream().sorted().collect(Collectors.toList());
@@ -58,6 +61,11 @@ public class UntakenStockholmZoneTest {
                             "", zone.getLongitude(), zone.getLatitude()));
             System.out.printf("%s: %d untaken zones%n", untakenMunicipality, untakenMunicipalityZones.size());
         }
+        out.writeFolder("7 summits");
+        stockholmZones.stream().filter(zone -> sevenSummitsZones.contains(zone.getId()))
+                .forEach(zone -> out.writePlacemark(
+                        String.format("%s - %d", zone.getName(), zone.getId()),
+                        "", zone.getLongitude(), zone.getLatitude()));
         out.close();
 
     }
