@@ -14,6 +14,8 @@ public final class StatisticsInitializer {
 
         Country spain = new Country("es");
         statistics.addCountry(spain);
+        Country greatBritain = new Country("gb");
+        statistics.addCountry(greatBritain);
         Country finland = new Country("fi");
         statistics.addCountry(finland);
         Country norway = new Country("no");
@@ -125,12 +127,16 @@ public final class StatisticsInitializer {
         addMunicipality(statistics, vastraGotaland, "Göteborgs kommun");
         addMunicipality(statistics, vastraGotaland, "Vårgårda kommun");
 
+        Region ostergotland = new Region(138, "Östergötland", sweden);
+        statistics.addRegion(ostergotland);
+        addMunicipality(statistics, ostergotland, "Linköpings kommun");
+
         Region orebro = new Region(131, "Örebro", sweden);
         statistics.addRegion(uppsala);
-        addMunicipality(statistics, stockholm, "Degerfors kommun");
-        addMunicipality(statistics, stockholm, "Hallsbergs kommun");
-        addMunicipality(statistics, stockholm, "Lindesbergs kommun");
-        addMunicipality(statistics, stockholm, "Örebro kommun");
+        addMunicipality(statistics, orebro, "Degerfors kommun");
+        addMunicipality(statistics, orebro, "Hallsbergs kommun");
+        addMunicipality(statistics, orebro, "Lindesbergs kommun");
+        addMunicipality(statistics, orebro, "Örebro kommun");
 
         Region aland = new Region(177, "Åland", finland);
         statistics.addRegion(aland);
@@ -144,6 +150,12 @@ public final class StatisticsInitializer {
         Region spainRegion = new Region(211, "Spain", spain);
         statistics.addRegion(spainRegion);
         addMunicipality(statistics, spainRegion, "Spain");
+
+        Region scotland = new Region(200, "Scotland", greatBritain);
+        statistics.addRegion(scotland);
+        addMunicipality(statistics, scotland, "City of Edinburgh");
+        addMunicipality(statistics, scotland, "North Ayrshire");
+        addMunicipality(statistics, scotland, "Renfrewshire");
 
         statistics.addUser(new User(80119, "Oberoff"));
 
