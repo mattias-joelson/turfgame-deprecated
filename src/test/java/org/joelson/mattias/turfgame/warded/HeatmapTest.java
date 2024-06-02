@@ -150,6 +150,7 @@ public class HeatmapTest {
         extraZones.add(zoneIdMap.get(94113).getName());
         extraZones.add(zoneIdMap.get(131839).getName());
         extraZones.add(zoneIdMap.get(223822).getName());
+        extraZones.add(zoneIdMap.get(680062).getName());
         //        extraZones.add("MillHillField");
         //        extraZones.add("RinkebyAllé");
         //        extraZones.add("Gliaskogen");
@@ -177,7 +178,7 @@ public class HeatmapTest {
         Set<String> combinedZones = getDSSZones();
 
         Map<String, Zone> zoneMap = ZoneUtil.toNameMap(ZonesTest.getAllZones());
-        Zone krausTorgZone = zoneMap.get("Nöjespark");
+        Zone krausTorgZone = zoneMap.get("DeSomBlevKvar");
 //        double possibleDistance = ZoneUtil.calcDistance(59.441020, 18.004288, krausTorgZone);
 //        System.out.println("possibleDistance: " + possibleDistance);
 
@@ -205,6 +206,7 @@ public class HeatmapTest {
         extraZones.add(zoneIdMap.get(94113).getName());
         extraZones.add(zoneIdMap.get(131839).getName());
         extraZones.add(zoneIdMap.get(223822).getName());
+        extraZones.add(zoneIdMap.get(680062).getName());
         //        extraZones.add("MillHillField");
         //        extraZones.add("RinkebyAllé");
         //        extraZones.add("Gliaskogen");
