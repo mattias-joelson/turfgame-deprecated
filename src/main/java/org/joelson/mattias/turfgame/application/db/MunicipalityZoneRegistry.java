@@ -1,7 +1,6 @@
 package org.joelson.mattias.turfgame.application.db;
 
-import java.util.stream.Stream;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 class MunicipalityZoneRegistry extends EntityRegistry<MunicipalityZoneEntity> {
     MunicipalityZoneRegistry(EntityManager entityManager) {

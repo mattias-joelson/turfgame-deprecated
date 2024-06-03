@@ -1,9 +1,9 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import jakarta.persistence.EntityManager;
 import org.joelson.mattias.turfgame.application.model.ZoneData;
 
 import java.time.Instant;
-import javax.persistence.EntityManager;
 
 class ZoneRegistry extends EntityRegistry<ZoneEntity> {
     

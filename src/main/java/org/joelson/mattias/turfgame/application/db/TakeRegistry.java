@@ -1,9 +1,10 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+
 import java.time.Instant;
 import java.util.stream.Stream;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 public class TakeRegistry extends EntityRegistry<TakeEntity> {
     

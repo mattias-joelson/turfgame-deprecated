@@ -1,10 +1,10 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.joelson.mattias.turfgame.application.model.ZoneData;
 
 import java.time.Instant;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 class ZonePointsHistoryRegistry extends EntityRegistry<ZonePointsHistoryEntity> {
     

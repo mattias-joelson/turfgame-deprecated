@@ -1,5 +1,6 @@
 package org.joelson.mattias.turfgame.application.model;
 
+import jakarta.persistence.PersistenceException;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
 
 import java.beans.PropertyChangeListener;
@@ -7,7 +8,6 @@ import java.beans.PropertyChangeSupport;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Map;
-import javax.persistence.PersistenceException;
 
 public class ApplicationData {
     
