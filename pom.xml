@@ -13,7 +13,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <com.h2database.version>1.4.200</com.h2database.version>
-    <org.hibernate.version>5.4.10.Final</org.hibernate.version>
+    <org.hibernate.version>5.4.24.Final</org.hibernate.version>
   </properties>
 
   <build>
