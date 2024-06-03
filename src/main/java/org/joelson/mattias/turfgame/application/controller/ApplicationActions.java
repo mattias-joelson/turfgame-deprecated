@@ -1,5 +1,6 @@
 package org.joelson.mattias.turfgame.application.controller;
 
+import jakarta.persistence.PersistenceException;
 import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.Zones;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
@@ -11,7 +12,6 @@ import org.joelson.mattias.turfgame.lundkvist.Municipality;
 import org.joelson.mattias.turfgame.warded.TakenZones;
 import org.joelson.mattias.turfgame.zundin.Today;
 
-import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

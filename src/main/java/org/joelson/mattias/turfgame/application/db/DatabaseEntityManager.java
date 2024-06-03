@@ -1,5 +1,9 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.PersistenceException;
 import org.joelson.mattias.turfgame.application.model.AssistData;
 import org.joelson.mattias.turfgame.application.model.MunicipalityData;
 import org.joelson.mattias.turfgame.application.model.RegionData;
@@ -20,16 +24,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
 
 public class DatabaseEntityManager {
 
