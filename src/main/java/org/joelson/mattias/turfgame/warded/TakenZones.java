@@ -1,55 +1,51 @@
 package org.joelson.mattias.turfgame.warded;
 
-import org.joelson.mattias.turfgame.util.JSONArray;
-import org.joelson.mattias.turfgame.util.JSONNumber;
-import org.joelson.mattias.turfgame.util.JSONObject;
-import org.joelson.mattias.turfgame.util.JSONParseException;
-import org.joelson.mattias.turfgame.util.JSONParser;
-import org.joelson.mattias.turfgame.util.JSONString;
-import org.joelson.mattias.turfgame.util.JSONValue;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.joelson.mattias.turfgame.util.JacksonUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TakenZones {
+public final class TakenZones {
     
-    public static Map<String,Integer> fromHTML(String s) {
-        int startIndex = s.indexOf("\"features\": ");
-        startIndex = s.indexOf('[', startIndex);
-        int endIndex = s.indexOf("});", startIndex);
-        endIndex = s.lastIndexOf("]", endIndex) + 1;
-        String json = s.substring(startIndex, endIndex);
-        JSONArray array = (JSONArray) new JSONParser().parse(json);
-        Map<String, Integer> zoneCounts = new HashMap<>();
-        for (JSONValue element : array.getElements()) {
-            JSONObject object = (JSONObject) element;
-            JSONObject properties = (JSONObject) object.getValue("properties");
-            JSONString title = (JSONString) properties.getValue("title");
-            JSONNumber count = (JSONNumber) properties.getValue("count");
-            zoneCounts.put(title.stringValue(), count.intValue());
+    private static final String PROPERTIES_PROPERTY = "properties"; // NON-NLS
+    private static final String TITLE_PROPERTY = "title"; // NON-NLS
+    private static final String COUNT_PROPERTY = "count"; // NON-NLS
+    private static final char ARRAY_START = '[';
+    private static final char ARRAY_END = ']';
+
+    private TakenZones() throws InstantiationException {
+        throw new InstantiationException("Should not be instantiated!"); //NON-NLS
+    }
+
+    public static String getUserNameFromHTML(String s) {
+        int startIndex = s.indexOf("<a href=/turf/user.php>"); //NON-NLS
+        if (startIndex < 0) {
+            return null;
         }
-        return zoneCounts;
+        startIndex += 23;
+        int endIndex = s.indexOf("</a>", startIndex); //NON-NLS
+        return s.substring(startIndex, endIndex);
     }
     
-    private static String unescapeString(String title) {
-        StringBuilder sb = new StringBuilder(title.length());
-        for (int i = 0; i < title.length(); i += 1) {
-            char ch = title.charAt(i);
-            if (ch == '\\') {
-                if (i + 5 >= title.length()) {
-                    throw new JSONParseException("Bad character escape - " + title.substring(i));
-                }
-                if (title.charAt(i +1 ) != 'u') {
-                    throw new JSONParseException("Bad character escape - " + title.substring(i, i + 6));
-                }
-                String hex = title.substring(i + 2, i + 6);
-                char c = (char) Integer.parseInt(hex, 16);
-                sb.append(c);
-                i += 5;
-            } else {
-                sb.append(ch);
-            }
+    public static Map<String, Integer> fromHTML(String s) {
+        String json = getZonesJSONSting(s);
+        Map<String, Integer> zoneCount = new HashMap<>();
+        for (JsonNode node : JacksonUtil.readValue(json, JsonNode[].class)) {
+            JsonNode properties = node.get(PROPERTIES_PROPERTY);
+            String title = properties.get(TITLE_PROPERTY).asText();
+            int count = properties.get(COUNT_PROPERTY).asInt();
+            zoneCount.put(title, count);
         }
-        return sb.toString();
+
+        return zoneCount;
+    }
+
+    private static String getZonesJSONSting(String s) {
+        int startIndex = s.indexOf("\"features\": "); //NON-NLS
+        startIndex = s.indexOf(ARRAY_START, startIndex);
+        int endIndex = s.indexOf("});", startIndex);
+        endIndex = s.lastIndexOf(ARRAY_END, endIndex) + 1;
+        return s.substring(startIndex, endIndex);
     }
 }

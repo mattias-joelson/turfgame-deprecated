@@ -1,19 +1,21 @@
 package org.joelson.mattias.turfgame.zundin;
 
 import org.joelson.mattias.turfgame.apiv4.Zone;
-import org.joelson.mattias.turfgame.apiv4.Zones;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
-import org.joelson.mattias.turfgame.util.URLReaderTest;
+import org.joelson.mattias.turfgame.warded.HeatmapTest;
+import org.joelson.mattias.turfgame.warded.TakenZoneTest;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -21,59 +23,255 @@ import static org.junit.Assert.assertEquals;
 public class MonthlyVisitTest {
 
     private static final String OBEROFF = "Oberoff";
-    private static final int ROUND = 114;
+    private static final int ROUND = 119;
     
     @Test
-    public void visitDanderydTest() throws IOException {
-        visitMunicipalityTest("danderyd_month.kml", MunicipalityTest.getDanderydZones());
-    }
-    
-    @Test
-    public void visitSolnaTest() throws IOException {
-        visitMunicipalityTest("solna_month.kml", MunicipalityTest.getSolnaZones());
-    }
-    @Test
-    public void visitSundbybergTest() throws IOException {
-        visitMunicipalityTest("sundbyberg_month.kml", MunicipalityTest.getSundbybergZones());
+    public void visitDanderydTest() throws Exception {
+        visitMunicipalityTest("Danderyd", "danderyd_month.kml", MunicipalityTest.getDanderydZones().keySet());
     }
 
-    private void visitMunicipalityTest(String filename, Map<String, Boolean> municipalityZones) throws IOException {
-        Monthly monthly = getMonthly();
+    @Test
+    public void visitJarfallaTest() throws Exception {
+        visitMunicipalityTest("Järfälla", "jarfalla_month.kml", MunicipalityTest.getJarfallaZones().keySet());
+    }
+
+    @Test
+    public void visitSolnaTest() throws Exception {
+        visitMunicipalityTest("Solna", "solna_month.kml", MunicipalityTest.getSolnaZones().keySet());
+    }
+
+    @Test
+    public void visitSollentunaTest() throws Exception {
+        visitMunicipalityTest("Sollentuna", "sollentuna_month.kml", MunicipalityTest.getSollentunaZones().keySet());
+    }
+
+    @Test
+    public void visitStockholmTest() throws Exception {
+        visitMunicipalityTest("Stockholm", "stockholm_month.kml", MunicipalityTest.getStockholmZones().keySet());
+    }
+
+    @Test
+    public void visitSundbybergTest() throws Exception {
+        visitMunicipalityTest("Sundbyberg", "sundbyberg_month.kml", MunicipalityTest.getSundbybergZones().keySet());
+    }
+
+    @Test
+    public void visitTäbyTest() throws Exception {
+        visitMunicipalityTest("Täby", "taby_month.kml", MunicipalityTest.getTabyZones().keySet());
+    }
+
+    @Test
+    public void combinedDSSVisitTest() throws Exception {
+        visitMunicipalityTest("DSS", "dss_month.kml", HeatmapTest.getDSSZones());
+    }
+
+    @Test
+    public void combinedCircleVisitTest() throws Exception {
+        visitMunicipalityTest("circle", "circle_month.kml", HeatmapTest.getCircleZones(), true);
+    }
+
+    @Test
+    public void combinedTrueCircleVisitTest() throws Exception {
+        visitMunicipalityTest("true_circle", "true_circle_month.kml", HeatmapTest.getTrueCircleZones(), true);
+    }
+
+    @Test
+    public void combinedFlippVisitTest() throws Exception {
+        visitMunicipalityTest("flipp", "flipp_month.kml", Flipp08MissionTest.getFlippZones(), true);
+    }
+
+    @Test
+    public void combinedNonSnurrTest() throws Exception {
+        Set<String> combinedZones = HeatmapTest.getDSSZones();
+        List<Integer> remainingZones = MissionTest.readSolnaSnurrZones();
+        remainingZones = remainingZones.subList(185, remainingZones.size());
+        List<Zone> zones1 = ZonesTest.getAllZones();
+        Map<Integer, Zone> zoneMap = zones1.stream()
+                .collect(Collectors.toMap(Zone::getId, Function.identity()));
+        remainingZones.forEach(id -> combinedZones.remove(zoneMap.get(id).getName()));
+        HeatmapTest.readTakenZones().entrySet().stream()
+                .filter(entry -> combinedZones.contains(entry.getKey()))
+                .filter(entry -> entry.getValue() >= 51)
+                .forEach(entry -> combinedZones.remove(entry.getKey()));
+
+        visitMunicipalityTest("NonSnurr", "dss_nonsnurr.kml", combinedZones);
+    }
+
+    private static void visitMunicipalityTest(String municipality, String filename, Set<String> municipalityZones) throws Exception {
+        visitMunicipalityTest(municipality, filename, municipalityZones, false);
+    }
+
+    private static void visitMunicipalityTest(String municipality, String filename, Set<String> municipalityZones, boolean partitionUnvisited) throws Exception {
+        Monthly monthly = MonthlyTest.getMonthly();
         List<Zone> zones = ZonesTest.getAllZones();
     
-        Set<String> visited = new HashSet<>();
-        Set<String> unvisited = new HashSet<>();
-        
         Set<String> monthlyVisits = monthly.getZones().stream().map(MonthlyZone::getName).collect(Collectors.toSet());
         
-        municipalityZones.keySet().forEach(name -> ((monthlyVisits.contains(name)) ? visited : unvisited).add(name));
-        Set<Zone> visitedZones = new HashSet<>();
-        Set<Zone> unvisitedZones = new HashSet<>();
-        zones.forEach(zone -> {
-            if (visited.contains(zone.getName())) { visitedZones.add(zone); }
-            if (unvisited.contains(zone.getName())) { unvisitedZones.add(zone);
-            } });
+        Set<String> visited = municipalityZones.stream()
+                .filter(monthlyVisits::contains)
+                .collect(Collectors.toSet());
+        Set<String> unvisited = municipalityZones.stream()
+                .filter(zoneName -> !monthlyVisits.contains(zoneName))
+                .collect(Collectors.toSet());
+        Set<String> unvisitedPurple = new HashSet<>();
+        if (partitionUnvisited) {
+            Map<String, Integer> takenZones = TakenZoneTest.readTakenZones();
+            unvisited.stream()
+                    .filter(takenZones::containsKey)
+                    .filter(zoneName -> takenZones.get(zoneName) > 50)
+                    .forEach(unvisitedPurple::add);
+            unvisited.removeAll(unvisitedPurple);
+        }
+
+        Set<Zone> visitedZones = zones.stream()
+                .filter(zone -> visited.contains(zone.getName()))
+                .collect(Collectors.toSet());
+        Set<Zone> unvisitedZones = zones.stream()
+                .filter(zone -> unvisited.contains(zone.getName()))
+                .collect(Collectors.toSet());
+        Set<Zone> unvisitedPurpleZones = zones.stream()
+                .filter(zone -> unvisitedPurple.contains(zone.getName()))
+                .collect(Collectors.toSet());
     
-        KMLWriter out = new KMLWriter(filename);
-        out.writeFolder("unvisited");
-        unvisitedZones.stream()
-                .sorted(Comparator.comparing(Zone::getName))
-                .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
-        out.writeFolder("visited");
-        visitedZones.stream()
-                .sorted(Comparator.comparing(Zone::getName))
-                .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
+        try (KMLWriter out = new KMLWriter(filename)) {
+            out.writeFolder(municipality + " unvisited");
+            unvisitedZones.stream()
+                    .sorted(Comparator.comparing(Zone::getName))
+                    .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
+            if (!unvisitedPurple.isEmpty()) {
+                out.writeFolder(municipality + " unvisited purple");
+                unvisitedPurpleZones.stream()
+                        .sorted(Comparator.comparing(Zone::getName))
+                        .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
+            }
+            out.writeFolder(municipality + " visited");
+            visitedZones.stream()
+                    .sorted(Comparator.comparing(Zone::getName))
+                    .forEach(zone -> out.writePlacemark(zone.getName(), "", zone.getLongitude(), zone.getLatitude()));
+        }
+        System.out.println(filename + ": " + (unvisitedZones.size() + visitedZones.size()) + " (" + municipalityZones.size() + ')');
+        assertEquals(municipalityZones.size(), unvisitedZones.size() + unvisitedPurpleZones.size() + visitedZones.size());
+
+//        String filePrefix = filename.substring(0, filename.indexOf(".kml"));
+//        try (CSVWriter out = new CSVWriter(filePrefix + "_unvisited.csv")) {
+//            unvisitedZones.stream()
+//                    .sorted(Comparator.comparing(Zone::getName))
+//                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
+//        }
+//        try (CSVWriter out = new CSVWriter(filePrefix + "_unvisited_purple.csv")) {
+//            unvisitedPurpleZones.stream()
+//                    .sorted(Comparator.comparing(Zone::getName))
+//                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
+//        }
+//        try (CSVWriter out = new CSVWriter(filePrefix + "_visited.csv")) {
+//            visitedZones.stream()
+//                    .sorted(Comparator.comparing(Zone::getName))
+//                    .forEach(zone -> out.writePlacemark(zone.getName(), zone.getLongitude(), zone.getLatitude()));
+//        }
+    }
+
+    private static class CombinedVisitZone implements Comparable<CombinedVisitZone> {
+        private final Zone zone;
+        private final int takes;
+        private final int visits;
+
+        private CombinedVisitZone(Zone zone, int takes, int visits) {
+            this.zone = zone;
+            this.takes = takes;
+            this.visits = visits;
+        }
+
+        @Override
+        public int compareTo(CombinedVisitZone that) {
+            return (this.takes == that.takes)
+                    ? this.zone.getName().compareTo(that.zone.getName())
+                    : this.takes - that.takes;
+        }
+
+        public void write(KMLWriter out) {
+            out.writePlacemark(String.format("%d - %s%s", takes, zone.getName(), (visits > 0) ? " (" + visits + " visits)" : " (unvisited)"),
+                    "", zone.getLongitude(), zone.getLatitude());
+        }
+    }
+    @Test
+    public void combinedCircleVisitHeatmapTest() throws Exception {
+        Set<String> circleZones = HeatmapTest.getCircleZones();
+        Map<String, Integer> takesZones = HeatmapTest.readTakenZones();
+        Map<String, Integer> monthlyVisits = MonthlyTest.getMonthly().getZones().stream().collect(Collectors.toMap(MonthlyZone::getName, MonthlyZone::getVisits));
+        List<Zone> zones = ZonesTest.getAllZones();
+        Map<String, Zone> zoneMap = new HashMap<>();
+        zones.forEach(zone -> zoneMap.put(zone.getName(), zone));
+
+        List<CombinedVisitZone> untakenZones = new ArrayList<>();
+        List<CombinedVisitZone> yellowZones = new ArrayList<>();
+        List<CombinedVisitZone> orangeZones = new ArrayList<>();
+        List<CombinedVisitZone> redZones = new ArrayList<>();
+        List<CombinedVisitZone> visitedOncePurpleZones = new ArrayList<>();
+        List<CombinedVisitZone> visitedPurpleZones = new ArrayList<>();
+        List<CombinedVisitZone> unvisitedPurpleZones = new ArrayList<>();
+        int numberVisitedOnceZones = 0;
+        int numberVisitedZones = 0;
+
+        for (String zoneName : circleZones) {
+            Zone zone = zoneMap.get(zoneName);
+            if (takesZones.containsKey(zoneName)) {
+                int takes = takesZones.get(zoneName);
+                int visits = (monthlyVisits.containsKey(zoneName)) ? monthlyVisits.get(zoneName) : 0;
+                if (takes < 11) {
+                    yellowZones.add(new CombinedVisitZone(zone, takes, visits));
+                } else if (takes < 21) {
+                    orangeZones.add(new CombinedVisitZone(zone, takes, visits));
+                } else if (takes < 51) {
+                    redZones.add(new CombinedVisitZone(zone, takes, visits));
+                } else if (visits >= 2) {
+                    visitedPurpleZones.add(new CombinedVisitZone(zone, takes, visits));
+                } else if (visits == 1) {
+                    visitedOncePurpleZones.add(new CombinedVisitZone(zone, takes, visits));
+                } else {
+                    unvisitedPurpleZones.add(new CombinedVisitZone(zone, takes, visits));
+                }
+                if (visits > 0) {
+                    numberVisitedOnceZones += 1;
+                    if (visits > 1) {
+                        numberVisitedZones += 1;
+                    }
+                }
+            } else {
+                untakenZones.add(new CombinedVisitZone(zone, 0, 0));
+            }
+        }
+        System.out.println("Zones visited:                " + numberVisitedOnceZones);
+        System.out.println("Zones visited more than once: " + numberVisitedZones);
+
+        KMLWriter out = new KMLWriter("circle_combined_month.kml");
+        if (!untakenZones.isEmpty()) {
+            out.writeFolder("Untaken Zones");
+            untakenZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!yellowZones.isEmpty()) {
+            out.writeFolder("Yellow Zones");
+            yellowZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!orangeZones.isEmpty()) {
+            out.writeFolder("Orange Zones");
+            orangeZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!redZones.isEmpty()) {
+            out.writeFolder("Red Zones");
+            redZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!unvisitedPurpleZones.isEmpty()) {
+            out.writeFolder("Unvisited Purple Zones");
+            unvisitedPurpleZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!visitedOncePurpleZones.isEmpty()) {
+            out.writeFolder("Visited Once Purple Zones");
+            visitedOncePurpleZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
+        if (!visitedPurpleZones.isEmpty()) {
+            out.writeFolder("Visited Purple Zones");
+            visitedPurpleZones.stream().sorted().forEach(zone -> zone.write(out));
+        }
         out.close();
-        System.out.println(filename + ": " + (unvisitedZones.size() + visitedZones.size()) + " (" + municipalityZones.size() + ")");
-        assertEquals(municipalityZones.size(), unvisitedZones.size() + visitedZones.size());
-    }
-    
-    private static Monthly getMonthly() throws IOException {
-        //        return readProperties("/monthly_oberoff_round96.html");
-        return readProperties("/monthly_oberoff_round114.html");
-    }
-    
-    private static Monthly readProperties(String resource) throws IOException {
-        return URLReaderTest.readProperties(resource, s -> Monthly.fromHTML(OBEROFF, ROUND, s));
     }
 }

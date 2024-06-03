@@ -104,7 +104,6 @@ Karlsruhe
 Bergakrysset
 Gena
 KlockarMalm
-Blanchegården
 DanaSkog
 KöpSätraÄng
 Transporten
@@ -128,8 +127,8 @@ TäbyTricks
 LångaBacken
 Tibblesport
 TäbyCare
-Tabyzone
-Threehills
+TäbyZone
+ThreeHills
 SägAhhhh
 VanityField
 Enstation

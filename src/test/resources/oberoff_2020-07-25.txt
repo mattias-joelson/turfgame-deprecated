@@ -1,0 +1,118 @@
+//** Uppsala
+// Östhammar
+Harviksvägen
+Brukfolkspark
+
+// Tierp
+EarByHouse
+Örbyhus
+
+// Älvkarleby
+DragonGate
+MarmaCamp
+
+//** Gävleborg
+// Nordanstig
+Backmacken
+HarmChurch
+
+//** Västernorrland
+// Timrå
+Timerchurch
+LidITimrå
+
+// ** Västerbotten
+// Nordmaling
+NordmaStation
+OrrField
+
+// ---
+
+//** Norrbotten
+// Piteå
+Jävrefyren
+TuristaMäET
+
+//** Västerbotten
+// Norsjö
+BastuträskStn
+Stationvolley
+
+// ---
+
+//** Västerbotten
+// Vindeln
+TallbackZone
+Tvärålund
+
+// Vännes
+Eldsoffan
+VännäsbyE12
+SufferTheHill
+
+// Bjurholm
+GasMeUp
+DetBränns
+
+// 43
+NordmaStation
+
+// 50
+VulpesLagopus
+
+//** Västernorrland
+// Sollefteå
+// 52
+ÖverlännäsKy
+Långstoppet
+Chainzone
+
+//** Jämtland
+// Ragunda
+DödaFallet
+Norrbacksväg
+// 55
+ForsKyrka
+
+// Bräcke
+KälarneZon
+Kälarne
+NyhemsKyrka
+BräckeKyrka
+
+//** Västernorrland
+// Ånge
+SteamFood
+Grötparken
+
+//** Gävleborg
+// Ljusdal
+RamsjöKyrka
+ChurchOfLight
+LightGreen
+
+// Bollnäs
+MarketRest
+NorthlandRd
+
+// Ovanåker
+OlAnders
+EastlingZone
+
+// Ockelbo
+ÅmotsKyrka
+ÅmotCMotÅn
+
+// Sandviken
+JärboKyrka
+
+// Hofors
+ThorsAcres
+Torsåkersork
+
+Österfärnebo
+
+//** Uppsala
+// Heby
+ÖvålChurch
+Svåltorget

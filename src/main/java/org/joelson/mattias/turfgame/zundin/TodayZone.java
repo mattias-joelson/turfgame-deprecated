@@ -27,7 +27,7 @@ public class TodayZone {
         this.date = validString(date);
         this.eagerTime = eagerTime;
         this.zoneName = validString(zoneName);
-        this.areaName = validString(areaName);
+        this.areaName = Objects.requireNonNull(areaName);
         this.tp = validNumber(tp, 32); // revisit halves tp
         this.pph = validNumber(pph, -1);
         this.activity = validString(activity);
@@ -94,9 +94,13 @@ public class TodayZone {
         StringPosition namePosition = Parser.getString(html, Parser.ZONE_NAME_LINK_TAG, eagerTimePosition);
         StringPosition areaPosition = Parser.getString(html, AREA_TABLE_CELL_TAG, namePosition);
         StringPosition tpPosition = Parser.getString(html, Parser.RIGHT_TABLE_CELL_TAG, areaPosition);
-        StringPosition pphPosition = Parser.getString(html, Parser.LEFT_TABLE_CELL_TAG, tpPosition);
+        StringPosition pphPosition = Parser.getString(html, Parser.LEFT_PADDED_TABLE_CELL_TAG, tpPosition);
         StringPosition activityPosition = Parser.getString(html, ACTIVITY_TABLE_CELL_TAG, pphPosition);
         StringPosition userIdPosition = Parser.getString(html, USER_NAME_LINK_TAG, activityPosition);
+        if (userIdPosition.getPosition() < activityPosition.getPosition()) {
+            // neutralizer
+            userIdPosition = Parser.getString(html, Parser.TABLE_CELL_TAG, activityPosition);
+        }
         StringPosition takePosition = Parser.getString(html, Parser.TABLE_CELL_TAG, userIdPosition);
 
         return new TodayZone(datePosition.stringValue(), eagerTimePosition.stringValue(), namePosition.stringValue(),

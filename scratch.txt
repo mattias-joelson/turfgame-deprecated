@@ -1,0 +1,61 @@
+mvn -Dtest=org.joelson.mattias.turfgame.application.model.ApplicationDatabaseTest#test package
+
+java -jar ~/.m2/repository/com/h2database/h2/1.4.200/h2-1.4.200.jar
+jdbc:h2:~/src/turfgame-statistics/output/turfgame_test_h2
+jdbc:h2:~/src/turfgame-history/turfgame_h2
+jdbc:h2:~/0impturfgame/turfgame_h2
+
+---
+SELECT FROM_TIMESTAMP, COUNT(FROM_TIMESTAMP) AS COUNTED_TIMESTAMP FROM REGION_HISTORY GROUP BY FROM_TIMESTAMP;
+SELECT FROM_TIMESTAMP, COUNT(FROM_TIMESTAMP) AS COUNTED_TIMESTAMP FROM ZONE_DATA_HISTORY GROUP BY FROM_TIMESTAMP;
+SELECT FROM_TIMESTAMP, COUNT(FROM_TIMESTAMP) AS COUNTED_TIMESTAMP FROM ZONE_POINT_HISTORY GROUP BY FROM_TIMESTAMP;
+
+SELECT COUNT(*) FROM REGIONS;
+SELECT COUNT(*) FROM REGION_HISTORY;
+SELECT COUNT(*) FROM ZONES;
+SELECT COUNT(*) FROM ZONE_DATA_HISTORY;
+SELECT COUNT(*) FROM ZONE_POINT_HISTORY;
+
+10-08
+11-19
+---
+
+TODO
+
+* rounds
+* api V5!
+* warded takes och Lundkvist municipality
+* kartbild
+* (Move ZoneCollection.toInstant to utility class,) add getter to apiv4 objects
+* uppdatera init av statusfält - application UI
+* getZones().getZones().size() -> getZones().getZoneCount()
+* java.net.HttpClient
+* today takeover utan owner innebär neutralize
+* Set isf List för collection
+* zundin monthly
+* neutralize innebär mer poäng
+* beräkna total p för zonen (until next take)
+
+
+DONE
+
+* sätt upp entities
+* skapa/initiera databas från entities om den inte finns
+* dubbla databaser under test - bara H2
+* skada dedikerade databaser under test?
+* Låt wrapper-hibernate vara DB agnostisk utan bero av test/program
+* slå på warning failure i pom.xml
+* namna om parse metoder
+* gör JSON parse exception checked and parse exception
+* Flytta ut resten av actions från ApplicationActions
+* disable menu options när ingen databas är öppen
+- id long isf int - int är fullt tillräckligt
+* Rename StringUtils to StringUtil
+* Typed queries
+* Move ZoneCollection.toInstant to utility class
+
+{"dateCreated":"2016-12-09T06:00:00+0000","latitude":59.385875,"name":"Ulriksdalz","id":92308,"totalTakeovers":594,
+"region":{"country":"se","name":"Stockholm","id":141},"pointsPerHour":4,"longitude":18.01901,"takeoverPoints":140}
+
+{"dateCreated":"2016-12-09T06:00:00+0000","latitude":59.386191,"name":"Ulriksdalz"," id":92308,"totalTakeovers":920,
+"region":{"country":"se","name":"Stockholm","id":141},"pointsPerHour":3,"longitude":18.018672,"takeoverPoints":155}
