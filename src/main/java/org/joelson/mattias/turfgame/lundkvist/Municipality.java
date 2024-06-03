@@ -10,10 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Municipality {
-    
+public final class Municipality {
+
+    private static final String SELECT_TAG = "<select name=";
+    private static final String SELECTED_ATTRIBUTE = "selected";
     private static final String ZONE_LINK = "<td><a href='https://turfgame.com/map/";
     private static final String ROW_END = "</td></tr>";
+
+    private Municipality() throws InstantiationException {
+        throw new InstantiationException("Should not be instantiated"); //NON-NLS
+    }
     
     public static Map<String, Boolean> fromLundkvist(String userName, String country, int region, String municipality) throws IOException {
         return fromHTML(getMunicipalityHTML(userName, country, region, municipality));
@@ -53,7 +59,25 @@ public class Municipality {
             writer.close();
         }
     }
-    
+
+    public static String nameFromHTML(String html) {
+        int pos = -1;
+        for (int i = 0; i < 3; i += 1) {
+            pos = assertPosition(html.indexOf(SELECT_TAG, pos + 1));
+        }
+        pos = assertPosition(html.indexOf(SELECTED_ATTRIBUTE, pos));
+        pos = assertPosition(html.indexOf('>', pos));
+        int endPos = assertPosition(html.indexOf(" (", pos));
+        return html.substring(pos + 1, endPos);
+    }
+
+    private static int assertPosition(int pos) {
+        if (pos == -1) {
+            throw new RuntimeException("Could not find municipality name"); // NON-NLS
+        }
+        return pos;
+    }
+
     public static Map<String, Boolean> fromHTML(String html) {
         int pos = html.indexOf(ZONE_LINK);
         if (pos == -1) {

@@ -21,7 +21,7 @@ CallethYou
 GrindtorpZone
 GrindtorpPath
 TäbyStation
-Tabyzone
+TäbyZone
 TäbyCare
 IngenBäverHär
 Enstation
@@ -57,7 +57,7 @@ Bergstornet
 FieldInMiddle
 Åbyberg
 Utförsbacken
-Tunatracks
+TunaTracks
 ÅbyField
 Hagakorset
 Lingsbergkrok

@@ -1,22 +1,26 @@
 package org.joelson.mattias.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JSONNumber;
-import org.joelson.mattias.turfgame.util.JSONObject;
-import org.joelson.mattias.turfgame.util.JSONString;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joelson.mattias.turfgame.util.StringUtil;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class Region {
-
-    private static final String COUNTRY = "country";
-    private static final String NAME = "name";
-    private static final String ID = "id";
 
     private final String country;
     private final String name;
     private final int id;
 
-    private Region(String country, String name, int id) {
-        this.country = country;
-        this.name = name;
+    @JsonCreator
+    private Region(
+            @Nullable @JsonProperty("country") String country,
+            @Nonnull @JsonProperty("name") String name,
+            @JsonProperty("id") int id,
+            @JsonProperty("regionLord") User regionLord) {
+        this.country = StringUtil.requireNullOrNonEmpty(country);
+        this.name = StringUtil.requireNotNullAndNotTrimmedEmpty(name);
         this.id = id;
     }
 
@@ -32,13 +36,12 @@ public final class Region {
         return id;
     }
 
-    static Region fromJSON(JSONObject obj) {
-        JSONString name = (JSONString) obj.getValue(NAME);
-        JSONNumber id = (JSONNumber) obj.getValue(ID);
-        if (obj.containsName(COUNTRY)) {
-            JSONString country = (JSONString) obj.getValue(COUNTRY);
-            return new Region(country.stringValue(), name.stringValue(), id.intValue());
-        }
-        return new Region(null, name.stringValue(), id.intValue());
+    @Override
+    public String toString() {
+        return "Region{"
+                + "country=" + StringUtil.printable(country)
+                + ", name=" + StringUtil.printable(name)
+                + ", id=" + id
+                + '}';
     }
 }
