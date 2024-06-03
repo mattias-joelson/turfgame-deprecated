@@ -1,6 +1,6 @@
 package org.joelson.mattias.turfgame.application.db;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 public class VisitRegistry extends EntityRegistry<VisitEntity> {
     
