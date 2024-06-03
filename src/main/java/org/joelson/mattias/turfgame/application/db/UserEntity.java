@@ -1,15 +1,15 @@
 package org.joelson.mattias.turfgame.application.db;
 
-import com.sun.istack.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import org.joelson.mattias.turfgame.application.model.UserData;
 import org.joelson.mattias.turfgame.util.StringUtil;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "users") //NON-NLS

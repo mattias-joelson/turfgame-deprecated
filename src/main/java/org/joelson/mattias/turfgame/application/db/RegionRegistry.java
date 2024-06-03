@@ -1,8 +1,7 @@
 package org.joelson.mattias.turfgame.application.db;
 
+import jakarta.persistence.EntityManager;
 import org.joelson.mattias.turfgame.application.model.RegionData;
-
-import javax.persistence.EntityManager;
 
 class RegionRegistry extends EntityRegistry<RegionEntity> {
     
