@@ -12,8 +12,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.function.ToIntFunction;
 import javax.swing.table.AbstractTableModel;
 
@@ -27,9 +25,9 @@ class VisitTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private static final int HALF_HOUR_RANGE = 1801;
     
-    private final VisitCollection visits;
-    private final Map<String, String> municipalityMap;
-    private List<VisitData> currentVisits;
+    private final transient VisitCollection visits;
+    private final HashMap<String, String> municipalityMap;
+    private ArrayList<VisitData> currentVisits;
 
     public VisitTableModel(VisitCollection visits, MunicipalityCollection municipalities, UserData selectedUser) {
         this.visits = visits;
@@ -37,8 +35,8 @@ class VisitTableModel extends AbstractTableModel {
         updateSelectedUser(selectedUser);
     }
 
-    private static Map<String, String> initMunicipalities(MunicipalityCollection municipalities) {
-        Map<String, String> municipalityMap = new HashMap<>();
+    private static HashMap<String, String> initMunicipalities(MunicipalityCollection municipalities) {
+        HashMap<String, String> municipalityMap = new HashMap<>();
         for (MunicipalityData municipality : municipalities.getMunicipalities()) {
             String municipalityName = String.format("%s / %s", municipality.getName(), municipality.getRegion().getName());
             municipality.getZones().forEach(zoneData -> municipalityMap.put(zoneData.getName(), municipalityName));

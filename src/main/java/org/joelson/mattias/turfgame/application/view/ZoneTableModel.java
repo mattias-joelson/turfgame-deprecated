@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 class ZoneTableModel extends AbstractTableModel {
     
@@ -17,7 +15,7 @@ class ZoneTableModel extends AbstractTableModel {
             Integer.class, Integer.class};
     private static final long serialVersionUID = 1L;
 
-    private final List<ZoneData> zones;
+    private final ArrayList<ZoneData> zones;
     
     ZoneTableModel(List<ZoneData> zones) {
         this.zones = new ArrayList<>(zones);

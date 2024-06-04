@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class StatisticsModel {
+public final class StatisticsModel {
 
     private final VisitCollection visits;
     private final Map<String, String> municipalityMap;
