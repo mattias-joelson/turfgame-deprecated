@@ -7,7 +7,7 @@ import org.joelson.mattias.turfgame.util.StringUtil;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class ZoneFeed extends FeedObject {
+public final class ZoneFeed extends FeedObject {
 
     private final Zone zone;
 
@@ -19,6 +19,9 @@ public class ZoneFeed extends FeedObject {
     ) {
         super(type, time);
         this.zone = Objects.requireNonNull(zone);
+        if (!getType().equals(type)) {
+            throw new RuntimeException("Illegal type " + type);
+        }
     }
 
     @Override

@@ -37,9 +37,13 @@ public class ApplicationUI {
     public ApplicationUI(ApplicationActions applicationActions, ApplicationData applicationData) {
         this.applicationActions = applicationActions;
         this.applicationData = applicationData;
+        applicationFrame = new JFrame(APPLICATION_TITLE);
+        statusLabel = new JLabel("<no user>");;
+    }
 
-        applicationFrame = createApplicationFrame();
-        statusLabel = createContent(applicationFrame.getContentPane());
+    public void initUI() {
+        initApplicationFrame();
+        createContent(applicationFrame.getContentPane());
         clearPane();
     }
     
@@ -144,22 +148,20 @@ public class ApplicationUI {
         return ImportDatabaseActionCreator.create(this);
     }
     
-    private JFrame createApplicationFrame() {
-        JFrame frame = new JFrame(APPLICATION_TITLE);
+    private void initApplicationFrame() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setSize(screenSize.width / 2, screenSize.height /2);
-        frame.setLocation(screenSize.width / 4, screenSize.height / 4);
-        frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
-        frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions, this));
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        frame.addWindowListener(createFrameWindowListener());
+        applicationFrame.setSize(screenSize.width / 2, screenSize.height /2);
+        applicationFrame.setLocation(screenSize.width / 4, screenSize.height / 4);
+        applicationFrame.setExtendedState(applicationFrame.getExtendedState() | Frame.MAXIMIZED_BOTH);
+        applicationFrame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions, this));
+        applicationFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        applicationFrame.addWindowListener(createFrameWindowListener());
         Desktop.getDesktop().disableSuddenTermination();
         try {
             Desktop.getDesktop().setQuitStrategy(QuitStrategy.CLOSE_ALL_WINDOWS);
         } catch (UnsupportedOperationException e) {
             // ignore, not available on all platforms
         }
-        return frame;
     }
     
     private WindowListener createFrameWindowListener() {
@@ -175,7 +177,6 @@ public class ApplicationUI {
         Container emptyContainer = new Container();
         contentPane.add(emptyContainer, BorderLayout.CENTER);
         currentContent = emptyContainer;
-        JLabel statusLabel = new JLabel("<no user>"); //NON-NLS
         contentPane.add(statusLabel, BorderLayout.PAGE_END);
         return statusLabel;
     }
