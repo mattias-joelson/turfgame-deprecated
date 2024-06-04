@@ -7,7 +7,7 @@ import org.joelson.mattias.turfgame.util.StringUtil;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class TakeoverFeed extends FeedObject {
+public final class TakeoverFeed extends FeedObject {
 
     private final Zone zone;
 
@@ -28,6 +28,9 @@ public class TakeoverFeed extends FeedObject {
         this.latitude = latitude;
         this.longitude = longitude;
         this.currentOwner = Objects.requireNonNull(currentOwner);
+        if (!getType().equals(type)) {
+            throw new RuntimeException("Illegal type " + type);
+        }
     }
 
     @Override

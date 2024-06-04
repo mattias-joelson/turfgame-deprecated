@@ -45,7 +45,7 @@ public class SessionStats {
         int revisits = 0;
         int revisitsTP = 0;
 
-        float distance = 0.0f;
+        double distance = 0.0;
         Zone previousZone = null;
         Zone northernmost = null;
         Zone southernmost = null;

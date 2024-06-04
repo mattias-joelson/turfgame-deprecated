@@ -15,9 +15,6 @@ public abstract class FeedObject {
     public FeedObject(
             @Nonnull @JsonProperty("type") String type,
             @Nonnull @JsonProperty("time") String time) {
-        if (!getType().equals(type)) {
-            throw new RuntimeException("Illegal type " + type);
-        }
         this.time = StringUtil.requireNotNullAndNotEmpty(time);
     }
 

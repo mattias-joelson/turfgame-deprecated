@@ -14,7 +14,7 @@ class ZoneHistoryTableModel extends AbstractTableModel {
             Instant.class };
     private static final long serialVersionUID = 1L;
 
-    private final List<ZoneHistoryData> zones;
+    private final ArrayList<ZoneHistoryData> zones;
 
     public ZoneHistoryTableModel(List<ZoneHistoryData> zones) {
         this.zones = new ArrayList<>(zones);

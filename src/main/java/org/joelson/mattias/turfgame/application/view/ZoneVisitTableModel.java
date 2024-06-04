@@ -6,7 +6,6 @@ import org.joelson.mattias.turfgame.application.model.ZoneVisitData;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 class ZoneVisitTableModel extends AbstractTableModel {
@@ -15,8 +14,8 @@ class ZoneVisitTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = { String.class, Integer.class };
     private static final long serialVersionUID = 1L;
 
-    private final ZoneVisitCollection zoneVisits;
-    private List<ZoneVisitData> currentZoneVisits;
+    private final transient ZoneVisitCollection zoneVisits;
+    private ArrayList<ZoneVisitData> currentZoneVisits;
 
     public ZoneVisitTableModel(ZoneVisitCollection zoneVisits, UserData selectedUser) {
         this.zoneVisits = zoneVisits;
