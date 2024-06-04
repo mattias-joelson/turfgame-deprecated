@@ -20,7 +20,7 @@ public class Stats {
     private final int revisitsTP;
 
     private final Duration duration;
-    private final float distance;
+    private final double distance;
 
     private final Zone northernmost;
     private final Zone southernmost;
@@ -38,7 +38,7 @@ public class Stats {
             int revisits,
             int revisitsTP,
             Duration duration,
-            float distance,
+            double distance,
             Zone northernmost,
             Zone southernmost,
             Zone easternmost,
