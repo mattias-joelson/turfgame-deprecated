@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ZoneOwnershipGraphModel {
+public final class ZoneOwnershipGraphModel {
 
     private static class ZoneOwnershipData {
 

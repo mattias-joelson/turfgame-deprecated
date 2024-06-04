@@ -14,6 +14,7 @@ public class Application {
         applicationData = new ApplicationData();
         applicationActions = new ApplicationActions(applicationData);
         applicationUI = new ApplicationUI(applicationActions, applicationData);
+        applicationUI.initUI();
         applicationActions.setApplicationUI(applicationUI);
     }
     

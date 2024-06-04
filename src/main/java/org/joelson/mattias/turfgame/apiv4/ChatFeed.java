@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 import java.util.Objects;
 
-public class ChatFeed extends FeedObject {
+public final class ChatFeed extends FeedObject {
 
     @Nullable
     private final String country;
@@ -35,6 +35,9 @@ public class ChatFeed extends FeedObject {
         this.region = region;
         this.sender = Objects.requireNonNull(sender);
         this.message = StringUtil.requireNotNullAndNotEmpty(message);
+        if (!getType().equals(type)) {
+            throw new RuntimeException("Illegal type " + type);
+        }
     }
 
     @Override

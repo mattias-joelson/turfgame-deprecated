@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class ApplicationData {
+public final class ApplicationData {
     
     public static final String HAS_DATABASE = "hasDatabase"; //NON-NLS
     

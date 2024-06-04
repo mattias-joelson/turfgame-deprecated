@@ -146,7 +146,7 @@ final class TableUtil {
 
         private static final long serialVersionUID = 1L;
 
-        private DateTimeFormatter formatter;
+        private transient DateTimeFormatter formatter;
 
         private InstantRenderer() {
             setHorizontalAlignment(SwingConstants.RIGHT);

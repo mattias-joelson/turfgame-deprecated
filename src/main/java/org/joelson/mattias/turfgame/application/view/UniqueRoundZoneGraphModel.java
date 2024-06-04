@@ -27,7 +27,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class UniqueRoundZoneGraphModel {
+public final class UniqueRoundZoneGraphModel {
 
     private static final class UniqueZoneData {
 
@@ -54,8 +54,8 @@ public class UniqueRoundZoneGraphModel {
         }
     }
 
-    private final VisitCollection visits;
-    private List<UniqueZoneData> currentUniqueZones;
+    private final transient VisitCollection visits;
+    private ArrayList<UniqueZoneData> currentUniqueZones;
     private JFreeChart chart;
 
     // TODO does not handle rounds at all
