@@ -2,9 +2,7 @@ package org.joelson.mattias.turfgame.application.view;
 
 import org.joelson.mattias.turfgame.application.model.RegionData;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -14,7 +12,7 @@ class RegionTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class, String.class };
     private static final long serialVersionUID = 1L;
 
-    private final List<RegionData> regions;
+    private final ArrayList<RegionData> regions;
 
     public RegionTableModel(List<RegionData> regions) {
         this.regions = new ArrayList<>(regions);

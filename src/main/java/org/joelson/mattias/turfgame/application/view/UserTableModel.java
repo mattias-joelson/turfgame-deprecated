@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 class UserTableModel extends AbstractTableModel {
     
@@ -15,7 +13,7 @@ class UserTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class };
     private static final long serialVersionUID = 1L;
     
-    private final List<UserData> users;
+    private final ArrayList<UserData> users;
     
     public UserTableModel(List<UserData> users) {
         this.users = new ArrayList<>(users);

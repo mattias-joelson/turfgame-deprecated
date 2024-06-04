@@ -14,7 +14,7 @@ public class MunicipalityTableModel  extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = { String.class, String.class, String.class, Integer.class };
     private static final long serialVersionUID = 1L;
 
-    private final List<MunicipalityData> municipalities;
+    private final ArrayList<MunicipalityData> municipalities;
 
     public MunicipalityTableModel(List<MunicipalityData> municipalities) {
         this.municipalities = new ArrayList<>(municipalities);

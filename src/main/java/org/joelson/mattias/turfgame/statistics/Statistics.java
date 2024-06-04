@@ -12,13 +12,13 @@ public class Statistics implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final Set<Country> countries;
-    private final Set<Region> regions;
-    private final Set<Municipality> municipalities;
-    private final Set<Zone> zones;
-    private final Set<Round> rounds;
-    private final Set<User> users;
-    private final Set<Visits> visits;
+    private final HashSet<Country> countries;
+    private final HashSet<Region> regions;
+    private final HashSet<Municipality> municipalities;
+    private final HashSet<Zone> zones;
+    private final HashSet<Round> rounds;
+    private final HashSet<User> users;
+    private final HashSet<Visits> visits;
 
     public Statistics() {
         countries = new HashSet<>();

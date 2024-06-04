@@ -1,6 +1,5 @@
 package org.joelson.mattias.turfgame.application.view;
 
-import org.joelson.mattias.turfgame.application.model.RegionData;
 import org.joelson.mattias.turfgame.application.model.RegionHistoryData;
 
 import java.time.Instant;
@@ -14,7 +13,7 @@ public class RegionHistoryTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class, String.class, Instant.class };
     private static final long serialVersionUID = 1L;
 
-    private final List<RegionHistoryData> regionHistory;
+    private final ArrayList<RegionHistoryData> regionHistory;
 
     public RegionHistoryTableModel(List<RegionHistoryData> regionHistory) {
         this.regionHistory = new ArrayList<>(regionHistory);

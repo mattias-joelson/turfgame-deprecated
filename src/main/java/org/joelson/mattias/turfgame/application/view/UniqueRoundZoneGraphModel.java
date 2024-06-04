@@ -54,8 +54,8 @@ public class UniqueRoundZoneGraphModel {
         }
     }
 
-    private final VisitCollection visits;
-    private List<UniqueZoneData> currentUniqueZones;
+    private final transient VisitCollection visits;
+    private ArrayList<UniqueZoneData> currentUniqueZones;
     private JFreeChart chart;
 
     // TODO does not handle rounds at all
