@@ -15,7 +15,6 @@ import jakarta.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -39,7 +38,7 @@ public class TakeEntity implements Serializable {
     
     @OneToMany(cascade= CascadeType.ALL)
     @JoinColumn(name="take_id") //NON-NLS
-    private List<VisitEntity> visits;
+    private ArrayList<VisitEntity> visits;
     
     public TakeEntity() {
     }
@@ -64,7 +63,7 @@ public class TakeEntity implements Serializable {
         this.when = Objects.requireNonNull(when, "When can not be null!"); //NON-NLS
     }
     
-    public List<VisitEntity> getVisits() {
+    public ArrayList<VisitEntity> getVisits() {
         return visits;
     }
     

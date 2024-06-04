@@ -73,9 +73,9 @@ class SessionTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private static final int SESSION_HOUR_LENGTH = 1200;
 
-    private final VisitCollection visits;
-    private final Map<String, MunicipalityData> municipalityMap;
-    private List<SessionData> currentSessions;
+    private final transient VisitCollection visits;
+    private final HashMap<String, MunicipalityData> municipalityMap;
+    private ArrayList<SessionData> currentSessions;
 
     public SessionTableModel(VisitCollection visits, MunicipalityCollection municipalities, UserData selectedUser) {
         this.visits = visits;
@@ -83,8 +83,8 @@ class SessionTableModel extends AbstractTableModel {
         updateSelectedUser(selectedUser);
     }
 
-    private static Map<String, MunicipalityData> initMunicipalities(MunicipalityCollection municipalities) {
-        Map<String, MunicipalityData> municipalityMap = new HashMap<>();
+    private static HashMap<String, MunicipalityData> initMunicipalities(MunicipalityCollection municipalities) {
+        HashMap<String, MunicipalityData> municipalityMap = new HashMap<>();
         for (MunicipalityData municipality : municipalities.getMunicipalities()) {
             municipality.getZones().forEach(zoneData -> municipalityMap.put(zoneData.getName(), municipality));
         }
@@ -99,8 +99,8 @@ class SessionTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    private List<SessionData> createSessions(List<VisitData> currentVisits) {
-        List<SessionData> sessionData = new ArrayList<>();
+    private ArrayList<SessionData> createSessions(List<VisitData> currentVisits) {
+        ArrayList<SessionData> sessionData = new ArrayList<>();
         Instant start = null;
         Instant last = null;
         Set<MunicipalityData> municipalities = new HashSet<>();
