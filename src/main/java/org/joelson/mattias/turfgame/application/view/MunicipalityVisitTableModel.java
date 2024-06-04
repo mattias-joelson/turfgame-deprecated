@@ -6,6 +6,7 @@ import org.joelson.mattias.turfgame.application.model.ZoneData;
 import org.joelson.mattias.turfgame.application.model.ZoneVisitCollection;
 import org.joelson.mattias.turfgame.application.model.ZoneVisitData;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -20,17 +21,17 @@ class MunicipalityVisitTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = { String.class, String.class, String.class, Integer.class };
     private static final long serialVersionUID = 1L;
 
-    private final List<MunicipalityData> municipalities;
-    private final Map<ZoneData, MunicipalityData> zoneMunicipalityMap;
-    private final ZoneVisitCollection zoneVisits;
-    private List<MunicipalityData> selectedMunicipalities;
-    private UserData selectedUser;
-    private List<ZoneVisitData> currentZoneVisits;
+    private final ArrayList<MunicipalityData> municipalities;
+    private final HashMap<ZoneData, MunicipalityData> zoneMunicipalityMap;
+    private final transient ZoneVisitCollection zoneVisits;
+    private ArrayList<MunicipalityData> selectedMunicipalities;
+    private transient UserData selectedUser;
+    private ArrayList<ZoneVisitData> currentZoneVisits;
 
 
     public MunicipalityVisitTableModel(List<MunicipalityData> municipalities, ZoneVisitCollection zoneVisits, UserData selectedUser) {
-        this.municipalities = municipalities;
-        selectedMunicipalities = municipalities;
+        this.municipalities = new ArrayList<>(municipalities);
+        selectedMunicipalities = new ArrayList<>(municipalities);
         zoneMunicipalityMap = createZoneMunicipalityMap(municipalities);
         this.zoneVisits = zoneVisits;
         updateSelectedUser(selectedUser);
@@ -42,15 +43,15 @@ class MunicipalityVisitTableModel extends AbstractTableModel {
     }
 
     public void updateSelectedMunicipalities(List<MunicipalityData> municipalities) {
-        selectedMunicipalities = (municipalities.isEmpty()) ? this.municipalities : municipalities;
+        selectedMunicipalities = (municipalities.isEmpty()) ? this.municipalities : new ArrayList<>(municipalities);
         updateData();
     }
 
     private void updateData() {
-        currentZoneVisits = zoneVisits.getZoneVisits(selectedUser).stream()
+        currentZoneVisits = new ArrayList<>(zoneVisits.getZoneVisits(selectedUser).stream()
                 .filter(zoneVisitData -> zoneMunicipalityMap.containsKey(zoneVisitData.getZone()))
                 .filter(zoneVisitData -> selectedMunicipalities.contains(zoneMunicipalityMap.get(zoneVisitData.getZone())))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
         // add unvisited zones
         Set<ZoneData> visitedZones = currentZoneVisits.stream().map(ZoneVisitData::getZone).collect(Collectors.toSet());
         selectedMunicipalities.stream()
@@ -100,8 +101,8 @@ class MunicipalityVisitTableModel extends AbstractTableModel {
         return COLUMN_CLASSES[columnIndex];
     }
 
-    private static Map<ZoneData, MunicipalityData> createZoneMunicipalityMap(List<MunicipalityData> municipalities) {
-        Map<ZoneData, MunicipalityData> zoneMunicipalityMap = new HashMap<>();
+    private static HashMap<ZoneData, MunicipalityData> createZoneMunicipalityMap(List<MunicipalityData> municipalities) {
+        HashMap<ZoneData, MunicipalityData> zoneMunicipalityMap = new HashMap<>();
         municipalities.forEach(municipalityData -> municipalityData.getZones().forEach(zoneData -> zoneMunicipalityMap.put(zoneData, municipalityData)));
         return zoneMunicipalityMap;
     }

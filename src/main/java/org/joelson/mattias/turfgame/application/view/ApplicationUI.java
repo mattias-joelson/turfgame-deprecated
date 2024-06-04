@@ -22,35 +22,39 @@ import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
 public class ApplicationUI {
-    
+
     private static final String OPEN_DATABASE_TEXT = "Open Database";
     private static final String APPLICATION_TITLE = "Turf Statistics";
     private final ApplicationActions applicationActions;
     private final ApplicationData applicationData;
-    
+
     private final JFrame applicationFrame;
     private final JLabel statusLabel;
     private Container currentContent;
     private JFileChooser directoryChooser;
     private JFileChooser fileChooser;
-    
+
     public ApplicationUI(ApplicationActions applicationActions, ApplicationData applicationData) {
         this.applicationActions = applicationActions;
         this.applicationData = applicationData;
+        applicationFrame = new JFrame(APPLICATION_TITLE);
+        statusLabel = new JLabel("<no user>");
+    }
 
-        applicationFrame = createApplicationFrame();
-        statusLabel = createContent(applicationFrame.getContentPane());
+    public void initUI() {
+        initApplicationFrame();
+        createContent(applicationFrame.getContentPane());
         clearPane();
     }
-    
+
     ApplicationActions getApplicationActions() {
         return applicationActions;
     }
-    
+
     ApplicationData getApplicationData() {
         return applicationData;
     }
-    
+
     Action readZonesAction() {
         return ReadZonesActionCreator.create(this);
     }
@@ -58,7 +62,7 @@ public class ApplicationUI {
     Action readZonesFromFileAction() {
         return ReadZonesFromFileActionCreator.create(this);
     }
-    
+
     Action regionTableAction() {
         return RegionTableActionCreator.create(this);
     }
@@ -78,11 +82,11 @@ public class ApplicationUI {
     Action zonePointsHistoryTableAction() {
         return ZonePointsHistoryTableActionCreator.create(this);
     }
-    
+
     Action userTableAction() {
         return UserTableActionCreator.create(this);
     }
-    
+
     Action visitTableAction() {
         return VisitTableActionCreator.create(this);
     }
@@ -135,33 +139,31 @@ public class ApplicationUI {
         applicationActions.closeDatabase();
         clearPane();
     }
-    
+
     Action exportDatabaseAction() {
         return ExportDatabaseActionCreator.create(this);
     }
-    
+
     Action importDatabaseAction() {
         return ImportDatabaseActionCreator.create(this);
     }
-    
-    private JFrame createApplicationFrame() {
-        JFrame frame = new JFrame(APPLICATION_TITLE);
+
+    private void initApplicationFrame() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setSize(screenSize.width / 2, screenSize.height /2);
-        frame.setLocation(screenSize.width / 4, screenSize.height / 4);
-        frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
-        frame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions, this));
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        frame.addWindowListener(createFrameWindowListener());
+        applicationFrame.setSize(screenSize.width / 2, screenSize.height / 2);
+        applicationFrame.setLocation(screenSize.width / 4, screenSize.height / 4);
+        applicationFrame.setExtendedState(applicationFrame.getExtendedState() | Frame.MAXIMIZED_BOTH);
+        applicationFrame.setJMenuBar(MenuBuilder.createApplicationMenu(applicationActions, this));
+        applicationFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        applicationFrame.addWindowListener(createFrameWindowListener());
         Desktop.getDesktop().disableSuddenTermination();
         try {
             Desktop.getDesktop().setQuitStrategy(QuitStrategy.CLOSE_ALL_WINDOWS);
         } catch (UnsupportedOperationException e) {
             // ignore, not available on all platforms
         }
-        return frame;
     }
-    
+
     private WindowListener createFrameWindowListener() {
         return new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -169,25 +171,24 @@ public class ApplicationUI {
             }
         };
     }
-    
+
     private JLabel createContent(Container contentPane) {
         contentPane.setLayout(new BorderLayout());
         Container emptyContainer = new Container();
         contentPane.add(emptyContainer, BorderLayout.CENTER);
         currentContent = emptyContainer;
-        JLabel statusLabel = new JLabel("<no user>"); //NON-NLS
         contentPane.add(statusLabel, BorderLayout.PAGE_END);
         return statusLabel;
     }
-    
+
     public void show() {
         applicationFrame.setVisible(true);
     }
-    
+
     public void dispose() {
         applicationFrame.dispose();
     }
-    
+
     private JFileChooser getDirectoryChooser() {
         if (directoryChooser == null) {
             directoryChooser = new JFileChooser();
@@ -197,7 +198,7 @@ public class ApplicationUI {
         }
         return directoryChooser;
     }
-    
+
     Path openDatabaseDialog() {
         getDirectoryChooser().setDialogType(JFileChooser.SAVE_DIALOG);
         int status = getDirectoryChooser().showDialog(applicationFrame, OPEN_DATABASE_TEXT);
@@ -214,7 +215,7 @@ public class ApplicationUI {
         }
         return fileChooser;
     }
-    
+
     Path openFileDialog() {
         return showFileDialog(JFileChooser.OPEN_DIALOG, null);
     }
@@ -222,11 +223,11 @@ public class ApplicationUI {
     Path openFileDialog(String approveButtonText) {
         return showFileDialog(JFileChooser.OPEN_DIALOG, approveButtonText);
     }
-    
+
     Path saveFileDialog(String approveButtonText) {
         return showFileDialog(JFileChooser.SAVE_DIALOG, approveButtonText);
     }
-    
+
     private Path showFileDialog(int dialogType, String approveButtonText) {
         JFileChooser fileChooser = getFileChooser();
         fileChooser.setDialogType(dialogType);
@@ -236,38 +237,38 @@ public class ApplicationUI {
         }
         return null;
     }
-    
+
     private void clearPane() {
         setPane(new Container());
     }
-    
+
     void setPane(Container container) {
         applicationFrame.getContentPane().remove(currentContent);
         applicationFrame.getContentPane().add(currentContent = container, BorderLayout.CENTER);
         applicationFrame.getContentPane().validate();
     }
-    
+
     public void setStatus(String status) {
         statusLabel.setText(status);
     }
-    
+
     void setApplicationDataStatus() {
         setStatus(applicationData.getStatus());
     }
-    
+
     void showUnexpectedInteruptionError(InterruptedException e) {
         showErrorDialog("Unexpected Interrupted Exception", String.valueOf(e));
         e.printStackTrace();
     }
-    
+
     public void showMessageDialog(String title, String message) {
         JOptionPane.showMessageDialog(applicationFrame, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
     void showErrorDialog(String title, String message) {
         JOptionPane.showMessageDialog(applicationFrame, message, title, JOptionPane.ERROR_MESSAGE);
     }
-    
+
     Boolean showYesNoDialog(String title, String message) {
         int val = JOptionPane.showConfirmDialog(applicationFrame, message, title, JOptionPane.YES_NO_OPTION);
         switch (val) {
@@ -286,7 +287,7 @@ public class ApplicationUI {
                 return null;
         }
     }
-    
+
     public String showInputDialog(String title, String message, String initialValue) {
         if (initialValue == null) {
             initialValue = "";
@@ -297,11 +298,11 @@ public class ApplicationUI {
         }
         return result.toString();
     }
-    
+
     private static class ApplicationJFileChooser extends JFileChooser {
-        
+
         private static final long serialVersionUID = 1L;
-        
+
         @Override
         public void approveSelection() {
             if (getDialogType() == JFileChooser.SAVE_DIALOG && getSelectedFile().exists()) {

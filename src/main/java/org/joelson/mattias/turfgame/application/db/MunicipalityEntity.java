@@ -42,7 +42,7 @@ public class MunicipalityEntity implements Serializable {
 
     @OneToMany(cascade= CascadeType.ALL)
     @JoinColumn(name = "municipality_id") //NON-NLS
-    private List<MunicipalityZoneEntity> municipalityZones;
+    private ArrayList<MunicipalityZoneEntity> municipalityZones;
 
 
     public MunicipalityEntity() {

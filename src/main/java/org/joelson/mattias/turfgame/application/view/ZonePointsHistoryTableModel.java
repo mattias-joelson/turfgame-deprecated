@@ -5,6 +5,7 @@ import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryData;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,12 +18,12 @@ class ZonePointsHistoryTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class, Instant.class, Integer.class, Integer.class };
     private static final long serialVersionUID = 1L;
 
-    private final List<ZonePointsHistoryData> zonePointsHistory;
-    private final Map<Integer, ZoneData> zones;
+    private final ArrayList<ZonePointsHistoryData> zonePointsHistory;
+    private final HashMap<Integer, ZoneData> zones;
 
     public ZonePointsHistoryTableModel(List<ZoneData> zones, List<ZonePointsHistoryData> zonePointsHistory) {
         this.zonePointsHistory = new ArrayList<>(zonePointsHistory);
-        this.zones = zones.stream().collect(Collectors.toMap(ZoneData::getId, Function.identity()));
+        this.zones = new HashMap<>(zones.stream().collect(Collectors.toMap(ZoneData::getId, Function.identity())));
         this.zonePointsHistory.sort((o1, o2) -> compareZones(this.zones, o1, o2));
     }
 
