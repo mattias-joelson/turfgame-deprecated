@@ -27,7 +27,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class UniqueRoundZoneGraphModel {
+public final class UniqueRoundZoneGraphModel {
 
     private static final class UniqueZoneData {
 
