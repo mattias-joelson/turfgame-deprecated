@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.db;
+package org.joelson.mattias.turfgame.util.db;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -6,13 +6,13 @@ import jakarta.persistence.TypedQuery;
 import java.lang.reflect.ParameterizedType;
 import java.util.stream.Stream;
 
-class EntityRegistry<T> {
+public class EntityRegistry<T> {
     
     private final EntityManager entityManager;
     private final Class<T> persistentClass;
     
     @SuppressWarnings("unchecked")
-    EntityRegistry(EntityManager entityManager) {
+    public EntityRegistry(EntityManager entityManager) {
         this.entityManager = entityManager;
         persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
@@ -29,7 +29,7 @@ class EntityRegistry<T> {
         return entityManager.find(persistentClass, key);
     }
     
-    protected T findAnyOrNull(String field, Object value) {
+    public T findAnyOrNull(String field, Object value) {
         return findAll(field, value)
                 .findAny()
                 .orElse(null);
@@ -40,7 +40,7 @@ class EntityRegistry<T> {
         return query.getResultStream();
     }
     
-    protected Stream<T> findAll(String field, Object value) {
+    public Stream<T> findAll(String field, Object value) {
         TypedQuery<T> query = entityManager.createQuery(String.format("SELECT e FROM %s e WHERE e.%s=:value", persistentClass.getName(), field), //NON-NLS
                 persistentClass);
         query.setParameter("value", value); //NON-NLS
