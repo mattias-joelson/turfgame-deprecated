@@ -1,10 +1,10 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv4;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.joelson.mattias.turfgame.util.JacksonUtil;
-import org.joelson.mattias.turfgame.util.URLReader;
+import org.joelson.turf.util.JacksonUtil;
+import org.joelson.turf.util.URLReader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

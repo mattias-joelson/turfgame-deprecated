@@ -1,13 +1,14 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv4;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.util.StringUtil;
 
 import java.util.Arrays;
 
+// TODO fix
 public class User {
-    
+
     private final String name;
     private final int id;
     private final String country;
@@ -55,11 +56,11 @@ public class User {
         this.medals = medals;
         this.zones = zones;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -71,31 +72,31 @@ public class User {
     public Region getRegion() {
         return region;
     }
-    
+
     public int getUniqueZonesTaken() {
         return uniqueZonesTaken;
     }
-    
+
     public int getPointsPerHour() {
         return pointsPerHour;
     }
-    
+
     public int getRank() {
         return rank;
     }
-    
+
     public int getTotalPoints() {
         return totalPoints;
     }
-    
+
     public int getTaken() {
         return taken;
     }
-    
+
     public int getPoints() {
         return points;
     }
-    
+
     public int getPlace() {
         return place;
     }

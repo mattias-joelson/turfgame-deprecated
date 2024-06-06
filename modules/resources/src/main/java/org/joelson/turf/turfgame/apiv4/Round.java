@@ -1,8 +1,9 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv4;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+// TODO fix
 public class Round {
 
     private final String name;

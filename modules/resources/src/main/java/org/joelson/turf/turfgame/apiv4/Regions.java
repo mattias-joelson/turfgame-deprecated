@@ -1,7 +1,7 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JacksonUtil;
-import org.joelson.mattias.turfgame.util.URLReader;
+import org.joelson.turf.util.JacksonUtil;
+import org.joelson.turf.util.URLReader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,11 +22,11 @@ public final class Regions {
     public static List<Region> readRegions() throws IOException {
         return fromJSON(getAllRegionsJSON());
     }
-    
+
     private static String getAllRegionsJSON() throws IOException {
         return URLReader.getRequest(REGIONS_REQUEST);
     }
-    
+
     public static void main(String[] args) throws IOException {
         Files.writeString(Path.of(DEFAULT_REGIONS_FILENAME), getAllRegionsJSON(), StandardCharsets.UTF_8);
     }
