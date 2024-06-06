@@ -33,7 +33,7 @@ LittleUse
 RunaByFot
 Bromstein
 Bromstensplan
-SkogsSkallet
+Skogsskallet
 SmallBirchZon
 Rinkebroms
 Rinkebylänken
