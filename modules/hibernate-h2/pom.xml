@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>hibernate-h2</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${com.h2database.h2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${org.hibernate.orm.hibernate-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${org.hibernate.validator.hibernate-validator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.expressly</groupId>
+            <artifactId>expressly</artifactId>
+            <version>${org.glassfish.expressly.expressly.version}</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jfree</groupId>-->
+<!--            <artifactId>jfreechart</artifactId>-->
+<!--            <version>${org.jfree.jfreechart.version}</version>-->
+<!--        </dependency>-->
+    </dependencies>
+
+    <parent>
+        <groupId>org.joelson.turf</groupId>
+        <artifactId>parent</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <com.h2database.h2.version>2.2.224</com.h2database.h2.version>
+        <org.hibernate.orm.hibernate-core.version>6.5.2.Final</org.hibernate.orm.hibernate-core.version>
+        <org.hibernate.validator.hibernate-validator.version>8.0.1.Final</org.hibernate.validator.hibernate-validator.version>
+        <org.glassfish.expressly.expressly.version>5.0.0</org.glassfish.expressly.expressly.version>
+<!--        <org.jfree.jfreechart.version>1.5.4</org.jfree.jfreechart.version>-->
+    </properties>
+
+    <name>turf-hibernate-h2</name>
+
+</project>

@@ -1,4 +1,7 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv4util;
+
+import org.joelson.turf.turfgame.apiv4.Zone;
+import org.joelson.turf.turfgame.apiv4.Zones;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +16,7 @@ public final class ZonesFind {
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
-            System.out.println(String.format("Usage:\n\t%s zone_name file [files...]", ZonesFind.class)); //NON-NLS
+            System.out.printf("Usage:\n\t%s zone_name file [files...]%n", ZonesFind.class); //NON-NLS
             return;
         }
         String zoneName = args[0];
@@ -22,7 +25,7 @@ public final class ZonesFind {
             String json = Files.readString(Path.of(fileName));
             List<Zone> zones = Zones.fromJSON(json);
             Zone zone = zones.stream().filter(z -> z.getName().equals(zoneName)).findFirst().orElse(null);
-            System.out.println(String.format("%s: %s", fileName, toString(zone))); // NON-NLS
+            System.out.printf("%s: %s%n", fileName, toString(zone)); // NON-NLS
         }
     }
 
@@ -30,7 +33,8 @@ public final class ZonesFind {
         if (zone == null) {
             return String.valueOf((Object) null);
         }
-        return String.format("{ %d, %s, %d - %s, %s, %f, %f, %d, %d }", zone.getId(), zone.getName(), zone.getRegion().getId(), zone.getRegion().getName(),
-                zone.getDateCreated(), zone.getLatitude(), zone.getLongitude(), zone.getTakeoverPoints(), zone.getPointsPerHour());
+        return String.format("{ %d, %s, %d - %s, %s, %f, %f, %d, %d }", zone.getId(), zone.getName(),
+                zone.getRegion().getId(), zone.getRegion().getName(), zone.getDateCreated(), zone.getLatitude(),
+                zone.getLongitude(), zone.getTakeoverPoints(), zone.getPointsPerHour());
     }
 }
