@@ -11,7 +11,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,8 +65,8 @@ public class TurfersRunTest {
     }
 
     private void writeRun(KMLWriter writer, String shortFilename) throws IOException {
-        String filename = TurfersRunTest.class.getResource(File.separatorChar + shortFilename).getFile();
-        try (Stream<String> lines = Files.lines(Paths.get(filename))) {
+        String filename = TurfersRunTest.class.getResource("/" + shortFilename).getFile();
+        try (Stream<String> lines = Files.lines(new File(filename).toPath())) {
             writeRun(writer, shortFilename, lines);
         }
     }
