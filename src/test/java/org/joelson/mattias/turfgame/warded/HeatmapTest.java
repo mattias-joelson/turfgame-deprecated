@@ -9,7 +9,7 @@ import org.joelson.mattias.turfgame.util.ZoneUtil;
 import org.joelson.mattias.turfgame.zundin.Monthly;
 import org.joelson.mattias.turfgame.zundin.MonthlyTest;
 import org.joelson.mattias.turfgame.zundin.MonthlyZone;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;

@@ -6,7 +6,7 @@ import org.joelson.mattias.turfgame.statistics.Statistics;
 import org.joelson.mattias.turfgame.statistics.StatisticsInitializer;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,9 +17,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MonthlyTest {
 

@@ -5,7 +5,7 @@ import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;

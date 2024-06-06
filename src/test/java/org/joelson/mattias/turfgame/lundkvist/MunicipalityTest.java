@@ -4,7 +4,7 @@ import org.joelson.mattias.turfgame.apiv4.Zone;
 import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.joelson.mattias.turfgame.warded.HeatmapTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MunicipalityTest {
     
