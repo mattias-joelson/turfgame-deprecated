@@ -1,16 +1,14 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.h2.api.Interval;
-import org.joelson.mattias.turfgame.util.FilesUtil;
-import org.joelson.mattias.turfgame.util.JacksonUtil;
+import org.joelson.turf.util.FilesUtil;
+import org.joelson.turf.util.JacksonUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,42 +21,9 @@ import java.util.zip.ZipFile;
 
 public class FeedsIntervalReader {
 
-    private static enum FeedType {
-        CHAT_MEDAL, TAKEOVER, ZONE
-    }
-
-    private static class FeedInterval {
-
-        private final FeedType type;
-        private final String start;
-        private final String end;
-
-        private FeedInterval(FeedType type, String start, String end) {
-            if (start.compareTo(end) >= 0) {
-                throw new IllegalArgumentException("Wrong order " + start + " and " + end);
-            }
-            this.type = type;
-            this.start = start;
-            this.end = end;
-        }
-
-        public boolean intersects(FeedInterval that) {
-            if (type != that.type) {
-                return false;
-            }
-            if (end.compareTo(that.start) < 0 || that.end.compareTo(start) < 0) {
-                return false;
-            }
-            if (end.compareTo(that.start) >= 0 || that.end.compareTo(start) >= 0) {
-                return true;
-            }
-            throw new IllegalStateException("Should not come here...");
-        }
-    }
-
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
-            System.out.println(String.format("Usage:\n\t%s feed_file1.json ...", FeedsIntervalReader.class.getName()));
+            System.out.printf("Usage:\n\t%s feed_file1.json ...%n", FeedsIntervalReader.class.getName());
             return;
         }
         SortedSet<FeedInterval> feedNodes = new TreeSet<>(new FeedIntervalComparator());
@@ -67,13 +32,14 @@ public class FeedsIntervalReader {
             Path feedPath = Path.of(filename);
             if (FilesUtil.isZipFile(feedPath)) {
                 ZipFile zipFile = new ZipFile(feedPath.toFile());
-                zipFile.stream().forEach(zipEntry -> readFeedNodes(feedNodes, readZipEntry(feedPath, zipFile, zipEntry)));
+                zipFile.stream()
+                        .forEach(zipEntry -> readFeedNodes(feedNodes, readZipEntry(feedPath, zipFile, zipEntry)));
             } else {
                 readFeedNodes(feedNodes, readFeedFile(feedPath));
             }
         }
-        feedNodes.stream().forEach(feedInterval -> System.out.println(String.format("%s: %s - %s",
-                feedInterval.type, feedInterval.start, feedInterval.end)));
+        feedNodes.stream().forEach(feedInterval
+                -> System.out.printf("%s: %s - %s%n", feedInterval.type, feedInterval.start, feedInterval.end));
     }
 
     private static void readFeedNodes(SortedSet<FeedInterval> feedIntervals, List<JsonNode> fileNodes) {
@@ -148,6 +114,39 @@ public class FeedsIntervalReader {
             return Collections.emptyList();
         }
         return Arrays.asList(JacksonUtil.readValue(content, JsonNode[].class));
+    }
+
+    private enum FeedType {
+        CHAT_MEDAL, TAKEOVER, ZONE
+    }
+
+    private static class FeedInterval {
+
+        private final FeedType type;
+        private final String start;
+        private final String end;
+
+        private FeedInterval(FeedType type, String start, String end) {
+            if (start.compareTo(end) >= 0) {
+                throw new IllegalArgumentException("Wrong order " + start + " and " + end);
+            }
+            this.type = type;
+            this.start = start;
+            this.end = end;
+        }
+
+        public boolean intersects(FeedInterval that) {
+            if (type != that.type) {
+                return false;
+            }
+            if (end.compareTo(that.start) < 0 || that.end.compareTo(start) < 0) {
+                return false;
+            }
+            if (end.compareTo(that.start) >= 0 || that.end.compareTo(start) >= 0) {
+                return true;
+            }
+            throw new IllegalStateException("Should not come here...");
+        }
     }
 
     private static class FeedIntervalComparator implements Comparator<FeedInterval> {
