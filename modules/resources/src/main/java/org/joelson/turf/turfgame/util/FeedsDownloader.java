@@ -1,9 +1,9 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.joelson.mattias.turfgame.util.JacksonUtil;
-import org.joelson.mattias.turfgame.util.TimeUtil;
-import org.joelson.mattias.turfgame.util.URLReader;
+import org.joelson.turf.util.JacksonUtil;
+import org.joelson.turf.util.TimeUtil;
+import org.joelson.turf.util.URLReader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,33 +14,35 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-public class Feeds {
+public class FeedsDownloader {
 
-    private static final String FEEDS_REQUEST = "https://api.turfgame.com/v4/feeds"; //NON-NLS
-
-    private static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     public static void main(String[] args) {
-        handleFeeds();
+        if (args.length != 1) {
+            System.out.printf("Usage:%n\t%s feedsRequest", FeedsDownloader.class);
+            return;
+        }
+        handleFeeds(args[0]);
     }
 
-    private static void handleFeeds() {
+    public static void handleFeeds(String feedsRequest) {
         Instant lastTakeEntry = null;
         Instant lastMedalChatEntry = null;
         Instant lastZoneEntry = null;
-        for (;;) {
-            lastTakeEntry = getFeed("takeover", "feeds_takeover_%s.%sjson", lastTakeEntry);
+        while (true) {
+            lastTakeEntry = getFeed(feedsRequest, "takeover", "feeds_takeover_%s.%sjson", lastTakeEntry);
             waitBetweenFeeds();
-            lastMedalChatEntry = getFeed("medal+chat", "feeds_medal_chat_%s.%sjson", lastMedalChatEntry);
+            lastMedalChatEntry = getFeed(feedsRequest, "medal+chat", "feeds_medal_chat_%s.%sjson", lastMedalChatEntry);
             waitBetweenFeeds();
-            lastZoneEntry = getFeed("zone", "feeds_zone_%s.%sjson", lastZoneEntry);
+            lastZoneEntry = getFeed(feedsRequest, "zone", "feeds_zone_%s.%sjson", lastZoneEntry);
             waitUntilNext();
         }
     }
 
-    private static Instant getFeed(String feed, String filenamePattern, Instant since) {
+    private static Instant getFeed(String feedsRequest, String feed, String filenamePattern, Instant since) {
         try {
-            String json = getFeedsJSON(feed, since);
+            String json = getFeedsJSON(feedsRequest, feed, since);
             if (json.equals("[]")) {
                 log("No data for " + feed + " since " + since);
                 return since;
@@ -59,12 +61,13 @@ public class Feeds {
             return null;
         }
     }
-    private static String getFeedsJSON(String feed, Instant since) throws IOException {
+
+    private static String getFeedsJSON(String feedsRequest, String feed, Instant since) throws IOException {
         String afterDate = "";
         if (since != null) {
             afterDate = "?afterDate=" + TimeUtil.turfAPITimestampFormatter(since);
         }
-        return URLReader.getRequest(FEEDS_REQUEST + '/' + feed + afterDate);
+        return URLReader.getRequest(feedsRequest + '/' + feed + afterDate);
     }
 
     private static Instant getLastEntryTime(String json) {
@@ -123,6 +126,6 @@ public class Feeds {
     }
 
     private static void log(String msg) {
-        System.out.println(String.format("[%s] %s", Thread.currentThread().getName(), msg));
+        System.out.printf("[%s] %s%n", Thread.currentThread().getName(), msg);
     }
 }
