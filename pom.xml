@@ -73,39 +73,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${com.fasterxml.jackson.core.version}</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
       <version>${com.google.code.findbugs.jsr305.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>${com.h2database.h2.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.orm</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>${org.hibernate.orm.hibernate-core.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${org.hibernate.validator.hibernate-validator.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.expressly</groupId>
-      <artifactId>expressly</artifactId>
-      <version>${org.glassfish.expressly.expressly.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jfree</groupId>
-      <artifactId>jfreechart</artifactId>
-      <version>${org.jfree.jfreechart.version}</version>
     </dependency>
   </dependencies>
 
@@ -116,13 +86,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <com.fasterxml.jackson.core.version>2.17.1</com.fasterxml.jackson.core.version>
     <com.google.code.findbugs.jsr305.version>3.0.2</com.google.code.findbugs.jsr305.version>
-    <com.h2database.h2.version>2.2.224</com.h2database.h2.version>
-    <org.hibernate.orm.hibernate-core.version>6.5.2.Final</org.hibernate.orm.hibernate-core.version>
-    <org.hibernate.validator.hibernate-validator.version>8.0.1.Final</org.hibernate.validator.hibernate-validator.version>
-    <org.glassfish.expressly.expressly.version>5.0.0</org.glassfish.expressly.expressly.version>
-    <org.jfree.jfreechart.version>1.5.4</org.jfree.jfreechart.version>
     <org.junit.jupiter.junit-jupiter-api.version>5.10.2</org.junit.jupiter.junit-jupiter-api.version>
   </properties>
 

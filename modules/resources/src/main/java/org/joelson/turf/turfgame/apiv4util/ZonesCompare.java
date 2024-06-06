@@ -1,4 +1,8 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv4util;
+
+import org.joelson.turf.turfgame.apiv4.Region;
+import org.joelson.turf.turfgame.apiv4.Zone;
+import org.joelson.turf.turfgame.apiv4.Zones;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +16,7 @@ public class ZonesCompare {
 
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
-            System.out.println(String.format("Usage:\n\t%s zonefile1.json zonefile2.json", ZonesCompare.class.getName()));
+            System.out.printf("Usage:\n\t%s zonefile1.json zonefile2.json%n", ZonesCompare.class.getName());
             return;
         }
         for (int i = 0; i + 1 < args.length; i += 1) {
@@ -28,7 +32,8 @@ public class ZonesCompare {
         if (zone1 == null) {
             System.out.println("New zone: " + toString(zone2));
         } else if (zone1.getDateCreated() == null || zone2.getDateCreated() == null) {
-            System.out.println("Zone '" + zone1.getName() + "' date problem: " + zone1.getDateCreated() + ", " + zone2.getDateCreated());
+            System.out.println("Zone '" + zone1.getName() + "' date problem: " + zone1.getDateCreated() + ", "
+                    + zone2.getDateCreated());
         } else if (!zone1.getName().equals(zone2.getName())
                 || !zone1.getDateCreated().equals(zone2.getDateCreated())
                 || zone1.getId() != zone2.getId()
@@ -49,8 +54,9 @@ public class ZonesCompare {
     }
 
     private static String toString(Zone zone) {
-        return String.format("{ %d, %s, %s, %s, %f, %f, %d, %d }", zone.getId(), zone.getName(), toString(zone.getRegion()),
-                zone.getDateCreated(), zone.getLatitude(), zone.getLongitude(), zone.getTakeoverPoints(), zone.getPointsPerHour());
+        return String.format("{ %d, %s, %s, %s, %f, %f, %d, %d }", zone.getId(), zone.getName(),
+                toString(zone.getRegion()), zone.getDateCreated(), zone.getLatitude(), zone.getLongitude(),
+                zone.getTakeoverPoints(), zone.getPointsPerHour());
     }
 
     private static String toString(Region region) {
