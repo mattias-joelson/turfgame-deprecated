@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,11 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.format.DateTimeFormatter;
 
 public class FeedsPartitioner {
-
-    private static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
@@ -36,17 +33,11 @@ public class FeedsPartitioner {
 //                .filter(path -> pathNotLarger(date, path))
 //                .mapToInt(path -> 1).sum();
 //        System.out.println("noFiles: " + noFiles);
-        Files.list(Path.of("."))
-                .filter(path -> includeFile(date, path))
-                .forEach(path -> {
-                    moveFile(partitionDirectory, path);
-                });
+        Files.list(Path.of(".")).filter(path -> includeFile(date, path))
+                .forEach(path -> moveFile(partitionDirectory, path));
 
-        String firstDate = Files.list(partitionDirectory)
-                .filter(path -> includeFile(date, path))
-                .map(path -> getDate(path))
-                .sorted()
-                .findFirst().orElseThrow();
+        String firstDate = Files.list(partitionDirectory).filter(path -> includeFile(date, path))
+                .map(FeedsPartitioner::getDate).sorted().findFirst().orElseThrow();
         System.out.println("firstDate: " + firstDate);
 
         Path finalPartition = Path.of(".", "feeds_" + version + '_' + firstDate + ".win");
@@ -55,8 +46,7 @@ public class FeedsPartitioner {
         System.out.printf("archive:%n\t7z a %s %s%n", finalPartition.getFileName() + ".zip", finalPartition);
         ProcessBuilder processBuilder = new ProcessBuilder();
         Process process = processBuilder.command("\"C:\\Program Files\\7-Zip\\7z.exe\"", "a",
-                finalPartition.getFileName() + ".zip",
-                finalPartition.toString()).start();
+                finalPartition.getFileName() + ".zip", finalPartition.toString()).start();
         InputStream inputStream = process.getInputStream();
         BufferedReader inputReader = new BufferedReader(new InputStreamReader(inputStream));
         new Thread(() -> {
