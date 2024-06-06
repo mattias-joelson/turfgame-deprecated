@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.JacksonUtil;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ZonesTest {
     @Test
@@ -176,7 +176,7 @@ public class ZonesTest {
                 7, 95,
                 8, 80,
                 9, 65);
-        zones.forEach(zone -> assertEquals(zone.getName(), (long) points.get(zone.getPointsPerHour()), (long) zone.getTakeoverPoints()));
+        zones.forEach(zone -> assertEquals((long) points.get(zone.getPointsPerHour()), (long) zone.getTakeoverPoints(), zone.getName()));
     }
 
     public static List<Zone> getAllZones() throws IOException {

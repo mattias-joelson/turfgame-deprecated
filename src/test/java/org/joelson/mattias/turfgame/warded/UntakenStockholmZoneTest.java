@@ -4,7 +4,7 @@ import org.joelson.mattias.turfgame.apiv5.Region;
 import org.joelson.mattias.turfgame.apiv5.Zone;
 import org.joelson.mattias.turfgame.apiv5.ZonesTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
 import java.util.List;

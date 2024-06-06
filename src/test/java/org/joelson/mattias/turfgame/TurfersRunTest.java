@@ -5,8 +5,8 @@ import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class TurfersRunTest {
 
     private Map<String, Zone> zones;
     
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         zones = ZoneUtil.toNameMap(ZonesTest.getAllZones());
     }
