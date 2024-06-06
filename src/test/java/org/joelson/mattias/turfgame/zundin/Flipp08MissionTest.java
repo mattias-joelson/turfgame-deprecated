@@ -6,7 +6,7 @@ import org.joelson.mattias.turfgame.apiv4.ZonesTest;
 import org.joelson.mattias.turfgame.util.JacksonUtil;
 import org.joelson.mattias.turfgame.util.KMLWriter;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,9 +23,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class Flipp08MissionTest {
 
@@ -53,11 +53,11 @@ public class Flipp08MissionTest {
                 if (value.canConvertToInt()) {
                     int zoneId = value.asInt();
                     zone = zoneIdMap.get(zoneId);
-                    assertNotNull("Zone '" + zoneId + "' not found!", zone);
+                    assertNotNull(zone, "Zone '" + zoneId + "' not found!");
                 } else {
                     String zoneName = value.asText();
                     zone = zoneMap.get(zoneName);
-                    assertNotNull("Zone '" + zoneName + "' not found!", zone);
+                    assertNotNull(zone, "Zone '" + zoneName + "' not found!");
                 }
                 flippZoneNames.add(zone.getName());
             }
@@ -99,11 +99,11 @@ public class Flipp08MissionTest {
                 if (value.canConvertToInt()) {
                     int zoneId = value.asInt();
                     zone = zoneIdMap.get(zoneId);
-                    assertNotNull("Zone '" + zoneId + "' not found!", zone);
+                    assertNotNull(zone, "Zone '" + zoneId + "' not found!");
                 } else {
                     String zoneName = value.asText();
                     zone = zoneMap.get(zoneName);
-                    assertNotNull("Zone '" + zoneName + "' not found!", zone);
+                    assertNotNull(zone, "Zone '" + zoneName + "' not found!");
                     zoneNameInput = true;
                 }
                 flipZoneNames.add(zone.getName());
@@ -170,11 +170,11 @@ public class Flipp08MissionTest {
                     if (value.canConvertToInt()) {
                         int zoneId = value.asInt();
                         zone = zoneIdMap.get(zoneId);
-                        assertNotNull("Zone '" + zoneId + "' not found!", zone);
+                        assertNotNull(zone, "Zone '" + zoneId + "' not found!");
                     } else {
                         String zoneName = value.asText();
                         zone = zoneMap.get(zoneName);
-                        assertNotNull("Zone '" + zoneName + "' not found!", zone);
+                        assertNotNull(zone, "Zone '" + zoneName + "' not found!");
                         zoneNameInput = true;
                     }
                     assertFalse(uniqueZoneNames.contains(zone.getName()));

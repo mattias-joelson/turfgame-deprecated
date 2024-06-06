@@ -2,11 +2,11 @@ package org.joelson.mattias.turfgame.application.model;
 
 import org.joelson.mattias.turfgame.apiv4.RegionsTest;
 import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegionCollectionTest {
     

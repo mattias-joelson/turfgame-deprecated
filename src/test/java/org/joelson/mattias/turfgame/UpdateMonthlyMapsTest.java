@@ -4,7 +4,7 @@ import org.joelson.mattias.turfgame.warded.HeatmapTest;
 import org.joelson.mattias.turfgame.warded.TakeDistributionTest;
 import org.joelson.mattias.turfgame.warded.UntakenStockholmZoneTest;
 import org.joelson.mattias.turfgame.zundin.MonthlyVisitTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UpdateMonthlyMapsTest {
 
