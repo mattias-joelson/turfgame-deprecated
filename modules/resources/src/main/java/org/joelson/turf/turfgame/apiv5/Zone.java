@@ -1,12 +1,13 @@
-package org.joelson.mattias.turfgame.apiv5;
+package org.joelson.turf.turfgame.apiv5;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.util.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+// TODO fix API
 public class Zone {
 
     private final String name;
@@ -39,7 +40,8 @@ public class Zone {
         this.region = region;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.dateCreated = StringUtil.requireNullOrNonEmpty(dateCreated);// requireNotNullAndNotTrimmedEmpty(dateCreated);
+        // this.dateCreated = StringUtil.requireNotNullAndNotTrimmedEmpty(dateCreated);
+        this.dateCreated = StringUtil.requireNullOrNonEmpty(dateCreated);
         this.takeoverPoints = takeoverPoints;
         this.pointsPerHour = pointsPerHour;
         this.totalTakeovers = totalTakeovers;
