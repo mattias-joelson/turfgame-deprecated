@@ -1,7 +1,7 @@
 package org.joelson.mattias.turfgame.zundin;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class MonthlyStatsTest {
     private Monthly monthly;
     private static final int[] POSSIBLE_TP = {65, 80, 95, 110, 125, 140, 155, 170, 185};
     
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         monthly = MonthlyTest.getMonthly();
     }

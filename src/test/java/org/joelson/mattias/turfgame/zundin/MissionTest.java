@@ -7,7 +7,7 @@ import org.joelson.mattias.turfgame.lundkvist.MunicipalityTest;
 import org.joelson.mattias.turfgame.util.FilesUtil;
 import org.joelson.mattias.turfgame.util.URLReaderTest;
 import org.joelson.mattias.turfgame.util.ZoneUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -23,11 +23,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class MissionTest {
 
@@ -194,7 +193,7 @@ public class MissionTest {
         for (Entry<String, Boolean> entry : municipalityZones.entrySet()) {
             assertNull(zones.get(entry.getKey()));
             Zone zone = namedZones.get(entry.getKey());
-            assertNotNull("Missing zone " + entry.getKey(), zone);
+            assertNotNull(zone, "Missing zone " + entry.getKey());
             ZoneStat zoneStat = new ZoneStat(zone.getName(), zone.getId(), municipalityName, zone.getLongitude(), zone.getLatitude());
             zones.put(zoneStat.name, zoneStat);
             zoneStat.taken = entry.getValue();
@@ -206,7 +205,7 @@ public class MissionTest {
         for (int id : missionZoneIds) {
             Zone zone = numberedZones.get(id);
             ZoneStat zoneStat = zones.get(zone.getName());
-            assertNotNull("Missing zone " + zone.getName(), zoneStat);
+            assertNotNull(zoneStat, "Missing zone " + zone.getName());
             if (prev != null) {
                 prev.next = zoneStat;
             }
