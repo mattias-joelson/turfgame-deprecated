@@ -1,7 +1,7 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv5;
 
-import org.joelson.mattias.turfgame.util.JacksonUtil;
-import org.joelson.mattias.turfgame.util.URLReader;
+import org.joelson.turf.util.JacksonUtil;
+import org.joelson.turf.util.URLReader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,11 +15,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-public final class Zones {
+public class Zones {
+    private static final String ALL_ZONES_REQUEST = "https://api.turfgame.com/unstable/zones/all"; //NON-NLS
+    private static final String DEFAULT_ZONES_FILENAME = "zones-all.v5.json"; //NON-NLS
 
-    private static final String ALL_ZONES_REQUEST = "https://api.turfgame.com/v4/zones/all"; //NON-NLS
-    private static final String DEFAULT_ZONES_FILENAME = "zones-all.json"; //NON-NLS
-    
     private Zones() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");
     }
@@ -37,8 +36,8 @@ public final class Zones {
     }
 
     public static void mainNew(String[] args) {
-        LocalDateTime startDate = LocalDateTime.of(2020, 5, 3, 11, 54, 0);
-        LocalDateTime endDate = LocalDateTime.of(2020, 5, 3, 12, 35, 0);
+        LocalDateTime startDate = LocalDateTime.of(2021, 10, 3, 12, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2021, 10, 3, 12, 35, 0);
         Instant start = toInstant(startDate);
         Instant end = toInstant(endDate);
 
@@ -59,7 +58,7 @@ public final class Zones {
                 Instant instant = Instant.now();
                 LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
                 String time = formatter.format(ldt);
-                String name = String.format("zones_%s.json", time);
+                String name = String.format("zones_%s.v5.json", time);
                 Path file = Path.of(".", name);
                 Files.writeString(file, getAllZonesJSON(), StandardCharsets.UTF_8);
                 System.out.println("Downloaded " + file + " at " + Instant.now());

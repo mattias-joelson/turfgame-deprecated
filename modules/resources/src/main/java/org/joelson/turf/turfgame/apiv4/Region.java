@@ -1,12 +1,13 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv4;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.util.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+// TODO fix
 public final class Region {
 
     private final String country;

@@ -1,8 +1,7 @@
-package org.joelson.mattias.turfgame.util;
+package org.joelson.turf.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class JacksonUtil {

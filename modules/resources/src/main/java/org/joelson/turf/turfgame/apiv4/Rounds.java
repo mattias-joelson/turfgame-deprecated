@@ -1,7 +1,7 @@
-package org.joelson.mattias.turfgame.apiv4;
+package org.joelson.turf.turfgame.apiv4;
 
-import org.joelson.mattias.turfgame.util.JacksonUtil;
-import org.joelson.mattias.turfgame.util.URLReader;
+import org.joelson.turf.util.JacksonUtil;
+import org.joelson.turf.util.URLReader;
 
 import java.io.IOException;
 import java.util.Arrays;

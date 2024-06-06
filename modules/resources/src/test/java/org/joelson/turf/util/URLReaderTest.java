@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.util;
+package org.joelson.turf.util;
 
 import java.io.File;
 import java.io.FileInputStream;
