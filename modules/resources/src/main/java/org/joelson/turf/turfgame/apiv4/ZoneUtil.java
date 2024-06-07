@@ -1,10 +1,7 @@
-package org.joelson.mattias.turfgame.util;
-
-import org.joelson.mattias.turfgame.apiv4.Zone;
+package org.joelson.turf.turfgame.apiv4;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ZoneUtil {
@@ -24,7 +21,8 @@ public class ZoneUtil {
     }
 
     /**
-     * @see <a href="https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula">Stack overflow</a>
+     * @see
+     * <a href="https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula">Stack overflow</a>
      * @see <a href="https://en.wikipedia.org/wiki/Haversine_formula">Haversine formula</a>
      */
     public static double calcDistance(double p1latitude, double p1longitude, double p2Latitude, double p2Longitude) {
