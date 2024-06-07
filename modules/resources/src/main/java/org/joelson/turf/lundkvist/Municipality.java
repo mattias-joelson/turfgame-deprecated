@@ -1,9 +1,10 @@
-package org.joelson.mattias.turfgame.lundkvist;
+package org.joelson.turf.lundkvist;
 
-import org.joelson.mattias.turfgame.util.URLReader;
+import org.joelson.turf.util.URLReader;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,23 +19,25 @@ public final class Municipality {
     private static final String ROW_END = "</td></tr>";
 
     private Municipality() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated"); //NON-NLS
+        throw new InstantiationException("Should not be instantiated");
     }
-    
-    public static Map<String, Boolean> fromLundkvist(String userName, String country, int region, String municipality) throws IOException {
+
+    public static Map<String, Boolean> fromLundkvist(String userName, String country, int region, String municipality)
+            throws IOException {
         return fromHTML(getMunicipalityHTML(userName, country, region, municipality));
     }
 
     private static String getMunicipalityHTML(String userName, String country, int region, String municipality)
             throws IOException {
-        String request = String.format("https://turf.lundkvist.com/?user=%s&country=%s&region=%d&city=%s", userName, country, region, municipality);
+        String request = String.format("https://turf.lundkvist.com/?user=%s&country=%s&region=%d&city=%s",
+                userName, country, region, municipality);
         return URLReader.getRequest(request);
     }
 
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
-            System.out.println(String.format("Usage:\n\t%s user=username country=country region=regionnumber city [city ...]",
-                    Municipality.class.getName()));
+            System.out.printf("Usage:\n\t%s user=username country=country region=regionnumber city [city ...]%n",
+                    Municipality.class.getName());
             return;
         }
         String username = "";
@@ -54,7 +57,8 @@ public final class Municipality {
         }
         for (String city : cities) {
             String html = getMunicipalityHTML(username, country, region, city);
-            PrintWriter writer = new PrintWriter("lundkvist_" + region + "_" + city.toLowerCase() + ".html", "UTF8");
+            PrintWriter writer = new PrintWriter("lundkvist_" + region + "_" + city.toLowerCase() + ".html",
+                    StandardCharsets.UTF_8);
             writer.println(html);
             writer.close();
         }
@@ -73,7 +77,7 @@ public final class Municipality {
 
     private static int assertPosition(int pos) {
         if (pos == -1) {
-            throw new RuntimeException("Could not find municipality name"); // NON-NLS
+            throw new RuntimeException("Could not find municipality name");
         }
         return pos;
     }
@@ -93,21 +97,21 @@ public final class Municipality {
         }
         return municipalityZones;
     }
-    
+
     private static String zoneNameFromHTML(int pos, String html) {
         int end = html.indexOf("'", pos + ZONE_LINK.length());
         String zoneName = html.substring(pos + ZONE_LINK.length(), end);
         return zoneName;
     }
-    
+
     private static int lineEndInHTML(int pos, String html) {
         int end = html.indexOf(ROW_END, pos);
         return end;
     }
-    
+
     private static boolean zoneTakenFromHTML(int end, String html) {
         int start = html.lastIndexOf('>', end);
-        String taken = html.substring(start +1 , end);
-        return taken.toLowerCase().equals("ja");
+        String taken = html.substring(start + 1, end);
+        return taken.equalsIgnoreCase("ja");
     }
 }
