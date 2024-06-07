@@ -104,14 +104,6 @@ public class MunicipalityTest {
         return URLReaderTest.readProperties("lundkvist_141_danderyd.html", Municipality::fromHTML);
     }
     
-    public static Map<String, Boolean> getHuddingeZones() throws Exception {
-        return URLReaderTest.readProperties("lundkvist_141_huddinge.html", Municipality::fromHTML);
-    }
-
-    public static Map<String, Boolean> getJarfallaZones() throws Exception {
-        return URLReaderTest.readProperties("lundkvist_141_jarfalla.html", Municipality::fromHTML);
-    }
-
     public static Map<String, Boolean> getNackaZones() throws Exception {
         return URLReaderTest.readProperties("lundkvist_141_nacka.html", Municipality::fromHTML);
     }
@@ -140,10 +132,6 @@ public class MunicipalityTest {
         return URLReaderTest.readProperties("lundkvist_141_upplands-bro.html", Municipality::fromHTML);
     }
     
-    public static Map<String, Boolean> getVallentunaZones() throws Exception {
-        return URLReaderTest.readProperties("lundkvist_141_vallentuna.html", Municipality::fromHTML);
-    }
-
     public static Map<String, Boolean> getLeifonsSolnaZones() throws Exception {
         return URLReaderTest.readProperties("lundkvist_leifons_141_solna.html", Municipality::fromHTML);
     }

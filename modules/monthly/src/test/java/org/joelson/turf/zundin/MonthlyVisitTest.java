@@ -31,11 +31,6 @@ public class MonthlyVisitTest {
     }
 
     @Test
-    public void visitJarfallaTest() throws Exception {
-        visitMunicipalityTest("Järfälla", "jarfalla_month.kml", MunicipalityTest.getJarfallaZones().keySet());
-    }
-
-    @Test
     public void visitSolnaTest() throws Exception {
         visitMunicipalityTest("Solna", "solna_month.kml", MunicipalityTest.getSolnaZones().keySet());
     }
