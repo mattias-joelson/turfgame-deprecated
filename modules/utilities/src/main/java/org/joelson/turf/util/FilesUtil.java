@@ -12,7 +12,7 @@ import java.nio.file.StandardOpenOption;
 
 public final class FilesUtil {
 
-    private static final String DEFAULT_OUTPUT_DIRECTORY = "output"; //NON-NLS
+    private static final String DEFAULT_OUTPUT_DIRECTORY = "output";
     private static final OpenOption[] DEFAULT_OPEN_OPTIONS =
             { StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING };
 
