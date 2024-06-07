@@ -15,7 +15,7 @@ public final class TimeUtil {
     private static final DateTimeFormatter TURF_API_FORMATTER =
             DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
     private static final DateTimeFormatter ZUNDIN_GMT_DATETIME_FORMAT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); //NON-NLS
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private TimeUtil() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");
