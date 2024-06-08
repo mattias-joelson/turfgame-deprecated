@@ -1,8 +1,10 @@
 package org.joelson.turf.lundkvist;
 
-import org.joelson.mattias.turfgame.apiv5.Zone;
-import org.joelson.mattias.turfgame.apiv5.ZonesTest;
+import org.joelson.turf.turfgame.apiv5.Zone;
+import org.joelson.turf.turfgame.apiv5.ZonesTest;
 import org.joelson.turf.util.KMLWriter;
+import org.joelson.turf.util.URLReaderTest;
+import org.joelson.turf.warded.TakenZones;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -14,6 +16,24 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SwedenExplorerTest {
+
+    private static boolean isNordicZone(Zone zone) {
+        if (zone.getRegion() == null) {
+            return false;
+        }
+        String country = zone.getRegion().getCountry();
+        return country != null && (country.equals("se") || country.equals("no") || country.equals("dk")
+                || country.equals("fi"));
+    }
+
+    private static boolean isSwedishZone(Zone zone) {
+        String country = zone.getRegion().getCountry();
+        return country != null && country.equals("se");
+    }
+
+    private static Map<String, Integer> readGlobalTakenZones() throws Exception {
+        return URLReaderTest.readProperties("warded.global-unique.php.html", TakenZones::fromHTML);
+    }
 
     @Test
     public void swedenExplorertest() throws Exception {
@@ -61,13 +81,13 @@ public class SwedenExplorerTest {
                 { "Osby kommun", "LönsbodaTorg" },
                 { "Östra Göinge kommun", "Boalt" },
 
-                { "Perstorps kommun", "Bläreträ"},
-                { "Örkelljunga kommun", "Skåneporten"},
-                { "Klippans kommun", "Mölletofta"},
-                { "Ängelholms kommun", "Tostæthorp"},
-                { "Båstads kommun", "FörslövsKyrka"},
+                { "Perstorps kommun", "Bläreträ" },
+                { "Örkelljunga kommun", "Skåneporten" },
+                { "Klippans kommun", "Mölletofta" },
+                { "Ängelholms kommun", "Tostæthorp" },
+                { "Båstads kommun", "FörslövsKyrka" },
                 { "Höganäs kommun", "FarhultsMölla" },
-                { "Helsingborgs kommun", "ByKyrkan"},
+                { "Helsingborgs kommun", "ByKyrkan" },
                 { "Åstorps kommun", "Familia" },
                 { "Bjuvs kommun", "BjuvVatten" },
                 { "Landskrona kommun", "AsmundKyrka" },
@@ -200,9 +220,11 @@ public class SwedenExplorerTest {
         for (int i = 0; i < municipalityZones.length; i += 1) {
             Object[] zoneData = municipalityZones[i];
             Object zoneIdentifier = zoneData[1];
-            Zone zone = (zoneIdentifier instanceof String) ? zoneNameMap.get((String) zoneIdentifier) : zoneIdMap.get((Integer) zoneIdentifier);
+            Zone zone = (zoneIdentifier instanceof String) ? zoneNameMap.get((String) zoneIdentifier)
+                    : zoneIdMap.get((Integer) zoneIdentifier);
             if (zone != null) {
-                String zoneDescription = String.format("%d - %s, %s", i + 1, zone.getName(), zone.getRegion().getArea().getName());
+                String zoneDescription = String.format("%d - %s, %s", i + 1, zone.getName(),
+                        zone.getRegion().getArea().getName());
                 out.writePlacemark(zoneDescription, "", zone.getLongitude(), zone.getLatitude());
                 System.out.printf("%s (%d) in %s%n", zoneDescription, zone.getId(), zoneData[0]);
                 if (!zone.getRegion().getArea().getName().equals(zoneData[0])) {
@@ -218,8 +240,7 @@ public class SwedenExplorerTest {
         out.close();
         assertEquals(131, explorerMunicipalities.size());
 
-        Set<String> municipalities = swedishZones.stream()
-                .map(zone -> zone.getRegion().getArea().getName())
+        Set<String> municipalities = swedishZones.stream().map(zone -> zone.getRegion().getArea().getName())
                 .collect(Collectors.toSet());
         assertEquals(290, municipalities.size());
         Set<String> visitedMunicipalities = swedishZones.stream()
@@ -227,28 +248,10 @@ public class SwedenExplorerTest {
                 .map(zone -> zone.getRegion().getArea().getName())
                 .collect(Collectors.toSet());
         assertEquals(159, visitedMunicipalities.size());
-        Set<String> unvisitedMunicipalities = municipalities.stream()
-                .filter(s -> !visitedMunicipalities.contains(s))
+        Set<String> unvisitedMunicipalities = municipalities.stream().filter(s -> !visitedMunicipalities.contains(s))
                 .collect(Collectors.toSet());
         assertEquals(131, unvisitedMunicipalities.size());
 
         assertEquals(unvisitedMunicipalities, explorerMunicipalities);
-    }
-
-    private static boolean isNordicZone(Zone zone) {
-        if (zone.getRegion() == null) {
-            return false;
-        }
-        String country = zone.getRegion().getCountry();
-        return country != null && (country.equals("se") || country.equals("no") || country.equals("dk") || country.equals("fi"));
-    }
-
-    private static boolean isSwedishZone(Zone zone) {
-        String country = zone.getRegion().getCountry();
-        return country != null && country.equals("se");
-    }
-
-    private static Map<String, Integer> readGlobalTakenZones() throws Exception {
-        return URLReaderTest.readProperties("warded.global-unique.php.html", TakenZones::fromHTML);
     }
 }
