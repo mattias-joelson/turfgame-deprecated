@@ -29,11 +29,11 @@
       <artifactId>expressly</artifactId>
       <version>${org.glassfish.expressly.expressly.version}</version>
     </dependency>
-      <!--    <dependency>-->
-      <!--      <groupId>org.jfree</groupId>-->
-      <!--      <artifactId>jfreechart</artifactId>-->
-      <!--      <version>${org.jfree.jfreechart.version}</version>-->
-      <!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.jfree</groupId>-->
+    <!--      <artifactId>jfreechart</artifactId>-->
+    <!--      <version>${org.jfree.jfreechart.version}</version>-->
+    <!--    </dependency>-->
   </dependencies>
 
   <parent>

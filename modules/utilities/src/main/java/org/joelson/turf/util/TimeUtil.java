@@ -12,10 +12,10 @@ import java.time.temporal.TemporalAccessor;
 public final class TimeUtil {
 
     private static final int TIMESTAMP_END_INDEX = 19;
-    private static final DateTimeFormatter TURF_API_FORMATTER =
-            DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
-    private static final DateTimeFormatter ZUNDIN_GMT_DATETIME_FORMAT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter TURF_API_FORMATTER
+            = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
+    private static final DateTimeFormatter ZUNDIN_GMT_DATETIME_FORMAT
+            = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private TimeUtil() throws InstantiationException {
         throw new InstantiationException("Should not be instantiated!");
@@ -28,16 +28,16 @@ public final class TimeUtil {
      * @return instant of timestamp
      */
     public static Instant turfTimestampToInstant(String timestamp) {
-        TemporalAccessor temporalAccessor =
-                DateTimeFormatter.ISO_DATE_TIME.parse(timestamp.substring(0, TIMESTAMP_END_INDEX));
+        TemporalAccessor temporalAccessor
+                = DateTimeFormatter.ISO_DATE_TIME.parse(timestamp.substring(0, TIMESTAMP_END_INDEX));
         LocalDateTime localDateTime = LocalDateTime.from(temporalAccessor);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
         return Instant.from(zonedDateTime);
     }
 
     public static Instant turfAPITimestampToInstant(String timestamp) {
-        TemporalAccessor temporalAccessor =
-                DateTimeFormatter.ISO_DATE_TIME.parse(timestamp.substring(0, TIMESTAMP_END_INDEX));
+        TemporalAccessor temporalAccessor
+                = DateTimeFormatter.ISO_DATE_TIME.parse(timestamp.substring(0, TIMESTAMP_END_INDEX));
         LocalDateTime localDateTime = LocalDateTime.from(temporalAccessor);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneOffset.UTC);
         return Instant.from(zonedDateTime);

@@ -8,23 +8,11 @@
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${com.fasterxml.jackson.core.version}</version>
-    </dependency>
-  </dependencies>
-
   <parent>
     <groupId>org.joelson.turf</groupId>
     <artifactId>parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-
-  <properties>
-    <com.fasterxml.jackson.core.version>2.17.1</com.fasterxml.jackson.core.version>
-  </properties>
 
   <build>
     <plugins>
