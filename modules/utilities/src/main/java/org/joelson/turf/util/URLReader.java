@@ -36,9 +36,7 @@ public final class URLReader {
     public static String postRequest(String request, String json) throws IOException {
         try {
             HttpRequest httpRequest = HttpRequest.newBuilder().uri(new URI(request))
-                    .header("Content-Type", "application/json")
-                    .POST(BodyPublishers.ofString(json))
-                    .build();
+                    .header("Content-Type", "application/json").POST(BodyPublishers.ofString(json)).build();
             HttpResponse<String> httpResponse = HttpClient.newBuilder().build()
                     .send(httpRequest, BodyHandlers.ofString());
             return httpResponse.body();
