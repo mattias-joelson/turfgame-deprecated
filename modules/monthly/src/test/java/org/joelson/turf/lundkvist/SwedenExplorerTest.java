@@ -1,10 +1,8 @@
-package org.joelson.mattias.turfgame.lundkvist;
+package org.joelson.turf.lundkvist;
 
 import org.joelson.mattias.turfgame.apiv5.Zone;
 import org.joelson.mattias.turfgame.apiv5.ZonesTest;
-import org.joelson.mattias.turfgame.util.KMLWriter;
-import org.joelson.mattias.turfgame.util.URLReaderTest;
-import org.joelson.mattias.turfgame.warded.TakenZones;
+import org.joelson.turf.util.KMLWriter;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

@@ -1,11 +1,11 @@
-package org.joelson.mattias.turfgame.zundin;
+package org.joelson.turf.zundin;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.joelson.mattias.turfgame.apiv4.Zone;
-import org.joelson.mattias.turfgame.apiv4.ZonesTest;
-import org.joelson.mattias.turfgame.util.JacksonUtil;
-import org.joelson.mattias.turfgame.util.KMLWriter;
-import org.joelson.mattias.turfgame.util.ZoneUtil;
+import org.joelson.turf.turfgame.apiv4.Zone;
+import org.joelson.turf.turfgame.apiv4.ZoneUtil;
+import org.joelson.turf.turfgame.apiv4.ZonesTest;
+import org.joelson.turf.util.JacksonUtil;
+import org.joelson.turf.util.KMLWriter;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -36,7 +36,8 @@ public class Flipp08MissionTest {
 
         File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
         List<JsonNode> flips = new ArrayList<>();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
+        try (BufferedReader in
+                = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             String line;
             while ((line = in.readLine()) != null) {
                 JsonNode flip = JacksonUtil.readValue(line, JsonNode.class);
@@ -74,7 +75,8 @@ public class Flipp08MissionTest {
 
         File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
         List<JsonNode> flips = new ArrayList<>();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
+        try (BufferedReader in
+                = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             String line;
             while ((line = in.readLine()) != null) {
                 //System.out.println("Parsing " + line);
@@ -111,16 +113,15 @@ public class Flipp08MissionTest {
             }
             assertEquals(flipZoneCount, count);
             List<MonthlyZone> takeZones = monthly.getZones().stream()
-                    .filter(monthlyZone -> flipZoneNames.contains(monthlyZone.getName()))
-                    .collect(Collectors.toList());
-            System.out.println(String.format("%s - %d / %d", flipName, takeZones.size(), flipZoneNames.size()));
+                    .filter(monthlyZone -> flipZoneNames.contains(monthlyZone.getName())).toList();
+            System.out.printf("%s - %d / %d%n", flipName, takeZones.size(), flipZoneNames.size());
             totalZoneCount += flipZoneNames.size();
             totalTakenCount += takeZones.size();
         }
 
-        System.out.println(String.format("Total - %d / %d", totalTakenCount, totalZoneCount));
+        System.out.printf("Total - %d / %d%n", totalTakenCount, totalZoneCount);
     }
-    
+
     @Test
     public void flipp08Test() throws Exception {
         List<Zone> zones = ZonesTest.getAllZones();
@@ -129,7 +130,8 @@ public class Flipp08MissionTest {
 
         File jsonFile = new File(Flipp08MissionTest.class.getResource("/flipp08zones.json").getFile());
         List<JsonNode> flips = new ArrayList<>();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
+        try (BufferedReader in
+                = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8))) {
             String line;
             while ((line = in.readLine()) != null) {
                 //System.out.println("Parsing " + line);
@@ -184,17 +186,15 @@ public class Flipp08MissionTest {
                     count += 1;
                 }
                 if (zoneNameInput) {
-                    String flipZoneNumbers = flipZoneNames.stream()
-                            .map(zoneMap::get)
-                            .map(Zone::getId)
-                            .map(integer -> Integer.toString(integer))
-                            .collect(Collectors.joining(","));
+                    String flipZoneNumbers = flipZoneNames.stream().map(zoneMap::get).map(Zone::getId)
+                            .map(integer -> Integer.toString(integer)).collect(Collectors.joining(","));
                     String outFlip = String.format("{\"name\":\"%s\",\"taken\":\"%s\",\"zoneCount\":%d,\"zones\":[%s]}",
-                            flipName, Boolean.toString(flipZoneTaken), flipZoneCount, flipZoneNumbers);
+                            flipName, flipZoneTaken, flipZoneCount, flipZoneNumbers);
                     System.out.println(outFlip);
                 }
                 assertEquals(flipZoneCount, count);
-                //System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " + (count == uniqueZoneNames.size()));
+                //System.out.println("  zones: " + count + ", unique: " + uniqueZoneNames.size() + ", same: " +
+                // (count == uniqueZoneNames.size()));
 
                 totalZoneCount += count;
                 if (flipZoneTaken) {
@@ -203,34 +203,30 @@ public class Flipp08MissionTest {
                 } else if (count > 0) {
                     flipZoneNames.forEach(name -> allRemainingZones.put(name, flipName + ": " + name));
                     outRemaining.writeFolder(flipName);
-                    for (String zoneName : flipZoneNames.stream()
-                            .sorted(String::compareTo)
-                            .collect(Collectors.toList())) {
+                    for (String zoneName : flipZoneNames.stream().sorted(String::compareTo).toList()) {
                         Zone zone = zoneMap.get(zoneName);
-                        outRemaining.writePlacemark(zoneName, flipName + ": " + zoneName, zone.getLongitude(), zone.getLatitude());
+                        outRemaining.writePlacemark(zoneName, flipName + ": " + zoneName, zone.getLongitude(),
+                                zone.getLatitude());
                     }
                 }
-                int flipNumber = Integer.valueOf(flipName.substring(5, flipName.indexOf(' ', 5)));
+                int flipNumber = Integer.parseInt(flipName.substring(5, flipName.indexOf(' ', 5)));
                 KMLWriter roundMap = roundRobinMaps.get(flipNumber % roundRobin);
                 roundMap.writeFolder(flipName);
-                for (String zoneName : flipZoneNames.stream()
-                        .sorted(String::compareTo)
-                        .collect(Collectors.toList())) {
+                for (String zoneName : flipZoneNames.stream().sorted(String::compareTo).toList()) {
                     Zone zone = zoneMap.get(zoneName);
-                    roundMap.writePlacemark(zoneName, flipName + ": " + zoneName, zone.getLongitude(), zone.getLatitude());
+                    roundMap.writePlacemark(zoneName, flipName + ": " + zoneName, zone.getLongitude(),
+                            zone.getLatitude());
                 }
             }
             outAll.writeFolder("Taken zones");
             for (Entry<String, String> entry : allTakenZones.entrySet().stream()
-                    .sorted(Comparator.comparing(Entry::getValue))
-                    .collect(Collectors.toList())) {
+                    .sorted(Comparator.comparing(Entry::getValue)).toList()) {
                 Zone zone = zoneMap.get(entry.getKey());
                 outAll.writePlacemark(entry.getKey(), entry.getValue(), zone.getLongitude(), zone.getLatitude());
             }
             outAll.writeFolder("Remaining zones");
             for (Entry<String, String> entry : allRemainingZones.entrySet().stream()
-                    .sorted(Comparator.comparing(Entry::getValue))
-                    .collect(Collectors.toList())) {
+                    .sorted(Comparator.comparing(Entry::getValue)).toList()) {
                 Zone zone = zoneMap.get(entry.getKey());
                 outAll.writePlacemark(entry.getKey(), entry.getValue(), zone.getLongitude(), zone.getLatitude());
             }

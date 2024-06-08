@@ -1,9 +1,9 @@
-package org.joelson.mattias.turfgame;
+package org.joelson.turf;
 
-import org.joelson.mattias.turfgame.warded.HeatmapTest;
-import org.joelson.mattias.turfgame.warded.TakeDistributionTest;
-import org.joelson.mattias.turfgame.warded.UntakenStockholmZoneTest;
-import org.joelson.mattias.turfgame.zundin.MonthlyVisitTest;
+import org.joelson.turf.warded.HeatmapTest;
+import org.joelson.turf.warded.TakeDistributionTest;
+import org.joelson.turf.warded.UntakenStockholmZoneTest;
+import org.joelson.turf.zundin.MonthlyVisitTest;
 import org.junit.jupiter.api.Test;
 
 public class UpdateMonthlyMapsTest {

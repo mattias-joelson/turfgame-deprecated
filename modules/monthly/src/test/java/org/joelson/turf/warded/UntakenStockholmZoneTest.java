@@ -1,9 +1,9 @@
-package org.joelson.mattias.turfgame.warded;
+package org.joelson.turf.warded;
 
 import org.joelson.mattias.turfgame.apiv5.Region;
 import org.joelson.mattias.turfgame.apiv5.Zone;
 import org.joelson.mattias.turfgame.apiv5.ZonesTest;
-import org.joelson.mattias.turfgame.util.KMLWriter;
+import org.joelson.turf.util.KMLWriter;
 import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
