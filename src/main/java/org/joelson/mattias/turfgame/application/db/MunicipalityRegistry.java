@@ -2,6 +2,7 @@ package org.joelson.mattias.turfgame.application.db;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.joelson.mattias.turfgame.util.db.EntityRegistry;
 
 class MunicipalityRegistry extends EntityRegistry<MunicipalityEntity> {
 
