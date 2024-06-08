@@ -80,6 +80,7 @@
   </dependencies>
 
   <modules>
+    <module>modules/utilities</module>
     <module>modules/resources</module>
     <module>modules/hibernate-h2</module>
   </modules>
