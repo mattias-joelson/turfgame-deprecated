@@ -6,7 +6,7 @@ import java.util.function.ToIntFunction;
 final class EntityUtil {
 
     private EntityUtil() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated!"); // NON-NLS
+        throw new InstantiationException("Should not be instantiated!");
     }
 
     public static String toStringPart(IdiotPlayerEntity user) {
