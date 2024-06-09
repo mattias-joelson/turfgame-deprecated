@@ -1,6 +1,6 @@
-package org.joelson.mattias.turfgame.idioten.model;
+package org.joelson.turf.idioten.model;
 
-import org.joelson.mattias.turfgame.idioten.db.IdiotVisitType;
+import org.joelson.turf.idioten.db.IdiotVisitType;
 
 import java.time.Instant;
 import java.util.Objects;

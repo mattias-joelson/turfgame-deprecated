@@ -1,11 +1,11 @@
-package org.joelson.mattias.turfgame.idioten.db;
+package org.joelson.turf.idioten.db;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
-import org.joelson.mattias.turfgame.idioten.model.PlayerData;
-import org.joelson.mattias.turfgame.idioten.model.ZoneData;
+import org.joelson.turf.idioten.model.PlayerData;
+import org.joelson.turf.idioten.model.ZoneData;
 
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class DatabaseEntityManager {
 
-    public static final String PERSISTANCE_NAME = "turfgame-idioten-h2";
+    public static final String PERSISTENCE_NAME = "turfgame-idioten-h2";
     private static final String JAVAX_PERSISTENCE_JDBC_URL_PROPERTY = "javax.persistence.jdbc.url";
     private static final String JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY =
             "javax.persistence.schema-generation.database.action";
@@ -185,7 +185,7 @@ public class DatabaseEntityManager {
 
         private void endTransaction() {
             if (entityManager == null) {
-                throw new IllegalStateException("Stoping non existing transaction.");
+                throw new IllegalStateException("Stopping non existing transaction.");
             }
             entityManager.close();
             entityManager = null;

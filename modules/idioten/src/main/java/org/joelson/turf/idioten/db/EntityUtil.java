@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.idioten.db;
+package org.joelson.turf.idioten.db;
 
 import java.util.function.Function;
 import java.util.function.ToIntFunction;

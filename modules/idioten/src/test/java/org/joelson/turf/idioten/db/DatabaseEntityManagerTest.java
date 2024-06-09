@@ -1,6 +1,6 @@
-package org.joelson.mattias.turfgame.idioten.db;
+package org.joelson.turf.idioten.db;
 
-import org.joelson.mattias.turfgame.idioten.model.PlayerData;
+import org.joelson.turf.idioten.model.PlayerData;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

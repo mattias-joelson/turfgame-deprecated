@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.idioten.model;
+package org.joelson.turf.idioten.model;
 
 final class ModelUtil {
 
