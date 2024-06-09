@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.idioten.db;
+package org.joelson.turf.idioten.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,17 +6,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import org.joelson.mattias.turfgame.idioten.model.PlayerData;
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.idioten.model.UserData;
+import org.joelson.turf.util.StringUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "idiot_players",
-        indexes = {@Index(columnList = "id", unique = true), @Index(columnList = "name", unique = true)})
-public class IdiotPlayerEntity implements Serializable {
+@Table(name = "users",
+        indexes = { @Index(columnList = "id", unique = true), @Index(columnList = "name", unique = true) })
+public class UserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,14 +29,14 @@ public class IdiotPlayerEntity implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    public IdiotPlayerEntity() {
+    public UserEntity() {
     }
 
-    public static IdiotPlayerEntity build(int id, @NotNull String name) {
-        IdiotPlayerEntity playerEntity = new IdiotPlayerEntity();
-        playerEntity.setId(id);
-        playerEntity.setName(name);
-        return playerEntity;
+    public static UserEntity build(int id, @NotNull String name) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(id);
+        userEntity.setName(name);
+        return userEntity;
     }
 
     public int getId() {
@@ -52,8 +52,7 @@ public class IdiotPlayerEntity implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null",
-                "Name can not be empty");
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
     }
 
     @Override
@@ -61,7 +60,7 @@ public class IdiotPlayerEntity implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof IdiotPlayerEntity that) {
+        if (obj instanceof UserEntity that) {
             return id == that.id && Objects.equals(name, that.name);
         }
         return false;
@@ -74,10 +73,10 @@ public class IdiotPlayerEntity implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("PlayerEntity[id %d, name %s]", id, name);
+        return String.format("UserEntity[id %d, name %s]", id, name);
     }
 
-    public PlayerData toData() {
-        return new PlayerData(id, name);
+    public UserData toData() {
+        return new UserData(id, name);
     }
 }
