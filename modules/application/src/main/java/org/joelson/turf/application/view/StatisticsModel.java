@@ -1,22 +1,16 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.MunicipalityCollection;
-import org.joelson.mattias.turfgame.application.model.MunicipalityData;
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.VisitCollection;
-import org.joelson.mattias.turfgame.application.model.VisitData;
-import org.joelson.mattias.turfgame.zundin.Monthly;
-import org.joelson.mattias.turfgame.zundin.MonthlyZone;
+import org.joelson.turf.application.model.MunicipalityCollection;
+import org.joelson.turf.application.model.MunicipalityData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.VisitCollection;
+import org.joelson.turf.application.model.VisitData;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public final class StatisticsModel {
 
@@ -33,7 +27,8 @@ public final class StatisticsModel {
     private static Map<String, String> initMunicipalities(MunicipalityCollection municipalities) {
         Map<String, String> municipalityMap = new HashMap<>();
         for (MunicipalityData municipality : municipalities.getMunicipalities()) {
-            String municipalityName = String.format("%s / %s", municipality.getName(), municipality.getRegion().getName());
+            String municipalityName = String.format("%s / %s", municipality.getName(),
+                    municipality.getRegion().getName());
             municipality.getZones().forEach(zoneData -> municipalityMap.put(zoneData.getName(), municipalityName));
         }
         return municipalityMap;

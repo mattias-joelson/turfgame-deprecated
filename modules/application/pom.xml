@@ -10,6 +10,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.jfree</groupId>
+      <artifactId>jfreechart</artifactId>
+      <version>${org.jfree.jfreechart.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.joelson.turf</groupId>
       <artifactId>persistence-utilities</artifactId>
       <version>${org.joelson.turf.persistence-utilities.version}</version>
@@ -28,6 +33,7 @@
   </parent>
 
   <properties>
+    <org.jfree.jfreechart.version>1.5.4</org.jfree.jfreechart.version>
     <org.joelson.turf.persistence-utilities.version>0.1-SNAPSHOT</org.joelson.turf.persistence-utilities.version>
     <org.joelson.turf.resources.version>0.1-SNAPSHOT</org.joelson.turf.resources.version>
   </properties>
@@ -45,6 +51,11 @@
           </execution>
         </executions>
         <configuration>
+          <archive>
+            <manifest>
+              <mainClass>org.joelson.turf.application.Application</mainClass>
+            </manifest>
+          </archive>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>

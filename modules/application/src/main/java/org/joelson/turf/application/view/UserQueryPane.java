@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
 /*import org.joelson.mattias.turfgame.application.controller.UserActions;
 

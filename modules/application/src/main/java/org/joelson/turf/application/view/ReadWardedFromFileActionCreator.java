@@ -1,12 +1,12 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
+import org.joelson.turf.application.model.ApplicationData;
 
+import javax.swing.Action;
 import java.awt.event.KeyEvent;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import javax.swing.Action;
 
 final class ReadWardedFromFileActionCreator {
 
@@ -16,12 +16,11 @@ final class ReadWardedFromFileActionCreator {
 
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> readWardedFromFile(applicationUI))
-                .withName("Read Warded from file ...")
-                .withMnemonicKey(KeyEvent.VK_W)
-                .withAcceleratorKey(KeyEvent.VK_W)
+                .withName("Read Warded from file ...").withMnemonicKey(KeyEvent.VK_W).withAcceleratorKey(KeyEvent.VK_W)
                 .build();
         action.setEnabled(false);
-        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action,
+                ApplicationData.HAS_DATABASE, true);
         return action;
     }
 
@@ -29,10 +28,9 @@ final class ReadWardedFromFileActionCreator {
         Path wardedFile = applicationUI.openFileDialog(null);
         if (wardedFile != null) {
             applicationUI.setStatus(String.format("Reading Warded from file %s ...", wardedFile));
-            new SwingWorkerBuilder<Void, Void>(() -> applicationUI.getApplicationActions().readWardedFromFile(wardedFile))
-                    .withDone(finishedWorker -> done(finishedWorker, applicationUI, wardedFile))
-                    .build()
-                    .execute();
+            new SwingWorkerBuilder<Void, Void>(
+                    () -> applicationUI.getApplicationActions().readWardedFromFile(wardedFile))
+                    .withDone(finishedWorker -> done(finishedWorker, applicationUI, wardedFile)).build().execute();
         }
     }
 

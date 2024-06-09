@@ -1,12 +1,14 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.MunicipalityCollection;
-import org.joelson.mattias.turfgame.application.model.MunicipalityData;
-import org.joelson.mattias.turfgame.application.model.TakeData;
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.VisitCollection;
-import org.joelson.mattias.turfgame.application.model.VisitData;
+import org.joelson.turf.application.model.MunicipalityCollection;
+import org.joelson.turf.application.model.MunicipalityData;
+import org.joelson.turf.application.model.TakeData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.VisitCollection;
+import org.joelson.turf.application.model.VisitData;
 
+import javax.swing.table.AbstractTableModel;
+import java.io.Serial;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,66 +19,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.swing.table.AbstractTableModel;
 
 class SessionTableModel extends AbstractTableModel {
 
-    private static class SessionData {
-        private final Instant start;
-        private final Duration duration;
-        private final String municipalities;
-        private final int takes;
-        private final int owns;
-        private final int revisits;
-        private final int assists;
-        private final int tp;
-        private final int pph;
-        private final int incPph;
-
-        private SessionData(Instant start, Duration duration, String municipalities, int takes, int owns, int revisits, int assists, int tp, int pph, int incPph) {
-            this.start = start;
-            this.duration = duration;
-            this.municipalities = municipalities;
-            this.takes = takes;
-            this.owns = owns;
-            this.revisits = revisits;
-            this.assists = assists;
-            this.tp = tp;
-            this.pph = pph;
-            this.incPph = incPph;
-        }
-
-        public int getTpH() {
-            int seconds = (int) duration.getSeconds();
-            if (seconds < 3600) {
-                return tp;
-            }
-            return (tp * 3600) / seconds;
-        }
-
-        public int getTpPphH() {
-            int seconds = (int) duration.getSeconds();
-            if (seconds < 3600) {
-                return tp + pph;
-            }
-            return ((tp + pph) * 3600) / seconds;
-        }
-    }
-
-    private static final String[] COLUMN_NAMES = {
-            "When", "Duration", "Municipalities", "Takes", "Owns", "Revisits", "Assists", "TP", "TP / h", "PPH", "TP + PPH", "TP + PPH / h", "PPH / h"
-    };
-    private static final Class<?>[] COLUMN_CLASSES = {
-            Instant.class, Duration.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class,
-            Integer.class, Integer.class, Integer.class, Integer.class
-    };
+    private static final String[] COLUMN_NAMES =
+            { "When", "Duration", "Municipalities", "Takes", "Owns", "Revisits", "Assists", "TP", "TP / h", "PPH",
+                    "TP + PPH", "TP + PPH / h", "PPH / h" };
+    private static final Class<?>[] COLUMN_CLASSES =
+            { Instant.class, Duration.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class,
+                    Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class };
+    @Serial
     private static final long serialVersionUID = 1L;
     private static final int SESSION_HOUR_LENGTH = 1200;
-
     private final transient VisitCollection visits;
     private final HashMap<String, MunicipalityData> municipalityMap;
     private ArrayList<SessionData> currentSessions;
-
     public SessionTableModel(VisitCollection visits, MunicipalityCollection municipalities, UserData selectedUser) {
         this.visits = visits;
         municipalityMap = initMunicipalities(municipalities);
@@ -89,6 +46,22 @@ class SessionTableModel extends AbstractTableModel {
             municipality.getZones().forEach(zoneData -> municipalityMap.put(zoneData.getName(), municipality));
         }
         return municipalityMap;
+    }
+
+    private static String toString(Set<MunicipalityData> municipalities) {
+        Map<String, Set<String>> regionMunicipalities = new HashMap<>();
+        for (MunicipalityData municipality : municipalities) {
+            String regionName = municipality.getRegion().getName();
+            Set<String> names = regionMunicipalities.computeIfAbsent(regionName, k -> new HashSet<>());
+            names.add(municipality.getName());
+        }
+        return regionMunicipalities.keySet().stream().sorted().map(
+                regionName -> String.format("%s / %s", regionMunicipalities.get(regionName).stream().sorted()
+                        .collect(Collectors.joining(",")), regionName)).collect(Collectors.joining(", "));
+    }
+
+    private static Integer nullZero(int i) {
+        return (i != 0) ? i : null;
     }
 
     public void updateSelectedUser(UserData selectedUser) {
@@ -114,7 +87,9 @@ class SessionTableModel extends AbstractTableModel {
         for (VisitData visit : currentVisits) {
             if (last == null || visit.getWhen().isAfter(last.plusSeconds(SESSION_HOUR_LENGTH))) {
                 if (last != null) {
-                    sessionData.add(new SessionData(start, Duration.between(start, last), toString(municipalities), takes, owns, revisits, assists, tp, pph, incPph));
+                    sessionData.add(
+                            new SessionData(start, Duration.between(start, last), toString(municipalities), takes, owns,
+                                    revisits, assists, tp, pph, incPph));
                     municipalities.clear();
                     takes = 0;
                     owns = 0;
@@ -152,30 +127,10 @@ class SessionTableModel extends AbstractTableModel {
             tp += visit.getTp();
         }
         if (last != null) {
-            sessionData.add(new SessionData(start, Duration.between(start, last), toString(municipalities), takes, owns, revisits, assists, tp, pph, incPph));
+            sessionData.add(new SessionData(start, Duration.between(start, last), toString(municipalities), takes, owns,
+                    revisits, assists, tp, pph, incPph));
         }
         return sessionData;
-    }
-
-    private static String toString(Set<MunicipalityData> municipalities) {
-        Map<String, Set<String>> regionMunicipalities = new HashMap<>();
-        for (MunicipalityData municipality : municipalities) {
-            String regionName = municipality.getRegion().getName();
-            Set<String> names = regionMunicipalities.get(regionName);
-            if (names == null) {
-                names = new HashSet<>();
-                regionMunicipalities.put(regionName, names);
-            }
-            names.add(municipality.getName());
-        }
-        return regionMunicipalities.keySet().stream()
-                .sorted()
-                .map(regionName -> String.format("%s / %s",
-                        regionMunicipalities.get(regionName).stream()
-                                .sorted()
-                                .collect(Collectors.joining(",")),
-                        regionName))
-                .collect(Collectors.joining(", "));
     }
 
     @Override
@@ -191,40 +146,22 @@ class SessionTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         SessionData session = currentSessions.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return session.start;
-            case 1:
-                return session.duration;
-            case 2:
-                return session.municipalities;
-            case 3:
-                return nullZero(session.takes);
-            case 4:
-                return nullZero(session.owns);
-            case 5:
-                return nullZero(session.revisits);
-            case 6:
-                return nullZero(session.assists);
-            case 7:
-                return session.tp;
-            case 8:
-                return session.getTpH();
-            case 9:
-                return session.pph;
-            case 10:
-                return session.tp + session.pph;
-            case 11:
-                return session.getTpPphH();
-            case 12:
-                return nullZero(session.incPph);
-            default:
-                throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
-        }
-    }
-
-    private static Integer nullZero(int i) {
-        return (i != 0) ? i : null;
+        return switch (columnIndex) {
+            case 0 -> session.start;
+            case 1 -> session.duration;
+            case 2 -> session.municipalities;
+            case 3 -> nullZero(session.takes);
+            case 4 -> nullZero(session.owns);
+            case 5 -> nullZero(session.revisits);
+            case 6 -> nullZero(session.assists);
+            case 7 -> session.tp;
+            case 8 -> session.getTpH();
+            case 9 -> session.pph;
+            case 10 -> session.tp + session.pph;
+            case 11 -> session.getTpPphH();
+            case 12 -> nullZero(session.incPph);
+            default -> throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
+        };
     }
 
     @Override
@@ -235,5 +172,25 @@ class SessionTableModel extends AbstractTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return COLUMN_CLASSES[columnIndex];
+    }
+
+    private record SessionData(Instant start, Duration duration, String municipalities, int takes, int owns,
+            int revisits, int assists, int tp, int pph, int incPph) {
+
+        public int getTpH() {
+            int seconds = (int) duration.getSeconds();
+            if (seconds < 3600) {
+                return tp;
+            }
+            return (tp * 3600) / seconds;
+        }
+
+        public int getTpPphH() {
+            int seconds = (int) duration.getSeconds();
+            if (seconds < 3600) {
+                return tp + pph;
+            }
+            return ((tp + pph) * 3600) / seconds;
+        }
     }
 }

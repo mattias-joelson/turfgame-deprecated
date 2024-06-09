@@ -1,7 +1,7 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.ZoneCollection;
+import org.joelson.turf.application.model.ApplicationData;
+import org.joelson.turf.application.model.ZoneCollection;
 
 import javax.swing.Action;
 
@@ -13,16 +13,17 @@ final class ZonePointsHistoryTableActionCreator {
 
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> showZonePointsTable(applicationUI))
-                .withName("Show Zone Points History Table")
-                .build();
+                .withName("Show Zone Points History Table").build();
         action.setEnabled(false);
-        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action,
+                ApplicationData.HAS_DATABASE, true);
         return action;
     }
 
     private static void showZonePointsTable(ApplicationUI applicationUI) {
         ZoneCollection zones = applicationUI.getApplicationData().getZones();
-        ZonePointsHistoryTableModel tableModel = new ZonePointsHistoryTableModel(zones.getZones(), zones.getZonePointsHistory());
+        ZonePointsHistoryTableModel tableModel = new ZonePointsHistoryTableModel(zones.getZones(),
+                zones.getZonePointsHistory());
         applicationUI.setPane(TableUtil.createDefaultTablePane(tableModel, "Zone Filter"));
     }
 }

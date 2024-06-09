@@ -1,4 +1,4 @@
 /**
  * Classes controlling application behaviour.
  */
-package org.joelson.mattias.turfgame.application.controller;
+package org.joelson.turf.application.controller;

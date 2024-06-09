@@ -1,16 +1,9 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.UserCollection;
-import org.joelson.mattias.turfgame.application.model.UserData;
+import org.joelson.turf.application.model.ApplicationData;
+import org.joelson.turf.application.model.UserCollection;
+import org.joelson.turf.application.model.UserData;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Vector;
-import java.util.function.Consumer;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -19,6 +12,14 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.io.Serial;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Vector;
+import java.util.function.Consumer;
 
 final class UserSelectionUtil {
 
@@ -26,13 +27,18 @@ final class UserSelectionUtil {
         throw new InstantiationException("Should not be instantiated"); //NON-NLS
     }
 
-    public static Container createContainer(ApplicationData applicationData, UserData selectedUser, Consumer<UserData> userSelectionListener,
+    public static Container createContainer(
+            ApplicationData applicationData, UserData selectedUser, Consumer<UserData> userSelectionListener,
             Container tableContainer) {
-        return createContainer(applicationData.getUsers().getUsers(), selectedUser, userSelectionListener, tableContainer);
+        return createContainer(applicationData.getUsers().getUsers(), selectedUser, userSelectionListener,
+                tableContainer);
     }
 
-    public static Container createContainer(List<UserData> users, UserData selectedUser, Consumer<UserData> userSelectionListener, Container tableContainer) {
-        return createContainer(createUserSelectionContainer(users, selectedUser, userSelectionListener), tableContainer);
+    public static Container createContainer(
+            List<UserData> users, UserData selectedUser, Consumer<UserData> userSelectionListener,
+            Container tableContainer) {
+        return createContainer(createUserSelectionContainer(users, selectedUser, userSelectionListener),
+                tableContainer);
     }
 
     private static Container createContainer(Container userContainer, Container tableContainer) {
@@ -62,7 +68,8 @@ final class UserSelectionUtil {
         return user;
     }
 
-    public static Container createUserSelectionContainer(List<UserData> users, UserData selectedUser, Consumer<UserData> userSelectionListener) {
+    public static Container createUserSelectionContainer(
+            List<UserData> users, UserData selectedUser, Consumer<UserData> userSelectionListener) {
         Container userContainer = new Container();
         GroupLayout groupLayout = new GroupLayout(userContainer);
         userContainer.setLayout(groupLayout);
@@ -75,11 +82,9 @@ final class UserSelectionUtil {
 
         userContainer.add(userLabel);
         userContainer.add(userComboBox);
-        groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-                .addComponent(userLabel)
-                .addComponent(userComboBox));
-        groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                .addComponent(userLabel)
+        groupLayout.setHorizontalGroup(
+                groupLayout.createSequentialGroup().addComponent(userLabel).addComponent(userComboBox));
+        groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.BASELINE).addComponent(userLabel)
                 .addComponent(userComboBox));
 
         return userContainer;
@@ -93,6 +98,7 @@ final class UserSelectionUtil {
 
     private static final class UserComboBoxCellRenderer extends JLabel implements ListCellRenderer<UserData> {
 
+        @Serial
         private static final long serialVersionUID = 1L;
 
         UserComboBoxCellRenderer() {
@@ -102,7 +108,8 @@ final class UserSelectionUtil {
         }
 
         @Override
-        public Component getListCellRendererComponent(JList<? extends UserData> list, UserData value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(
+                JList<? extends UserData> list, UserData value, int index, boolean isSelected, boolean cellHasFocus) {
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());

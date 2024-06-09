@@ -1,8 +1,10 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ZoneData;
-import org.joelson.mattias.turfgame.application.model.ZonePointsHistoryData;
+import org.joelson.turf.application.model.ZoneData;
+import org.joelson.turf.application.model.ZonePointsHistoryData;
 
+import javax.swing.table.AbstractTableModel;
+import java.io.Serial;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.swing.table.AbstractTableModel;
 
 class ZonePointsHistoryTableModel extends AbstractTableModel {
 
     private static final String[] COLUMN_NAMES = { "ID", "Name", "From", "TP", "PPH" };
-    private static final Class<?>[] COLUMN_CLASSES = { Integer.class, String.class, Instant.class, Integer.class, Integer.class };
+    private static final Class<?>[] COLUMN_CLASSES =
+            { Integer.class, String.class, Instant.class, Integer.class, Integer.class };
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final ArrayList<ZonePointsHistoryData> zonePointsHistory;
@@ -25,6 +28,21 @@ class ZonePointsHistoryTableModel extends AbstractTableModel {
         this.zonePointsHistory = new ArrayList<>(zonePointsHistory);
         this.zones = new HashMap<>(zones.stream().collect(Collectors.toMap(ZoneData::getId, Function.identity())));
         this.zonePointsHistory.sort((o1, o2) -> compareZones(this.zones, o1, o2));
+    }
+
+    private static int compareZones(
+            Map<Integer, ZoneData> zones, ZonePointsHistoryData zonePointsHistoryData1,
+            ZonePointsHistoryData zonePointsHistoryData2) {
+        int cmpName = zones.get(zonePointsHistoryData1.getId()).getName()
+                .compareTo(zones.get(zonePointsHistoryData2.getId()).getName());
+        if (cmpName != 0) {
+            return cmpName;
+        }
+        int cmpFrom = zonePointsHistoryData1.getFrom().compareTo(zonePointsHistoryData2.getFrom());
+        if (cmpFrom != 0) {
+            return cmpFrom;
+        }
+        return -1;
     }
 
     @Override
@@ -40,20 +58,14 @@ class ZonePointsHistoryTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         ZonePointsHistoryData zonePoints = zonePointsHistory.get(rowIndex);
-        switch (columnIndex) {
-        case 0:
-            return zonePoints.getId();
-        case 1:
-            return zones.get(zonePoints.getId()).getName();
-        case 2:
-            return zonePoints.getFrom();
-        case 3:
-            return zonePoints.getTp();
-        case 4:
-            return zonePoints.getPph();
-        default:
-            throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
-        }
+        return switch (columnIndex) {
+            case 0 -> zonePoints.getId();
+            case 1 -> zones.get(zonePoints.getId()).getName();
+            case 2 -> zonePoints.getFrom();
+            case 3 -> zonePoints.getTp();
+            case 4 -> zonePoints.getPph();
+            default -> throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
+        };
     }
 
     @Override
@@ -64,17 +76,5 @@ class ZonePointsHistoryTableModel extends AbstractTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return COLUMN_CLASSES[columnIndex];
-    }
-
-    private static int compareZones(Map<Integer, ZoneData> zones, ZonePointsHistoryData zonePointsHistoryData1, ZonePointsHistoryData zonePointsHistoryData2) {
-        int cmpName = zones.get(zonePointsHistoryData1.getId()).getName().compareTo(zones.get(zonePointsHistoryData2.getId()).getName());
-        if (cmpName != 0) {
-            return cmpName;
-        }
-        int cmpFrom = zonePointsHistoryData1.getFrom().compareTo(zonePointsHistoryData2.getFrom());
-        if (cmpFrom != 0) {
-            return cmpFrom;
-        }
-        return -1;
     }
 }

@@ -1,21 +1,17 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.MunicipalityData;
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.ZoneVisitCollection;
+import org.joelson.turf.application.model.ApplicationData;
+import org.joelson.turf.application.model.MunicipalityData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.ZoneVisitCollection;
 
-import java.awt.BorderLayout;
+import javax.swing.Action;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
-import javax.swing.Action;
-import javax.swing.BoxLayout;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 final class MunicipalityVisitTableActionCreator {
 
@@ -25,10 +21,10 @@ final class MunicipalityVisitTableActionCreator {
 
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> showMunicipalityVisitTable(applicationUI))
-                .withName("Show Municipality Visit Table")
-                .build();
+                .withName("Show Municipality Visit Table").build();
         action.setEnabled(false);
-        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action,
+                ApplicationData.HAS_DATABASE, true);
         return action;
     }
 
@@ -37,25 +33,31 @@ final class MunicipalityVisitTableActionCreator {
         List<MunicipalityData> municipalities = applicationData.getMunicipalities().getMunicipalities();
         MunicipalityTableModel municipalityTableModel = new MunicipalityTableModel(municipalities);
         JTable municipalityTable = TableUtil.createDefaultTable(municipalityTableModel);
-        Container municipalityTableContainer = TableUtil.createDefaultTablePane(municipalityTable, "Municipality Filter");
+        Container municipalityTableContainer = TableUtil.createDefaultTablePane(municipalityTable,
+                "Municipality Filter");
         ZoneVisitCollection zoneVisits = applicationData.getZoneVisits();
         List<UserData> zoneVisitUsers = zoneVisits.getZoneVisitUsers();
         UserData selectedUser = UserSelectionUtil.getSelectedUser(applicationData, zoneVisitUsers);
-        MunicipalityVisitTableModel tableModel = new MunicipalityVisitTableModel(municipalities, zoneVisits, selectedUser);
+        MunicipalityVisitTableModel tableModel = new MunicipalityVisitTableModel(municipalities, zoneVisits,
+                selectedUser);
         Container municipalityVisitTableContainer = TableUtil.createDefaultTablePane(tableModel, "Visit Filter");
         Container tablesContainer = createContainer(municipalityTableContainer, municipalityVisitTableContainer);
-        applicationUI.setPane(UserSelectionUtil.createContainer(zoneVisitUsers, selectedUser, tableModel::updateSelectedUser, tablesContainer));
+        applicationUI.setPane(
+                UserSelectionUtil.createContainer(zoneVisitUsers, selectedUser, tableModel::updateSelectedUser,
+                        tablesContainer));
         applicationUI.setApplicationDataStatus();
 
         ListSelectionModel listSelectionModel = municipalityTable.getSelectionModel();
         municipalityTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                tableModel.updateSelectedMunicipalities(municipalityTableModel.getMunicipalities(listSelectionModel.getSelectedIndices()));
+                tableModel.updateSelectedMunicipalities(
+                        municipalityTableModel.getMunicipalities(listSelectionModel.getSelectedIndices()));
             }
         });
     }
 
-    private static Container createContainer(Container municipalityTableContainer, Container municipalityVisitTableContainer) {
+    private static Container createContainer(
+            Container municipalityTableContainer, Container municipalityVisitTableContainer) {
         Container container = new Container();
         container.setLayout(new GridBagLayout());
         container.add(municipalityTableContainer, createConstraints(0, 0.3));

@@ -1,10 +1,10 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.UserData;
+import org.joelson.turf.application.model.ApplicationData;
+import org.joelson.turf.application.model.UserData;
 
-import java.awt.Container;
 import javax.swing.Action;
+import java.awt.Container;
 
 public final class UniqueRoundZoneGraphActionCreator {
 
@@ -14,19 +14,21 @@ public final class UniqueRoundZoneGraphActionCreator {
 
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> showZoneRoundUniqueGraph(applicationUI))
-                .withName("Show Unique Round Zone Graph")
-                .build();
+                .withName("Show Unique Round Zone Graph").build();
         action.setEnabled(false);
-        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action,
+                ApplicationData.HAS_DATABASE, true);
         return action;
     }
 
     private static void showZoneRoundUniqueGraph(ApplicationUI applicationUI) {
         ApplicationData applicationData = applicationUI.getApplicationData();
         UserData selectedUser = UserSelectionUtil.getSelectedUser(applicationData);
-        UniqueRoundZoneGraphModel uniqueRoundZoneGraphModel = new UniqueRoundZoneGraphModel(applicationData.getVisits(), selectedUser);
+        UniqueRoundZoneGraphModel uniqueRoundZoneGraphModel = new UniqueRoundZoneGraphModel(applicationData.getVisits(),
+                selectedUser);
         Container chartContainer = uniqueRoundZoneGraphModel.getChart();
-        applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser, uniqueRoundZoneGraphModel::updateSelectedUser, chartContainer));
+        applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser,
+                uniqueRoundZoneGraphModel::updateSelectedUser, chartContainer));
         applicationUI.setApplicationDataStatus();
     }
 }

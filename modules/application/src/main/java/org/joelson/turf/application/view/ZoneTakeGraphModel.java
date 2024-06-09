@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -10,10 +10,10 @@ import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.joelson.mattias.turfgame.application.model.RevisitData;
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.VisitCollection;
-import org.joelson.mattias.turfgame.application.model.VisitData;
+import org.joelson.turf.application.model.RevisitData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.VisitCollection;
+import org.joelson.turf.application.model.VisitData;
 
 import java.awt.Container;
 import java.text.DecimalFormat;
@@ -24,42 +24,26 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class ZoneTakeGraphModel {
-
-    private static class ZoneTakesData {
-
-        private final Instant when;
-        private final int zoneCount;
-
-        private ZoneTakesData(Instant when, int zoneCount) {
-            this.when = when;
-            this.zoneCount = zoneCount;
-        }
-
-        public Instant getWhen() {
-            return when;
-        }
-
-        public int getZoneCount() {
-            return zoneCount;
-        }
-    }
 
     private final VisitCollection visits;
     private List<ZoneTakesData> currentZoneTake;
     private JFreeChart chart;
-
     public ZoneTakeGraphModel(VisitCollection visits, UserData selectedUser) {
         this.visits = visits;
         updateSelectedUser(selectedUser);
     }
 
+    private static RegularTimePeriod getTime(Instant when) {
+        LocalDateTime dateTime = LocalDateTime.ofInstant(when, ZoneId.systemDefault());
+        return new Second(dateTime.getSecond(), dateTime.getMinute(), dateTime.getHour(), dateTime.getDayOfMonth(),
+                dateTime.getMonthValue(), dateTime.getYear());
+    }
+
     public void updateSelectedUser(UserData selectedUser) {
         List<VisitData> visits = this.visits.getVisits(selectedUser).stream()
-                .filter(visitData -> !(visitData instanceof RevisitData))
-                .collect(Collectors.toList());
+                .filter(visitData -> !(visitData instanceof RevisitData)).toList();
         int minusI = 0;
         int zones = 0;
         currentZoneTake = new ArrayList<>(visits.size());
@@ -106,7 +90,7 @@ public final class ZoneTakeGraphModel {
         TimeSeries zones = new TimeSeries("Zones");
         if (!currentZoneTake.isEmpty()) {
             for (ZoneTakesData zoneOwnership : currentZoneTake) {
-                zones.add(getTime(zoneOwnership.getWhen()), zoneOwnership.getZoneCount());
+                zones.add(getTime(zoneOwnership.when()), zoneOwnership.zoneCount());
             }
         }
         TimeSeriesCollection dataset = new TimeSeriesCollection();
@@ -117,13 +101,13 @@ public final class ZoneTakeGraphModel {
     private void updateTimeAxis() {
         if (!currentZoneTake.isEmpty()) {
             DateAxis xAxis = new DateAxis();
-            xAxis.setRange(getTime(currentZoneTake.get(0).getWhen()).getFirstMillisecond(),
-                    getTime(currentZoneTake.get(currentZoneTake.size() - 1).getWhen()).getLastMillisecond());
+            xAxis.setRange(getTime(currentZoneTake.get(0).when()).getFirstMillisecond(),
+                    getTime(currentZoneTake.get(currentZoneTake.size() - 1).when()).getLastMillisecond());
             chart.getXYPlot().setDomainAxis(xAxis);
         }
     }
 
-    private static RegularTimePeriod getTime(Instant when) {
-        LocalDateTime dateTime = LocalDateTime.ofInstant(when, ZoneId.systemDefault());
-        return new Second(dateTime.getSecond(), dateTime.getMinute(), dateTime.getHour(), dateTime.getDayOfMonth(), dateTime.getMonthValue(), dateTime.getYear());
-    }}
+    private record ZoneTakesData(Instant when, int zoneCount) {
+
+    }
+}

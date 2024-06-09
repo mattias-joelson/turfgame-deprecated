@@ -1,11 +1,11 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.ZoneVisitCollection;
+import org.joelson.turf.application.model.ApplicationData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.ZoneVisitCollection;
 
-import java.awt.Container;
 import javax.swing.Action;
+import java.awt.Container;
 
 final class ZoneVisitTableActionCreator {
 
@@ -15,10 +15,10 @@ final class ZoneVisitTableActionCreator {
 
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> showZoneVisitTable(applicationUI))
-                .withName("Show Zone Visit Table")
-                .build();
+                .withName("Show Zone Visit Table").build();
         action.setEnabled(false);
-        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action,
+                ApplicationData.HAS_DATABASE, true);
         return action;
     }
 
@@ -28,7 +28,9 @@ final class ZoneVisitTableActionCreator {
         UserData selectedUser = UserSelectionUtil.getSelectedUser(applicationData, zoneVisits.getZoneVisitUsers());
         ZoneVisitTableModel tableModel = new ZoneVisitTableModel(zoneVisits, selectedUser);
         Container tableContainer = TableUtil.createDefaultTablePane(tableModel, "Zone Filter");
-        applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser, tableModel::updateSelectedUser, tableContainer));
+        applicationUI.setPane(
+                UserSelectionUtil.createContainer(applicationData, selectedUser, tableModel::updateSelectedUser,
+                        tableContainer));
         applicationUI.setApplicationDataStatus();
     }
 }

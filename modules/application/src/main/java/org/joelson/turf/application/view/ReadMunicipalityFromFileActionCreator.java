@@ -1,13 +1,12 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.lundkvist.Municipality;
+import org.joelson.turf.application.model.ApplicationData;
 
+import javax.swing.Action;
 import java.awt.event.KeyEvent;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import javax.swing.Action;
 
 final class ReadMunicipalityFromFileActionCreator {
 
@@ -17,12 +16,11 @@ final class ReadMunicipalityFromFileActionCreator {
 
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> readMunicipalityFromFile(applicationUI))
-                .withName("Read Municipality from HTML File...")
-                .withMnemonicKey(KeyEvent.VK_M)
-                .withAcceleratorKey(KeyEvent.VK_M)
-                .build();
+                .withName("Read Municipality from HTML File...").withMnemonicKey(KeyEvent.VK_M)
+                .withAcceleratorKey(KeyEvent.VK_M).build();
         action.setEnabled(false);
-        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action,
+                ApplicationData.HAS_DATABASE, true);
         return action;
     }
 
@@ -30,9 +28,9 @@ final class ReadMunicipalityFromFileActionCreator {
         Path municipalityFile = applicationUI.openFileDialog(null);
         if (municipalityFile != null) {
             applicationUI.setStatus(String.format("Reading municipality from file %s ...", municipalityFile));
-            new SwingWorkerBuilder<Void, Void>(() -> applicationUI.getApplicationActions().readMunicipalityFromFile(municipalityFile))
-                    .withDone(finishedWorker -> done(finishedWorker, applicationUI, municipalityFile))
-                    .build()
+            new SwingWorkerBuilder<Void, Void>(
+                    () -> applicationUI.getApplicationActions().readMunicipalityFromFile(municipalityFile))
+                    .withDone(finishedWorker -> done(finishedWorker, applicationUI, municipalityFile)).build()
                     .execute();
         }
     }
@@ -42,7 +40,8 @@ final class ReadMunicipalityFromFileActionCreator {
             finishedWorker.get();
         } catch (ExecutionException e) {
             applicationUI.showErrorDialog("Error Reading Municipality File",
-                    String.format("There was an error reading municipality file %s\n%s", municipalityFile, e.getCause()));
+                    String.format("There was an error reading municipality file %s\n%s", municipalityFile,
+                            e.getCause()));
             e.printStackTrace();
         } catch (InterruptedException e) {
             applicationUI.showUnexpectedInteruptionError(e);

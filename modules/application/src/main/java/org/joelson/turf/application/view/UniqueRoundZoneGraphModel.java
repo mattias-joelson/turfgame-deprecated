@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -10,9 +10,9 @@ import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.VisitCollection;
-import org.joelson.mattias.turfgame.application.model.VisitData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.VisitCollection;
+import org.joelson.turf.application.model.VisitData;
 
 import java.awt.Container;
 import java.time.Instant;
@@ -25,49 +25,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class UniqueRoundZoneGraphModel {
-
-    private static final class UniqueZoneData {
-
-        private final String zoneName;
-        private final Instant when;
-        private final int number;
-
-        private UniqueZoneData(String zoneName, Instant when, int number) {
-            this.zoneName = zoneName;
-            this.when = when;
-            this.number = number;
-        }
-
-        public String getZoneName() {
-            return zoneName;
-        }
-
-        public Instant getWhen() {
-            return when;
-        }
-
-        public int getNumber() {
-            return number;
-        }
-    }
 
     private final transient VisitCollection visits;
     private ArrayList<UniqueZoneData> currentUniqueZones;
     private JFreeChart chart;
-
     // TODO does not handle rounds at all
     public UniqueRoundZoneGraphModel(VisitCollection visits, UserData selectedUser) {
         this.visits = visits;
         updateSelectedUser(selectedUser);
     }
 
+    private static RegularTimePeriod getTime(Instant when) {
+        LocalDateTime dateTime = LocalDateTime.ofInstant(when, ZoneId.systemDefault());
+        return new Second(dateTime.getSecond(), dateTime.getMinute(), dateTime.getHour(), dateTime.getDayOfMonth(),
+                dateTime.getMonthValue(), dateTime.getYear());
+    }
+
     public void updateSelectedUser(UserData selectedUser) {
         List<VisitData> userVisits = this.visits.getVisits(selectedUser).stream()
-                .sorted(Comparator.comparing(VisitData::getWhen))
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(VisitData::getWhen)).toList();
         Set<String> zoneNames = new HashSet<>(userVisits.size());
         currentUniqueZones = new ArrayList<>(10);
         int number = 0;
@@ -87,14 +65,16 @@ public final class UniqueRoundZoneGraphModel {
 
     public Container getChart() {
         chart = ChartFactory.createXYLineChart("Unique Round Zones", "When", "Count", getDataSet());
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE.withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault());
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_LOCAL_TIME.withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault());
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE.withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault());
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_LOCAL_TIME.withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault());
         StandardXYToolTipGenerator standardXYToolTipGenerator = new StandardXYToolTipGenerator() {
             @Override
             public String generateLabelString(XYDataset dataset, int series, int item) {
                 UniqueZoneData uniqueZoneData = currentUniqueZones.get(item);
-                return String.format("%d - %s @ %s %s", item, uniqueZoneData.getZoneName(), dateFormatter.format(uniqueZoneData.getWhen()),
-                        timeFormatter.format(uniqueZoneData.getWhen()));
+                return String.format("%d - %s @ %s %s", item, uniqueZoneData.zoneName(),
+                        dateFormatter.format(uniqueZoneData.when()), timeFormatter.format(uniqueZoneData.when()));
             }
         };
         chart.getXYPlot().getRenderer().setDefaultToolTipGenerator(standardXYToolTipGenerator);
@@ -106,7 +86,7 @@ public final class UniqueRoundZoneGraphModel {
         TimeSeries zones = new TimeSeries("Zones");
         if (!currentUniqueZones.isEmpty()) {
             for (UniqueZoneData uniqueZone : currentUniqueZones) {
-                zones.add(getTime(uniqueZone.getWhen()), uniqueZone.getNumber());
+                zones.add(getTime(uniqueZone.when()), uniqueZone.number());
             }
         }
         TimeSeriesCollection dataset = new TimeSeriesCollection();
@@ -117,14 +97,13 @@ public final class UniqueRoundZoneGraphModel {
     private void updateTimeAxis() {
         if (!currentUniqueZones.isEmpty()) {
             DateAxis xAxis = new DateAxis();
-            xAxis.setRange(getTime(currentUniqueZones.get(0).getWhen()).getFirstMillisecond(),
-                    getTime(currentUniqueZones.get(currentUniqueZones.size() - 1).getWhen()).getLastMillisecond());
+            xAxis.setRange(getTime(currentUniqueZones.get(0).when()).getFirstMillisecond(),
+                    getTime(currentUniqueZones.get(currentUniqueZones.size() - 1).when()).getLastMillisecond());
             chart.getXYPlot().setDomainAxis(xAxis);
         }
     }
 
-    private static RegularTimePeriod getTime(Instant when) {
-        LocalDateTime dateTime = LocalDateTime.ofInstant(when, ZoneId.systemDefault());
-        return new Second(dateTime.getSecond(), dateTime.getMinute(), dateTime.getHour(), dateTime.getDayOfMonth(), dateTime.getMonthValue(), dateTime.getYear());
+    private record UniqueZoneData(String zoneName, Instant when, int number) {
+
     }
 }

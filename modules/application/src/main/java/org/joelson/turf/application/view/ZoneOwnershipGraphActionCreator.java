@@ -1,11 +1,10 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.UserData;
+import org.joelson.turf.application.model.ApplicationData;
+import org.joelson.turf.application.model.UserData;
 
-import java.awt.Container;
 import javax.swing.Action;
-import javax.swing.JTextArea;
+import java.awt.Container;
 
 final class ZoneOwnershipGraphActionCreator {
 
@@ -15,19 +14,21 @@ final class ZoneOwnershipGraphActionCreator {
 
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> showZoneOwnershipGraph(applicationUI))
-                .withName("Show Zone Ownership Graph")
-                .build();
+                .withName("Show Zone Ownership Graph").build();
         action.setEnabled(false);
-        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action,
+                ApplicationData.HAS_DATABASE, true);
         return action;
     }
 
     private static void showZoneOwnershipGraph(ApplicationUI applicationUI) {
         ApplicationData applicationData = applicationUI.getApplicationData();
         UserData selectedUser = UserSelectionUtil.getSelectedUser(applicationData);
-        ZoneOwnershipGraphModel zoneOwnershipGraphModel = new ZoneOwnershipGraphModel(applicationData.getVisits(), selectedUser);
+        ZoneOwnershipGraphModel zoneOwnershipGraphModel = new ZoneOwnershipGraphModel(applicationData.getVisits(),
+                selectedUser);
         Container chartContainer = zoneOwnershipGraphModel.getChart();
-        applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser, zoneOwnershipGraphModel::updateSelectedUser, chartContainer));
+        applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser,
+                zoneOwnershipGraphModel::updateSelectedUser, chartContainer));
         applicationUI.setApplicationDataStatus();
     }
 }

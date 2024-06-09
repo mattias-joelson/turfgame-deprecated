@@ -1,10 +1,10 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
-import org.joelson.mattias.turfgame.application.model.UserData;
+import org.joelson.turf.application.model.ApplicationData;
+import org.joelson.turf.application.model.UserData;
 
-import java.awt.Container;
 import javax.swing.Action;
+import java.awt.Container;
 
 final class ZoneTakeGraphActionCreator {
 
@@ -14,10 +14,10 @@ final class ZoneTakeGraphActionCreator {
 
     public static Action create(ApplicationUI applicationUI) {
         Action action = new ActionBuilder(actionEvent -> showZoneTakeGraph(applicationUI))
-                .withName("Show Zone Take Graph")
-                .build();
+                .withName("Show Zone Take Graph").build();
         action.setEnabled(false);
-        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action, ApplicationData.HAS_DATABASE, true);
+        ActionUtil.addEnabledPropertyChangeListener(applicationUI.getApplicationData(), action,
+                ApplicationData.HAS_DATABASE, true);
         return action;
     }
 
@@ -26,7 +26,9 @@ final class ZoneTakeGraphActionCreator {
         UserData selectedUser = UserSelectionUtil.getSelectedUser(applicationData);
         ZoneTakeGraphModel zoneTakeGraphModel = new ZoneTakeGraphModel(applicationData.getVisits(), selectedUser);
         Container chartContainer = zoneTakeGraphModel.getChart();
-        applicationUI.setPane(UserSelectionUtil.createContainer(applicationData, selectedUser, zoneTakeGraphModel::updateSelectedUser, chartContainer));
+        applicationUI.setPane(
+                UserSelectionUtil.createContainer(applicationData, selectedUser, zoneTakeGraphModel::updateSelectedUser,
+                        chartContainer));
         applicationUI.setApplicationDataStatus();
     }
 }

@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.controller;
+package org.joelson.turf.application.controller;
 
 /*import org.joelson.mattias.turfgame.apiv4.User;
 import org.joelson.mattias.turfgame.apiv4.Users;

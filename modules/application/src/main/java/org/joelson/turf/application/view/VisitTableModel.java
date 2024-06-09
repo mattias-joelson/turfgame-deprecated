@@ -1,12 +1,13 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.MunicipalityCollection;
-import org.joelson.mattias.turfgame.application.model.MunicipalityData;
-import org.joelson.mattias.turfgame.application.model.TakeData;
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.VisitCollection;
-import org.joelson.mattias.turfgame.application.model.VisitData;
+import org.joelson.turf.application.model.MunicipalityCollection;
+import org.joelson.turf.application.model.MunicipalityData;
+import org.joelson.turf.application.model.TakeData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.VisitCollection;
+import org.joelson.turf.application.model.VisitData;
 
+import java.io.Serial;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ class VisitTableModel extends AbstractTableModel {
             Instant.class, String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, Boolean.class, Duration.class, Integer.class,
             Integer.class, Integer.class
     };
+    @Serial
     private static final long serialVersionUID = 1L;
     private static final int HALF_HOUR_RANGE = 1801;
     
@@ -63,35 +65,25 @@ class VisitTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         VisitData visit = currentVisits.get(rowIndex);
-        switch (columnIndex) {
-        case 0:
-            return visit.getWhen();
-        case 1:
-            String municipality = municipalityMap.get(visit.getZone().getName());
-            return (municipality != null) ? municipality : String.format("? / %s", visit.getZone().getRegion().getName());
-        case 2:
-            return visit.getZone().getName();
-        case 3:
-            return visit.getTp();
-        case 4:
-            return visit.getPph();
-        case 5:
-            return visit.getType();
-        case 6:
-            return sumRange(visit.getWhen(), VisitData::getTp);
-        case 7:
-            return visit instanceof TakeData && ((TakeData) visit).isOwning();
-        case 8:
-            return visit.getDuration();
-        case 9:
-            return calcPph(visit);
-        case 10:
-            return totalPoints(visit);
-        case 11:
-            return sumRange(visit.getWhen(), VisitTableModel::totalPoints);
-        default:
-            throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
-        }
+        return switch (columnIndex) {
+            case 0 -> visit.getWhen();
+            case 1 -> {
+                String municipality = municipalityMap.get(visit.getZone().getName());
+                yield (municipality != null) ? municipality : String.format("? / %s",
+                        visit.getZone().getRegion().getName());
+            }
+            case 2 -> visit.getZone().getName();
+            case 3 -> visit.getTp();
+            case 4 -> visit.getPph();
+            case 5 -> visit.getType();
+            case 6 -> sumRange(visit.getWhen(), VisitData::getTp);
+            case 7 -> visit instanceof TakeData && ((TakeData) visit).isOwning();
+            case 8 -> visit.getDuration();
+            case 9 -> calcPph(visit);
+            case 10 -> totalPoints(visit);
+            case 11 -> sumRange(visit.getWhen(), VisitTableModel::totalPoints);
+            default -> throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
+        };
     }
     
     private int sumRange(Instant when, ToIntFunction<VisitData> pointFunction) {

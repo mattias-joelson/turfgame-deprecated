@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
 import java.awt.Container;
 import java.awt.Frame;
@@ -22,7 +22,7 @@ public class UIBuilder {
     private UIBuilder() throws IllegalAccessException {
         throw new IllegalAccessException("Should not be instantiated!");
     }
-    
+
 //    public static JFrame createApplicationFrame() {
 //        JFrame frame = new JFrame("Turfgame Statistics");
 //        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -32,7 +32,7 @@ public class UIBuilder {
 //
 //        return frame;
 //    }
-    
+
 //    private static WindowListener createFrameWindowListener(JFrame frame) {
 //        WindowListener windowListener = new WindowAdapter() {
 //            public void windowClosing(WindowEvent e) {
@@ -59,10 +59,10 @@ public class UIBuilder {
 //
 //        return dialog;
 //    }
-    
+
 //    public static Container createInputFieldContainer(List<String> fields, List<Action> actions) {
 //        return null;
 //    }
-    
+
     //public static void show
 }

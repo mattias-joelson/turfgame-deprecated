@@ -1,8 +1,14 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.controller.ApplicationActions;
-import org.joelson.mattias.turfgame.application.model.ApplicationData;
+import org.joelson.turf.application.controller.ApplicationActions;
+import org.joelson.turf.application.model.ApplicationData;
 
+import javax.swing.Action;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Desktop;
@@ -13,13 +19,8 @@ import java.awt.desktop.QuitStrategy;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.Serial;
 import java.nio.file.Path;
-import javax.swing.Action;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.WindowConstants;
 
 public class ApplicationUI {
 
@@ -271,28 +272,27 @@ public class ApplicationUI {
 
     Boolean showYesNoDialog(String title, String message) {
         int val = JOptionPane.showConfirmDialog(applicationFrame, message, title, JOptionPane.YES_NO_OPTION);
-        switch (val) {
-            case JOptionPane.YES_OPTION:
-                return Boolean.TRUE;
-            case JOptionPane.NO_OPTION:
-                return Boolean.FALSE;
-            case JOptionPane.CLOSED_OPTION:
-                return null;
-            default:
+        return switch (val) {
+            case JOptionPane.YES_OPTION -> Boolean.TRUE;
+            case JOptionPane.NO_OPTION -> Boolean.FALSE;
+            case JOptionPane.CLOSED_OPTION -> null;
+            default -> {
                 try {
                     throw new NullPointerException("Unknown return type " + val);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
-                return null;
-        }
+                yield null;
+            }
+        };
     }
 
     public String showInputDialog(String title, String message, String initialValue) {
         if (initialValue == null) {
             initialValue = "";
         }
-        Object result = JOptionPane.showInputDialog(applicationFrame, message, title, JOptionPane.PLAIN_MESSAGE, null, null, initialValue);
+        Object result = JOptionPane.showInputDialog(applicationFrame, message, title, JOptionPane.PLAIN_MESSAGE, null,
+                null, initialValue);
         if (result == null) {
             return null;
         }
@@ -301,6 +301,7 @@ public class ApplicationUI {
 
     private static class ApplicationJFileChooser extends JFileChooser {
 
+        @Serial
         private static final long serialVersionUID = 1L;
 
         @Override

@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -10,9 +10,9 @@ import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.joelson.mattias.turfgame.application.model.TakeData;
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.VisitCollection;
+import org.joelson.turf.application.model.TakeData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.VisitCollection;
 
 import java.awt.Container;
 import java.text.DecimalFormat;
@@ -25,70 +25,47 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class ZoneOwnershipGraphModel {
-
-    private static class ZoneOwnershipData {
-
-        private final Instant when;
-        private final int zoneCount;
-        private final int zonePphCount;
-
-        private ZoneOwnershipData(Instant when, int zoneCount, int zonePphCount) {
-            this.when = when;
-            this.zoneCount = zoneCount;
-            this.zonePphCount = zonePphCount;
-        }
-
-        public Instant getWhen() {
-            return when;
-        }
-
-        public int getZoneCount() {
-            return zoneCount;
-        }
-
-        public int getZonePphCount() {
-            return zonePphCount;
-        }
-    }
 
     private final VisitCollection visits;
     private List<ZoneOwnershipData> currentZoneOwnership;
     private JFreeChart chart;
-
     public ZoneOwnershipGraphModel(VisitCollection visits, UserData selectedUser) {
         this.visits = visits;
         updateSelectedUser(selectedUser);
     }
 
+    private static RegularTimePeriod getTime(Instant when) {
+        LocalDateTime dateTime = LocalDateTime.ofInstant(when, ZoneId.systemDefault());
+        return new Second(dateTime.getSecond(), dateTime.getMinute(), dateTime.getHour(), dateTime.getDayOfMonth(),
+                dateTime.getMonthValue(), dateTime.getYear());
+    }
+
     public void updateSelectedUser(UserData selectedUser) {
         List<TakeData> takes = this.visits.getVisits(selectedUser).stream()
-                .filter(visitData -> visitData instanceof TakeData)
-                .map(visitData -> (TakeData) visitData)
-                .collect(Collectors.toList());
+                .filter(visitData -> visitData instanceof TakeData).map(visitData -> (TakeData) visitData).toList();
         List<ZoneOwnershipData> changes = new ArrayList<>(takes.size() * 2);
         for (TakeData take : takes) {
             changes.add(new ZoneOwnershipData(take.getWhen(), 1, take.getPph()));
             if (!take.isOwning()) {
-                changes.add(new ZoneOwnershipData(take.getWhen().plusSeconds(take.getDuration().getSeconds()), -1, -take.getPph()));
+                changes.add(new ZoneOwnershipData(take.getWhen().plusSeconds(take.getDuration().getSeconds()), -1,
+                        -take.getPph()));
             }
         }
-        changes.sort(Comparator.comparing(ZoneOwnershipData::getWhen));
+        changes.sort(Comparator.comparing(ZoneOwnershipData::when));
         currentZoneOwnership = new ArrayList<>(changes.size());
         Instant last = null;
         int sumZones = 0;
         int sumPph = 0;
-        for (int i = 0; i < changes.size(); i += 1) {
-            ZoneOwnershipData data = changes.get(i);
-            if (last == null || last.isBefore(data.getWhen())) {
+        for (ZoneOwnershipData data : changes) {
+            if (last == null || last.isBefore(data.when())) {
                 if (last != null) {
                     currentZoneOwnership.add(new ZoneOwnershipData(last, sumZones, sumPph));
                 }
-                last = data.getWhen();
-                sumZones += data.getZoneCount();
-                sumPph += data.getZonePphCount();
+                last = data.when();
+                sumZones += data.zoneCount();
+                sumPph += data.zonePphCount();
             }
         }
         if (last != null) {
@@ -101,11 +78,8 @@ public final class ZoneOwnershipGraphModel {
     }
 
     public void updateSelectedUserNew(UserData selectedUser) {
-        List<TakeData> takes = visits.getAllVisits().stream()
-                .filter(visitData -> visitData instanceof TakeData)
-                .map(visitData -> (TakeData) visitData)
-                .sorted(Comparator.comparing(TakeData::getWhen))
-                .collect(Collectors.toList());
+        List<TakeData> takes = visits.getAllVisits().stream().filter(visitData -> visitData instanceof TakeData)
+                .map(visitData -> (TakeData) visitData).sorted(Comparator.comparing(TakeData::getWhen)).toList();
         Set<String> ownedZones = new HashSet<>();
         List<ZoneOwnershipData> changes = new ArrayList<>();
         for (TakeData take : takes) {
@@ -138,8 +112,8 @@ public final class ZoneOwnershipGraphModel {
         TimeSeries pph = new TimeSeries("PPH");
         if (!currentZoneOwnership.isEmpty()) {
             for (ZoneOwnershipData zoneOwnership : currentZoneOwnership) {
-                zones.add(getTime(zoneOwnership.getWhen()), zoneOwnership.getZoneCount());
-                pph.add(getTime(zoneOwnership.getWhen()), zoneOwnership.getZonePphCount());
+                zones.add(getTime(zoneOwnership.when()), zoneOwnership.zoneCount());
+                pph.add(getTime(zoneOwnership.when()), zoneOwnership.zonePphCount());
             }
         }
         TimeSeriesCollection dataset = new TimeSeriesCollection();
@@ -151,14 +125,13 @@ public final class ZoneOwnershipGraphModel {
     private void updateTimeAxis() {
         if (!currentZoneOwnership.isEmpty()) {
             DateAxis xAxis = new DateAxis();
-            xAxis.setRange(getTime(currentZoneOwnership.get(0).getWhen()).getFirstMillisecond(),
-                    getTime(currentZoneOwnership.get(currentZoneOwnership.size() - 1).getWhen()).getLastMillisecond());
+            xAxis.setRange(getTime(currentZoneOwnership.get(0).when()).getFirstMillisecond(),
+                    getTime(currentZoneOwnership.get(currentZoneOwnership.size() - 1).when()).getLastMillisecond());
             chart.getXYPlot().setDomainAxis(xAxis);
         }
     }
 
-    private static RegularTimePeriod getTime(Instant when) {
-        LocalDateTime dateTime = LocalDateTime.ofInstant(when, ZoneId.systemDefault());
-        return new Second(dateTime.getSecond(), dateTime.getMinute(), dateTime.getHour(), dateTime.getDayOfMonth(), dateTime.getMonthValue(), dateTime.getYear());
+    private record ZoneOwnershipData(Instant when, int zoneCount, int zonePphCount) {
+
     }
 }

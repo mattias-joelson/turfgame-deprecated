@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -7,6 +7,15 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 public final class PopupMenuUtil {
+
+    private PopupMenuUtil() throws InstantiationException {
+        throw new InstantiationException("Should not be instantiated");
+    }
+
+    public static void addToTable(JTable table, JPopupMenu popupMenu) {
+        table.setComponentPopupMenu(popupMenu);
+        popupMenu.addPopupMenuListener(new SelectionPopupMenuListener(table, popupMenu));
+    }
 
     private static class SelectionPopupMenuListener implements PopupMenuListener {
 
@@ -37,14 +46,5 @@ public final class PopupMenuUtil {
         public void popupMenuCanceled(PopupMenuEvent e) {
 
         }
-    }
-
-    private PopupMenuUtil() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated");
-    }
-
-    public static void addToTable(JTable table, JPopupMenu popupMenu) {
-        table.setComponentPopupMenu(popupMenu);
-        popupMenu.addPopupMenuListener(new SelectionPopupMenuListener(table, popupMenu));
     }
 }

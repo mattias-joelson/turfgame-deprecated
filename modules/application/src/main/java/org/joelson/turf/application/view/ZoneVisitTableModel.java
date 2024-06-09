@@ -1,9 +1,10 @@
-package org.joelson.mattias.turfgame.application.view;
+package org.joelson.turf.application.view;
 
-import org.joelson.mattias.turfgame.application.model.UserData;
-import org.joelson.mattias.turfgame.application.model.ZoneVisitCollection;
-import org.joelson.mattias.turfgame.application.model.ZoneVisitData;
+import org.joelson.turf.application.model.UserData;
+import org.joelson.turf.application.model.ZoneVisitCollection;
+import org.joelson.turf.application.model.ZoneVisitData;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Comparator;
 import javax.swing.table.AbstractTableModel;
@@ -12,6 +13,7 @@ class ZoneVisitTableModel extends AbstractTableModel {
 
     private static final String[] COLUMN_NAMES = { "Zone", "Visits" };
     private static final Class<?>[] COLUMN_CLASSES = { String.class, Integer.class };
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final transient ZoneVisitCollection zoneVisits;
@@ -41,14 +43,11 @@ class ZoneVisitTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         ZoneVisitData zoneVisit = currentZoneVisits.get(rowIndex);
-        switch (columnIndex) {
-        case 0:
-            return zoneVisit.getZone().getName();
-        case 1:
-            return zoneVisit.getVisits();
-        default:
-            throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
-        }
+        return switch (columnIndex) {
+            case 0 -> zoneVisit.getZone().getName();
+            case 1 -> zoneVisit.getVisits();
+            default -> throw new IllegalArgumentException("Invalid columnIndex " + columnIndex);
+        };
     }
 
     @Override
