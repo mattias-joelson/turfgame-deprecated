@@ -29,11 +29,6 @@
       <artifactId>expressly</artifactId>
       <version>${org.glassfish.expressly.expressly.version}</version>
     </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>org.jfree</groupId>-->
-    <!--      <artifactId>jfreechart</artifactId>-->
-    <!--      <version>${org.jfree.jfreechart.version}</version>-->
-    <!--    </dependency>-->
   </dependencies>
 
   <parent>
@@ -48,7 +43,6 @@
     <org.hibernate.validator.hibernate-validator.version>8.0.1.Final
     </org.hibernate.validator.hibernate-validator.version>
     <org.glassfish.expressly.expressly.version>5.0.0</org.glassfish.expressly.expressly.version>
-    <!--        <org.jfree.jfreechart.version>1.5.4</org.jfree.jfreechart.version>-->
   </properties>
 
   <name>turf-hibernate-h2</name>
