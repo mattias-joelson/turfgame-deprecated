@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+        http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+  <persistence-unit name="turfgame-idioten-test-h2">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <class>org.joelson.turf.idioten.db.UserEntity</class>
+    <class>org.joelson.turf.idioten.db.ZoneEntity</class>
+    <properties>
+      <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:./output/turfgame_idioten_test_h2"/>
+      <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+      <property name="hibernate.dialect" value="org.joelson.turf.idioten.db.DropConstraintsH2Dialect"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+    </properties>
+  </persistence-unit>
+
+</persistence>

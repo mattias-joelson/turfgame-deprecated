@@ -1,14 +1,12 @@
-package org.joelson.mattias.turfgame.idioten.model;
+package org.joelson.turf.idioten.model;
 
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.util.StringUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class PlayerData implements Serializable {
-
-    // Oberoff 80119
+public class ZoneData implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -16,7 +14,7 @@ public class PlayerData implements Serializable {
     private final int id;
     private final String name;
 
-    public PlayerData(int id, String name) {
+    public ZoneData(int id, String name) {
         this.id = id;
         this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
     }
@@ -34,7 +32,7 @@ public class PlayerData implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof PlayerData that) {
+        if (obj instanceof ZoneData that) {
             return id == that.id && Objects.equals(name, that.name);
         }
         return false;
@@ -47,6 +45,6 @@ public class PlayerData implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("PlayerData[id %d, name %s]", id, name);
+        return String.format("ZoneData[id %d, name %s]", id, name);
     }
 }

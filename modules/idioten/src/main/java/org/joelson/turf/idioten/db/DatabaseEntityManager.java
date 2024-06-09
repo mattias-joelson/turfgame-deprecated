@@ -1,11 +1,11 @@
-package org.joelson.mattias.turfgame.idioten.db;
+package org.joelson.turf.idioten.db;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
-import org.joelson.mattias.turfgame.idioten.model.PlayerData;
-import org.joelson.mattias.turfgame.idioten.model.ZoneData;
+import org.joelson.turf.idioten.model.UserData;
+import org.joelson.turf.idioten.model.ZoneData;
 
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -18,15 +18,15 @@ import java.util.stream.Collectors;
 
 public class DatabaseEntityManager {
 
-    public static final String PERSISTANCE_NAME = "turfgame-idioten-h2";
-    private static final String JAVAX_PERSISTENCE_JDBC_URL_PROPERTY = "javax.persistence.jdbc.url";
-    private static final String JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY =
-            "javax.persistence.schema-generation.database.action";
+    public static final String PERSISTENCE_NAME = "turfgame-idioten-h2";
+    private static final String JAKARTA_PERSISTENCE_JDBC_URL_PROPERTY = "jakarta.persistence.jdbc.url";
+    private static final String JAKARTA_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY =
+            "jakarta.persistence.schema-generation.database.action";
     private static final String DATABASE_NAME = "turfgame_idioten_h2";
     private final EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
-    private IdiotPlayerRegistry playerRegistry;
-    private IdiotZoneRegistry zoneRegistry;
+    private UserRegistry userRegistry;
+    private ZoneRegistry zoneRegistry;
 
     public DatabaseEntityManager(String unit) {
         this(unit, null);
@@ -38,8 +38,8 @@ public class DatabaseEntityManager {
 
     public static Map<String, String> createPersistancePropertyMap(
             Path directoryPath, boolean openExisting, boolean dropAndCreateTables) {
-        return Map.of(JAVAX_PERSISTENCE_JDBC_URL_PROPERTY, createJdbcURL(directoryPath, openExisting),
-                JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY,
+        return Map.of(JAKARTA_PERSISTENCE_JDBC_URL_PROPERTY, createJdbcURL(directoryPath, openExisting),
+                JAKARTA_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY,
                 (dropAndCreateTables) ? "drop-and-create" : "none");
     }
 
@@ -58,7 +58,7 @@ public class DatabaseEntityManager {
 
     private void executeSQL(String sql) throws SQLException {
         Map<String, Object> properties = entityManagerFactory.getProperties();
-        String jdbcURL = String.valueOf(properties.get(JAVAX_PERSISTENCE_JDBC_URL_PROPERTY));
+        String jdbcURL = String.valueOf(properties.get(JAKARTA_PERSISTENCE_JDBC_URL_PROPERTY));
         try (Connection connection = DriverManager.getConnection(jdbcURL);
                 Statement statement = connection.createStatement()) {
             statement.execute(sql);
@@ -69,52 +69,52 @@ public class DatabaseEntityManager {
         entityManagerFactory.close();
     }
 
-    public PlayerData getPlayer(int id) {
+    public UserData getUser(int id) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            IdiotPlayerEntity player = playerRegistry.find(id);
-            return (player != null) ? player.toData() : null;
+            UserEntity userEntity = userRegistry.find(id);
+            return (userEntity != null) ? userEntity.toData() : null;
         }
     }
 
-    public PlayerData getPlayer(String name) {
+    public UserData getUser(String name) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return playerRegistry.findAnyOrNull("name", name).toData();
+            return userRegistry.findAnyOrNull("name", name).toData();
         }
     }
 
-    public List<PlayerData> getPlayers() {
+    public List<UserData> getUsers() {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return playerRegistry.findAll().map(IdiotPlayerEntity::toData).collect(Collectors.toList());
+            return userRegistry.findAll().map(UserEntity::toData).collect(Collectors.toList());
         }
     }
 
-    public void updatePlayers(Iterable<PlayerData> newPlayers, Iterable<PlayerData> updatedPlayers) {
+    public void updateUsers(Iterable<UserData> newUsers, Iterable<UserData> updatedUsers) {
         try (Transaction transaction = new Transaction()) {
             transaction.begin();
-            newPlayers.forEach(this::createPlayer);
-            updatedPlayers.forEach(this::updatePlayer);
+            newUsers.forEach(this::createUser);
+            updatedUsers.forEach(this::updateUser);
             transaction.commit();
         }
     }
 
-    private void createPlayer(PlayerData playerData) {
-        IdiotPlayerEntity user = IdiotPlayerEntity.build(playerData.getId(), playerData.getName());
-        playerRegistry.persist(user);
+    private void createUser(UserData userData) {
+        UserEntity user = UserEntity.build(userData.getId(), userData.getName());
+        userRegistry.persist(user);
     }
 
-    private void updatePlayer(PlayerData playerData) {
-        IdiotPlayerEntity user = playerRegistry.find(playerData.getId());
-        user.setName(playerData.getName());
-        playerRegistry.persist(user);
+    private void updateUser(UserData userData) {
+        UserEntity user = userRegistry.find(userData.getId());
+        user.setName(userData.getName());
+        userRegistry.persist(user);
     }
 
     public ZoneData getZone(int id) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            IdiotZoneEntity zone = zoneRegistry.find(id);
+            ZoneEntity zone = zoneRegistry.find(id);
             return (zone != null) ? zone.toData() : null;
         }
     }
@@ -129,7 +129,7 @@ public class DatabaseEntityManager {
     public List<ZoneData> getZones() {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return zoneRegistry.findAll().map(IdiotZoneEntity::toData).collect(Collectors.toList());
+            return zoneRegistry.findAll().map(ZoneEntity::toData).collect(Collectors.toList());
         }
     }
 
@@ -147,7 +147,7 @@ public class DatabaseEntityManager {
     }
 
     private void updateZone(ZoneData zoneData) {
-        IdiotZoneEntity zone = zoneRegistry.find(zoneData.getId());
+        ZoneEntity zone = zoneRegistry.find(zoneData.getId());
         zone.setName(zoneData.getName());
         zoneRegistry.persist(zone);
     }
@@ -163,8 +163,8 @@ public class DatabaseEntityManager {
                 throw new IllegalStateException("Starting new transaction inside existing.");
             }
             entityManager = entityManagerFactory.createEntityManager();
-            playerRegistry = new IdiotPlayerRegistry(entityManager);
-            zoneRegistry = new IdiotZoneRegistry(entityManager);
+            userRegistry = new UserRegistry(entityManager);
+            zoneRegistry = new ZoneRegistry(entityManager);
         }
 
         void use() {
@@ -185,11 +185,11 @@ public class DatabaseEntityManager {
 
         private void endTransaction() {
             if (entityManager == null) {
-                throw new IllegalStateException("Stoping non existing transaction.");
+                throw new IllegalStateException("Stopping non existing transaction.");
             }
             entityManager.close();
             entityManager = null;
-            playerRegistry = null;
+            userRegistry = null;
             zoneRegistry = null;
         }
 
