@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 public class DatabaseEntityManager {
 
     public static final String PERSISTENCE_NAME = "turfgame-idioten-h2";
-    private static final String JAVAX_PERSISTENCE_JDBC_URL_PROPERTY = "javax.persistence.jdbc.url";
-    private static final String JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY =
-            "javax.persistence.schema-generation.database.action";
+    private static final String JAKARTA_PERSISTENCE_JDBC_URL_PROPERTY = "jakarta.persistence.jdbc.url";
+    private static final String JAKARTA_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY =
+            "jakarta.persistence.schema-generation.database.action";
     private static final String DATABASE_NAME = "turfgame_idioten_h2";
     private final EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
@@ -38,8 +38,8 @@ public class DatabaseEntityManager {
 
     public static Map<String, String> createPersistancePropertyMap(
             Path directoryPath, boolean openExisting, boolean dropAndCreateTables) {
-        return Map.of(JAVAX_PERSISTENCE_JDBC_URL_PROPERTY, createJdbcURL(directoryPath, openExisting),
-                JAVAX_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY,
+        return Map.of(JAKARTA_PERSISTENCE_JDBC_URL_PROPERTY, createJdbcURL(directoryPath, openExisting),
+                JAKARTA_PERSISTENCE_SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY,
                 (dropAndCreateTables) ? "drop-and-create" : "none");
     }
 
@@ -58,7 +58,7 @@ public class DatabaseEntityManager {
 
     private void executeSQL(String sql) throws SQLException {
         Map<String, Object> properties = entityManagerFactory.getProperties();
-        String jdbcURL = String.valueOf(properties.get(JAVAX_PERSISTENCE_JDBC_URL_PROPERTY));
+        String jdbcURL = String.valueOf(properties.get(JAKARTA_PERSISTENCE_JDBC_URL_PROPERTY));
         try (Connection connection = DriverManager.getConnection(jdbcURL);
                 Statement statement = connection.createStatement()) {
             statement.execute(sql);
