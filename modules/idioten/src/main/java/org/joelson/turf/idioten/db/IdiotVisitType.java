@@ -1,5 +1,5 @@
-package org.joelson.mattias.turfgame.idioten.db;
+package org.joelson.turf.idioten.db;
 
 public enum IdiotVisitType {
-    TAKE, REVISIT, ASSIST
+    TAKE, REVISIT
 }

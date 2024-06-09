@@ -1,7 +1,7 @@
-package org.joelson.mattias.turfgame.idioten.db;
+package org.joelson.turf.idioten.db;
 
 import jakarta.persistence.EntityManager;
-import org.joelson.mattias.turfgame.util.db.EntityRegistry;
+import org.joelson.turf.util.persistence.EntityRegistry;
 
 class IdiotPlayerRegistry extends EntityRegistry<IdiotPlayerEntity> {
 

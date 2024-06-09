@@ -1,4 +1,4 @@
 /**
  * Classes belonging to the Idioten implementation.
  */
-package org.joelson.mattias.turfgame.idioten;
+package org.joelson.turf.idioten;

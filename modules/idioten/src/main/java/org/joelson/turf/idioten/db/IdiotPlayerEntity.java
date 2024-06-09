@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.idioten.db;
+package org.joelson.turf.idioten.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,8 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import org.joelson.mattias.turfgame.idioten.model.PlayerData;
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.idioten.model.PlayerData;
+import org.joelson.turf.util.StringUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "idiot_players",
-        indexes = {@Index(columnList = "id", unique = true), @Index(columnList = "name", unique = true)})
+        indexes = { @Index(columnList = "id", unique = true), @Index(columnList = "name", unique = true) })
 public class IdiotPlayerEntity implements Serializable {
 
     @Serial
@@ -52,8 +52,7 @@ public class IdiotPlayerEntity implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null",
-                "Name can not be empty");
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
     }
 
     @Override

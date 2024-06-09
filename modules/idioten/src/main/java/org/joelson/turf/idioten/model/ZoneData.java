@@ -1,6 +1,6 @@
-package org.joelson.mattias.turfgame.idioten.model;
+package org.joelson.turf.idioten.model;
 
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.util.StringUtil;
 
 import java.io.Serial;
 import java.io.Serializable;

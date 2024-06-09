@@ -85,6 +85,7 @@
     <module>modules/hibernate-h2</module>
     <module>modules/persistence-utilities</module>
     <module>modules/application</module>
+    <module>modules/idioten</module>
   </modules>
 
   <properties>

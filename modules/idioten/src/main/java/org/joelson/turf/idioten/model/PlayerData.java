@@ -1,6 +1,6 @@
-package org.joelson.mattias.turfgame.idioten.model;
+package org.joelson.turf.idioten.model;
 
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.util.StringUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class PlayerData implements Serializable {
 
-    // Oberoff 80119
+    // 0beroff 80119
 
     @Serial
     private static final long serialVersionUID = 1L;

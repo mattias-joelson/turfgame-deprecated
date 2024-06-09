@@ -1,14 +1,14 @@
-package org.joelson.mattias.turfgame.idioten;
+package org.joelson.turf.idioten;
 
 import jakarta.persistence.PersistenceException;
-import org.joelson.mattias.turfgame.idioten.db.DatabaseEntityManager;
+import org.joelson.turf.idioten.db.DatabaseEntityManager;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class IdiotenServer implements Runnable {
 
-    private static Path DB_PATH = Path.of("output", "idioten");
+    private static final Path DB_PATH = Path.of("output", "idioten");
 
     public static void main(String[] args) {
         new IdiotenServer().run();
@@ -27,7 +27,7 @@ public class IdiotenServer implements Runnable {
             entityManager = openDB(DB_PATH, true);
         }
         if (entityManager == null) {
-            throw new IllegalArgumentException("Could not creat DB " + DB_PATH);
+            throw new IllegalArgumentException("Could not create DB " + DB_PATH);
         }
 
         //entityManager.updatePlayers(List.of(new PlayerData(1, "one")), List.of(new PlayerData(2, "two")));
@@ -39,8 +39,8 @@ public class IdiotenServer implements Runnable {
             throw new IllegalArgumentException(dbPath + " is not a directory!");
         }
         try {
-            return new DatabaseEntityManager(DatabaseEntityManager.PERSISTANCE_NAME,
-                                             DatabaseEntityManager.createPersistancePropertyMap(dbPath.toAbsolutePath(), !createDB, createDB));
+            return new DatabaseEntityManager(DatabaseEntityManager.PERSISTENCE_NAME,
+                    DatabaseEntityManager.createPersistancePropertyMap(dbPath.toAbsolutePath(), !createDB, createDB));
         } catch (PersistenceException e) {
             return null;
         }
