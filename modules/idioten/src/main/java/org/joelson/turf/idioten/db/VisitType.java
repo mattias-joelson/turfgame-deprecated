@@ -1,5 +1,5 @@
 package org.joelson.turf.idioten.db;
 
-public enum IdiotVisitType {
+public enum VisitType {
     TAKE, REVISIT
 }

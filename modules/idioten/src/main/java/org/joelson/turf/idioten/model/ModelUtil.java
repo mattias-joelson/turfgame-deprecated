@@ -6,11 +6,11 @@ final class ModelUtil {
         throw new InstantiationException("Should not be instantiated!");
     }
 
-    public static String toStringPart(PlayerData player) {
-        if (player == null) {
+    public static String toStringPart(UserData user) {
+        if (user == null) {
             return "N/A";
         }
-        return toStringPart(player.getId(), player.getName());
+        return toStringPart(user.getId(), user.getName());
     }
 
     public static String toStringPart(ZoneData zone) {

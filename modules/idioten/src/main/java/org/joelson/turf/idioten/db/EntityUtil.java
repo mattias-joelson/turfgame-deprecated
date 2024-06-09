@@ -9,15 +9,15 @@ final class EntityUtil {
         throw new InstantiationException("Should not be instantiated!");
     }
 
-    public static String toStringPart(IdiotPlayerEntity user) {
+    public static String toStringPart(UserEntity user) {
         if (user == null) {
             return "N/A";
         }
-        return toStringPart(user, IdiotPlayerEntity::getId, IdiotPlayerEntity::getName);
+        return toStringPart(user, UserEntity::getId, UserEntity::getName);
     }
 
-    public static String toStringPart(IdiotZoneEntity zone) {
-        return toStringPart(zone, IdiotZoneEntity::getId, IdiotZoneEntity::getName);
+    public static String toStringPart(ZoneEntity zone) {
+        return toStringPart(zone, ZoneEntity::getId, ZoneEntity::getName);
     }
 
     private static <T> String toStringPart(T entity, ToIntFunction<T> id, Function<T, String> name) {

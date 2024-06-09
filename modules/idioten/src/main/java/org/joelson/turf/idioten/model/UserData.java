@@ -6,7 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class PlayerData implements Serializable {
+public class UserData implements Serializable {
 
     // 0beroff 80119
 
@@ -16,7 +16,7 @@ public class PlayerData implements Serializable {
     private final int id;
     private final String name;
 
-    public PlayerData(int id, String name) {
+    public UserData(int id, String name) {
         this.id = id;
         this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
     }
@@ -34,7 +34,7 @@ public class PlayerData implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof PlayerData that) {
+        if (obj instanceof UserData that) {
             return id == that.id && Objects.equals(name, that.name);
         }
         return false;
@@ -47,6 +47,6 @@ public class PlayerData implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("PlayerData[id %d, name %s]", id, name);
+        return String.format("UserData[id %d, name %s]", id, name);
     }
 }

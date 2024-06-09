@@ -30,7 +30,6 @@ public class IdiotenServer implements Runnable {
             throw new IllegalArgumentException("Could not create DB " + DB_PATH);
         }
 
-        //entityManager.updatePlayers(List.of(new PlayerData(1, "one")), List.of(new PlayerData(2, "two")));
         entityManager.close();
     }
 
