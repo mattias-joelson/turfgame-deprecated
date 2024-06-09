@@ -1,6 +1,6 @@
 package org.joelson.turf.idioten.model;
 
-import org.joelson.turf.idioten.db.IdiotVisitType;
+import org.joelson.turf.idioten.db.VisitType;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -8,37 +8,37 @@ import java.util.Objects;
 public class VisitData {
 
     private final ZoneData zone;
-    private final PlayerData player;
+    private final UserData user;
     private final Instant when;
-    private final IdiotVisitType type;
-    private final PlayerData assistedPlayer;
+    private final VisitType type;
+    private final UserData assistedUser;
 
-    public VisitData(ZoneData zone, PlayerData player, Instant when, IdiotVisitType type, PlayerData assistedPlayer) {
+    public VisitData(ZoneData zone, UserData user, Instant when, VisitType type, UserData assistedUser) {
         this.zone = zone;
-        this.player = player;
+        this.user = user;
         this.when = when;
         this.type = type;
-        this.assistedPlayer = assistedPlayer;
+        this.assistedUser = assistedUser;
     }
 
     public ZoneData getZone() {
         return zone;
     }
 
-    public PlayerData getPlayer() {
-        return player;
+    public UserData getUser() {
+        return user;
     }
 
     public Instant getWhen() {
         return when;
     }
 
-    public IdiotVisitType getType() {
+    public VisitType getType() {
         return type;
     }
 
-    public PlayerData getAssistedPlayer() {
-        return assistedPlayer;
+    public UserData getAssistedUser() {
+        return assistedUser;
     }
 
     @Override
@@ -47,22 +47,22 @@ public class VisitData {
             return true;
         }
         if (obj instanceof VisitData that) {
-            return Objects.equals(zone, that.zone) && Objects.equals(player, that.player)
+            return Objects.equals(zone, that.zone) && Objects.equals(user, that.user)
                     && Objects.equals(when, that.when) && Objects.equals(type, that.type)
-                    && Objects.equals(assistedPlayer, that.assistedPlayer);
+                    && Objects.equals(assistedUser, that.assistedUser);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(zone, player, when);
+        return Objects.hash(zone, user, when);
     }
 
     @Override
     public String toString() {
-        return String.format("TakeData[zone %s, player %s, when %s, type %s, assistedPlayer %s]",
-                ModelUtil.toStringPart(zone), ModelUtil.toStringPart(player), when, type,
-                ModelUtil.toStringPart(assistedPlayer));
+        return String.format("TakeData[zone %s, user %s, when %s, type %s, assistedUser %s]",
+                ModelUtil.toStringPart(zone), ModelUtil.toStringPart(user), when, type,
+                ModelUtil.toStringPart(assistedUser));
     }
 }

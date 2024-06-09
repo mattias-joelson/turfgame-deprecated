@@ -14,9 +14,9 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "idiot_zones",
+@Table(name = "zones",
         indexes = { @Index(columnList = "id", unique = true), @Index(columnList = "name", unique = true) })
-public class IdiotZoneEntity implements Serializable {
+public class ZoneEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,14 +29,14 @@ public class IdiotZoneEntity implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    public IdiotZoneEntity() {
+    public ZoneEntity() {
     }
 
-    static IdiotZoneEntity build(int id, @NotNull String name) {
-        IdiotZoneEntity zone = new IdiotZoneEntity();
-        zone.setId(id);
-        zone.setName(name);
-        return zone;
+    static ZoneEntity build(int id, @NotNull String name) {
+        ZoneEntity zoneEntity = new ZoneEntity();
+        zoneEntity.setId(id);
+        zoneEntity.setName(name);
+        return zoneEntity;
     }
 
     public int getId() {
@@ -61,7 +61,7 @@ public class IdiotZoneEntity implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof IdiotZoneEntity that) {
+        if (obj instanceof ZoneEntity that) {
             return id == that.id && Objects.equals(name, that.name);
         }
         return false;

@@ -3,9 +3,9 @@ package org.joelson.turf.idioten.db;
 import jakarta.persistence.EntityManager;
 import org.joelson.turf.util.persistence.EntityRegistry;
 
-class IdiotPlayerRegistry extends EntityRegistry<IdiotPlayerEntity> {
+class UserRegistry extends EntityRegistry<UserEntity> {
 
-    IdiotPlayerRegistry(EntityManager entityManager) {
+    UserRegistry(EntityManager entityManager) {
         super(entityManager);
     }
 }
