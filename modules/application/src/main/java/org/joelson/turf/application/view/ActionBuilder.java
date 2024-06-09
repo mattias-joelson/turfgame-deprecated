@@ -21,7 +21,7 @@ class ActionBuilder {
     private KeyStroke acceleratorKey;
 
     public ActionBuilder(Consumer<ActionEvent> actionPerformed) {
-        this.actionPerformed = Objects.requireNonNull(actionPerformed, "Action to perform can not be null"); //NON-NLS
+        this.actionPerformed = Objects.requireNonNull(actionPerformed, "Action to perform can not be null");
     }
 
     public ActionBuilder withName(String name) {
@@ -76,7 +76,7 @@ class ActionBuilder {
 
     private static final class DelegatingAction implements Action {
 
-        private static final String ENABLED = "enabled"; //NON-NLS
+        private static final String ENABLED = "enabled";
 
         private final Consumer<ActionEvent> actionPerformed;
 

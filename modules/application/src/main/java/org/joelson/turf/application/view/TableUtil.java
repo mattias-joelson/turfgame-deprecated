@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 final class TableUtil {
 
     private TableUtil() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated!"); //NON-NLS
+        throw new InstantiationException("Should not be instantiated!");
     }
 
     public static Container createDefaultTablePane(TableModel tabelModel, String filterLabelText) {

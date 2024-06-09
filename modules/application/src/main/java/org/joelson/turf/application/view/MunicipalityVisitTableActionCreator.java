@@ -16,7 +16,7 @@ import java.util.List;
 final class MunicipalityVisitTableActionCreator {
 
     private MunicipalityVisitTableActionCreator() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated"); //NON-NLS
+        throw new InstantiationException("Should not be instantiated");
     }
 
     public static Action create(ApplicationUI applicationUI) {

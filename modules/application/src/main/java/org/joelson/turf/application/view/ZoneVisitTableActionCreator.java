@@ -10,7 +10,7 @@ import java.awt.Container;
 final class ZoneVisitTableActionCreator {
 
     private ZoneVisitTableActionCreator() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated"); //NON-NLS
+        throw new InstantiationException("Should not be instantiated");
     }
 
     public static Action create(ApplicationUI applicationUI) {

@@ -107,7 +107,7 @@ class SessionTableModel extends AbstractTableModel {
                 municipalities.add(municipality);
             }
             switch (visit.getType()) {
-                case "Take": // NON-NLS
+                case "Take":
                     takes += 1;
                     pph += (int) (visit.getDuration().getSeconds() * visit.getPph() / 3600);
                     if (((TakeData) visit).isOwning()) {
@@ -115,10 +115,10 @@ class SessionTableModel extends AbstractTableModel {
                         incPph += visit.getZone().getPph();
                     }
                     break;
-                case "Revisit": // NON-NLS
+                case "Revisit":
                     revisits += 1;
                     break;
-                case "Assist": // NON-NLS
+                case "Assist":
                     assists += 1;
                     break;
                 default:

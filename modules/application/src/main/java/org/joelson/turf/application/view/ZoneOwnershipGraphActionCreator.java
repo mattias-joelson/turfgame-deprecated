@@ -9,7 +9,7 @@ import java.awt.Container;
 final class ZoneOwnershipGraphActionCreator {
 
     private ZoneOwnershipGraphActionCreator() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated"); //NON-NLS
+        throw new InstantiationException("Should not be instantiated");
     }
 
     public static Action create(ApplicationUI applicationUI) {

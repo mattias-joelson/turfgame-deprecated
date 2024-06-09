@@ -11,7 +11,7 @@ class SwingWorkerBuilder<T, V> {
     private Consumer<Future<T>> done;
 
     public SwingWorkerBuilder(DoInBackgroundSupplier<T> doInBackground) {
-        this.doInBackground = Objects.requireNonNull(doInBackground, "Background can not be null"); //NON-NLS
+        this.doInBackground = Objects.requireNonNull(doInBackground, "Background can not be null");
     }
 
     public SwingWorkerBuilder<T, V> withDone(Consumer<Future<T>> done) {
