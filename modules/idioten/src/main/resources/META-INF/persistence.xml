@@ -9,7 +9,7 @@
     <class>org.joelson.turf.idioten.db.IdiotPlayerEntity</class>
     <class>org.joelson.turf.idioten.db.IdiotZoneEntity</class>
     <properties>
-      <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+      <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
       <property name="hibernate.show_sql" value="false"/>
       <property name="hibernate.format_sql" value="true"/>
     </properties>
