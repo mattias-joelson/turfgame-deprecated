@@ -38,7 +38,7 @@ final class ExportDatabaseActionCreator {
             applicationUI.showErrorDialog("Error Exporting Database",
                     String.format("Unable to export database to file %s\n%s", saveFile, e.getCause()));
         } catch (InterruptedException e) {
-            applicationUI.showUnexpectedInteruptionError(e);
+            applicationUI.showUnexpectedInterruptedException(e);
         } finally {
             applicationUI.setApplicationDataStatus();
         }

@@ -42,7 +42,7 @@ final class ReadWardedFromFileActionCreator {
                     String.format("There was an error reading warded file %s\n%s", wardedFile, e.getCause()));
             e.printStackTrace();
         } catch (InterruptedException e) {
-            applicationUI.showUnexpectedInteruptionError(e);
+            applicationUI.showUnexpectedInterruptedException(e);
         } finally {
             applicationUI.setApplicationDataStatus();
         }

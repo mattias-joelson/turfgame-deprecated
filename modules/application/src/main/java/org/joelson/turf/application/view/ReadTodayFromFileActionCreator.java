@@ -76,7 +76,7 @@ final class ReadTodayFromFileActionCreator {
                     String.format("There was an error reading the today file %s\n%s", todayFile, e.getCause()));
             e.printStackTrace();
         } catch (InterruptedException e) {
-            applicationUI.showUnexpectedInteruptionError(e);
+            applicationUI.showUnexpectedInterruptedException(e);
         } finally {
             applicationUI.setApplicationDataStatus();
         }

@@ -70,7 +70,7 @@ final class ReadZonesFromFileActionCreator {
             applicationUI.showErrorDialog("Error Updating Zones",
                     String.format("There was an error updating the zones with file %s\n%s", zonesFile, e.getCause()));
         } catch (InterruptedException e) {
-            applicationUI.showUnexpectedInteruptionError(e);
+            applicationUI.showUnexpectedInterruptedException(e);
         } finally {
             applicationUI.setApplicationDataStatus();
         }

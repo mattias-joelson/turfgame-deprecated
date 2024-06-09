@@ -257,7 +257,7 @@ public class ApplicationUI {
         setStatus(applicationData.getStatus());
     }
 
-    void showUnexpectedInteruptionError(InterruptedException e) {
+    void showUnexpectedInterruptedException(InterruptedException e) {
         showErrorDialog("Unexpected Interrupted Exception", String.valueOf(e));
         e.printStackTrace();
     }

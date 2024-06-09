@@ -43,7 +43,7 @@ final class ImportDatabaseActionCreator {
                     String.format("Unable to import file %s into directory %s\n%s",
                             loadFile, directoryPath, e.getCause()));
         } catch (InterruptedException e) {
-            applicationUI.showUnexpectedInteruptionError(e);
+            applicationUI.showUnexpectedInterruptedException(e);
         } finally {
             applicationUI.setApplicationDataStatus();
         }

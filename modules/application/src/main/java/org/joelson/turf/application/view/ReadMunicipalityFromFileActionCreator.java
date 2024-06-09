@@ -44,7 +44,7 @@ final class ReadMunicipalityFromFileActionCreator {
                             e.getCause()));
             e.printStackTrace();
         } catch (InterruptedException e) {
-            applicationUI.showUnexpectedInteruptionError(e);
+            applicationUI.showUnexpectedInterruptedException(e);
         } finally {
             applicationUI.setApplicationDataStatus();
         }

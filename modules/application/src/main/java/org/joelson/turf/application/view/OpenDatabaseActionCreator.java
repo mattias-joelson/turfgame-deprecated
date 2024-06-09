@@ -39,7 +39,7 @@ final class OpenDatabaseActionCreator {
                 createDatabase(applicationUI, directoryPath);
             }
         } catch (InterruptedException e) {
-            applicationUI.showUnexpectedInteruptionError(e);
+            applicationUI.showUnexpectedInterruptedException(e);
         } finally {
             applicationUI.setApplicationDataStatus();
         }
@@ -59,7 +59,7 @@ final class OpenDatabaseActionCreator {
             applicationUI.showErrorDialog("Error Creating Database",
                     String.format("Unable to create a database in directory %s\n%s", directoryPath, e.getCause()));
         } catch (InterruptedException e) {
-            applicationUI.showUnexpectedInteruptionError(e);
+            applicationUI.showUnexpectedInterruptedException(e);
         } finally {
             applicationUI.setApplicationDataStatus();
         }
