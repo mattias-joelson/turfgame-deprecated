@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.db;
+package org.joelson.turf.application.db;
 
 public enum VisitType {
     TAKE, REVISIT, ASSIST

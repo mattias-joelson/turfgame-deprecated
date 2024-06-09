@@ -1,4 +1,4 @@
 /**
  * Application model classes.
  */
-package org.joelson.mattias.turfgame.application.model;
+package org.joelson.turf.application.model;

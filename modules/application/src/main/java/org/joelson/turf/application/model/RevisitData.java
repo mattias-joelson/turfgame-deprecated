@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.model;
+package org.joelson.turf.application.model;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -24,9 +24,9 @@ public class RevisitData extends VisitData {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof RevisitData) {
-            RevisitData that = (RevisitData) obj;
-            return Objects.equals(getZone(), that.getZone()) && Objects.equals(getWhen(), that.getWhen()) && Objects.equals(getTaker(), that.getTaker());
+        if (obj instanceof RevisitData that) {
+            return Objects.equals(getZone(), that.getZone()) && Objects.equals(getWhen(), that.getWhen())
+                    && Objects.equals(getTaker(), that.getTaker());
         }
         return false;
     }
@@ -38,6 +38,7 @@ public class RevisitData extends VisitData {
 
     @Override
     public String toString() {
-        return String.format("RevisitData[zone %s, when %s, taker %%s]", ModelUtil.toStringPart(getZone()), getWhen(), ModelUtil.toStringPart(getTaker())); //NON-NLS
+        return String.format("RevisitData[zone %s, when %s, taker %%s]",
+                ModelUtil.toStringPart(getZone()), getWhen(), ModelUtil.toStringPart(getTaker()));
     }
 }

@@ -1,4 +1,4 @@
-package org.joelson.mattias.turfgame.application.db;
+package org.joelson.turf.application.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,15 +6,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import org.joelson.mattias.turfgame.application.model.ZoneVisitData;
+import org.joelson.turf.application.model.ZoneVisitData;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "zone_visits") //NON-NLS
+@Table(name = "zone_visits")
 public class ZoneVisitEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull
@@ -33,12 +35,20 @@ public class ZoneVisitEntity implements Serializable {
     public ZoneVisitEntity() {
     }
 
+    static ZoneVisitEntity build(UserEntity user, ZoneEntity zone, int visits) {
+        ZoneVisitEntity zoneVisit = new ZoneVisitEntity();
+        zoneVisit.setUser(user);
+        zoneVisit.setZone(zone);
+        zoneVisit.setVisits(visits);
+        return zoneVisit;
+    }
+
     public UserEntity getUser() {
         return user;
     }
 
     public void setUser(UserEntity user) {
-        this.user = Objects.requireNonNull(user, "User can not be null!"); //NON-NLS
+        this.user = Objects.requireNonNull(user, "User can not be null!");
     }
 
     public ZoneEntity getZone() {
@@ -46,7 +56,7 @@ public class ZoneVisitEntity implements Serializable {
     }
 
     public void setZone(ZoneEntity zone) {
-        this.zone = Objects.requireNonNull(zone, "Zone can not be null"); //NON-NLS
+        this.zone = Objects.requireNonNull(zone, "Zone can not be null");
     }
 
     public int getVisits() {
@@ -62,8 +72,7 @@ public class ZoneVisitEntity implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof ZoneVisitEntity) {
-            ZoneVisitEntity that = (ZoneVisitEntity) obj;
+        if (obj instanceof ZoneVisitEntity that) {
             return user.equals(that.user) && zone.equals(that.zone) && visits == that.visits;
         }
         return false;
@@ -76,18 +85,11 @@ public class ZoneVisitEntity implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("ZoneVisitEntity[user %s, zone %s, visits %d]", EntityUtil.toStringPart(user), EntityUtil.toStringPart(zone), visits); //NON-NLS
+        return String.format("ZoneVisitEntity[user %s, zone %s, visits %d]", EntityUtil.toStringPart(user),
+                EntityUtil.toStringPart(zone), visits);
     }
 
     public ZoneVisitData toData() {
         return new ZoneVisitData(user.toData(), zone.toData(), visits);
-    }
-
-    static ZoneVisitEntity build(UserEntity user, ZoneEntity zone, int visits) {
-        ZoneVisitEntity zoneVisit = new ZoneVisitEntity();
-        zoneVisit.setUser(user);
-        zoneVisit.setZone(zone);
-        zoneVisit.setVisits(visits);
-        return zoneVisit;
     }
 }

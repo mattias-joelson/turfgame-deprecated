@@ -1,7 +1,7 @@
-package org.joelson.mattias.turfgame.application.db;
+package org.joelson.turf.application.db;
 
 import jakarta.persistence.EntityManager;
-import org.joelson.mattias.turfgame.util.db.EntityRegistry;
+import org.joelson.turf.util.persistence.EntityRegistry;
 
 class MunicipalityZoneRegistry extends EntityRegistry<MunicipalityZoneEntity> {
     MunicipalityZoneRegistry(EntityManager entityManager) {
@@ -9,9 +9,9 @@ class MunicipalityZoneRegistry extends EntityRegistry<MunicipalityZoneEntity> {
     }
 
     public MunicipalityZoneEntity findZone(ZoneEntity zone) {
-        return findAll("zone", zone) //NON-NLS
-                .reduce((element, otherElement) -> { throw new IllegalStateException("Multiple zone entries"); })
-                .orElse(null);
+        return findAll("zone", zone).reduce((element, otherElement) -> {
+            throw new IllegalStateException("Multiple zone entries");
+        }).orElse(null);
     }
 
     public MunicipalityZoneEntity create(MunicipalityEntity municipality, ZoneEntity zone) {

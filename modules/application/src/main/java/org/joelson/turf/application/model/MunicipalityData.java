@@ -1,8 +1,7 @@
-package org.joelson.mattias.turfgame.application.model;
+package org.joelson.turf.application.model;
 
-import org.joelson.mattias.turfgame.util.StringUtil;
+import org.joelson.turf.util.StringUtil;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -16,9 +15,13 @@ public class MunicipalityData {
     private final List<ZoneData> zones;
 
     public MunicipalityData(RegionData region, String name, List<ZoneData> zones) {
-        this.region = Objects.requireNonNull(region, "Region can not be null"); //NON-NLS
-        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty"); //NON-NLS
-        this.zones = sortedZones(Objects.requireNonNull(zones, "Zones can not be null")); //NON-NLS
+        this.region = Objects.requireNonNull(region, "Region can not be null");
+        this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
+        this.zones = sortedZones(Objects.requireNonNull(zones, "Zones can not be null"));
+    }
+
+    private static List<ZoneData> sortedZones(List<ZoneData> zones) {
+        return zones.stream().sorted(Comparator.comparing(ZoneData::getName)).toList();
     }
 
     public RegionData getRegion() {
@@ -50,15 +53,7 @@ public class MunicipalityData {
     }
 
     public String toString() {
-        return String.format("MunicipalityData[region %s, name %s, zones [%s]]", //NON-NLS
-                ModelUtil.toStringPart(region), name, zones.stream()
-                        .map(ModelUtil::toStringPart)
-                        .collect(Collectors.joining(", ")));
-    }
-
-    private static List<ZoneData> sortedZones(List<ZoneData> zones) {
-        return zones.stream()
-                .sorted(Comparator.comparing(ZoneData::getName))
-                .collect(Collectors.toList());
+        return String.format("MunicipalityData[region %s, name %s, zones [%s]]", ModelUtil.toStringPart(region), name,
+                zones.stream().map(ModelUtil::toStringPart).collect(Collectors.joining(", ")));
     }
 }

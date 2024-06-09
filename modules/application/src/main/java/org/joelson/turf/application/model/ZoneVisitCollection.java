@@ -1,6 +1,6 @@
-package org.joelson.mattias.turfgame.application.model;
+package org.joelson.turf.application.model;
 
-import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
+import org.joelson.turf.application.db.DatabaseEntityManager;
 
 import java.util.List;
 import java.util.Map;
@@ -29,8 +29,7 @@ public class ZoneVisitCollection {
         Map<String, ZoneData> zoneNameMap = zones.stream()
                 .collect(Collectors.toMap(ZoneData::getName, Function.identity()));
         List<ZoneVisitData> zoneVisits = visits.entrySet().stream()
-                .map(entry -> new ZoneVisitData(user, zoneNameMap.get(entry.getKey()), entry.getValue()))
-                .collect(Collectors.toList());
+                .map(entry -> new ZoneVisitData(user, zoneNameMap.get(entry.getKey()), entry.getValue())).toList();
         dbEntity.updateZoneVisits(zoneVisits);
     }
 }

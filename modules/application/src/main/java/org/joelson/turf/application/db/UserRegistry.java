@@ -1,10 +1,10 @@
-package org.joelson.mattias.turfgame.application.db;
+package org.joelson.turf.application.db;
 
 import jakarta.persistence.EntityManager;
-import org.joelson.mattias.turfgame.util.db.EntityRegistry;
+import org.joelson.turf.util.persistence.EntityRegistry;
 
 class UserRegistry extends EntityRegistry<UserEntity> {
-    
+
     UserRegistry(EntityManager entityManager) {
         super(entityManager);
     }

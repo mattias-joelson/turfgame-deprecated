@@ -1,8 +1,8 @@
-package org.joelson.mattias.turfgame.application.db;
+package org.joelson.turf.application.db;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import org.joelson.mattias.turfgame.util.db.EntityRegistry;
+import org.joelson.turf.util.persistence.EntityRegistry;
 
 import java.util.stream.Stream;
 
@@ -23,11 +23,10 @@ public class ZoneVisitRegistry extends EntityRegistry<ZoneVisitEntity> {
     }
 
     public ZoneVisitEntity find(UserEntity user, ZoneEntity zone) {
-        TypedQuery<ZoneVisitEntity> query = createQuery("SELECT e FROM ZoneVisitEntity e WHERE e.user=:user AND e.zone=:zone"); //NON-NLS
-        query.setParameter("user", user); //NON-NLS
-        query.setParameter("zone", zone); //NON-NLS
-        return query.getResultStream()
-                .findAny()
-                .orElse(null);
+        TypedQuery<ZoneVisitEntity> query = createQuery(
+                "SELECT e FROM ZoneVisitEntity e WHERE e.user=:user AND e.zone=:zone");
+        query.setParameter("user", user);
+        query.setParameter("zone", zone);
+        return query.getResultStream().findAny().orElse(null);
     }
 }

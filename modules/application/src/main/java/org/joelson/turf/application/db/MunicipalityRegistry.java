@@ -1,8 +1,8 @@
-package org.joelson.mattias.turfgame.application.db;
+package org.joelson.turf.application.db;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import org.joelson.mattias.turfgame.util.db.EntityRegistry;
+import org.joelson.turf.util.persistence.EntityRegistry;
 
 class MunicipalityRegistry extends EntityRegistry<MunicipalityEntity> {
 
@@ -11,19 +11,17 @@ class MunicipalityRegistry extends EntityRegistry<MunicipalityEntity> {
     }
 
     public MunicipalityEntity findByName(String name) {
-        return findAll("name", name) //NON-NLS
-                .reduce((element, otherElement) -> { throw new IllegalStateException("Multiple municipalities with same name"); })
-                .orElse(null);
+        return findAll("name", name).reduce((element, otherElement) -> {
+            throw new IllegalStateException("Multiple municipalities with same name");
+        }).orElse(null);
     }
 
     public MunicipalityEntity find(RegionEntity region, String name) {
-        TypedQuery<MunicipalityEntity> query
-                = createQuery("SELECT e FROM MunicipalityEntity e WHERE e.region=:region AND e.name=:name"); //NON-NLS
-        query.setParameter("region", region); //NON-NLS
-        query.setParameter("name", name); //NON-NLS
-        return query.getResultStream()
-                .findFirst()
-                .orElse(null);
+        TypedQuery<MunicipalityEntity> query = createQuery(
+                "SELECT e FROM MunicipalityEntity e WHERE e.region=:region AND e.name=:name");
+        query.setParameter("region", region);
+        query.setParameter("name", name);
+        return query.getResultStream().findFirst().orElse(null);
     }
 
     public MunicipalityEntity create(RegionEntity region, String name) {

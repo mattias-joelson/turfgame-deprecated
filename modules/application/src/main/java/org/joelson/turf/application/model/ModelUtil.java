@@ -1,9 +1,9 @@
-package org.joelson.mattias.turfgame.application.model;
+package org.joelson.turf.application.model;
 
 final class ModelUtil {
 
     private ModelUtil() throws InstantiationException {
-        throw new InstantiationException("Should not be instantiated!"); //NON-NLS
+        throw new InstantiationException("Should not be instantiated!");
     }
 
     public static String toStringPart(UserData user) {
@@ -19,6 +19,6 @@ final class ModelUtil {
     }
 
     private static String toStringPart(int id, String name) {
-        return String.format("%d - %s", id, name); //NON-NLS
+        return String.format("%d - %s", id, name);
     }
 }

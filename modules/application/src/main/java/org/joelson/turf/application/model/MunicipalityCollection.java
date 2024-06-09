@@ -1,6 +1,6 @@
-package org.joelson.mattias.turfgame.application.model;
+package org.joelson.turf.application.model;
 
-import org.joelson.mattias.turfgame.application.db.DatabaseEntityManager;
+import org.joelson.turf.application.db.DatabaseEntityManager;
 
 import java.util.List;
 
