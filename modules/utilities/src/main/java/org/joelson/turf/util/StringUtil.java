@@ -1,5 +1,6 @@
 package org.joelson.turf.util;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public final class StringUtil {
@@ -55,5 +56,17 @@ public final class StringUtil {
 
     public static String printable(String s) {
         return (s == null) ? "null" : '\'' + s + '\'';
+    }
+
+    public static String printable(Object value, String possiblePrefix) {
+        return switch (value) {
+            case null -> "";
+            case String s -> possiblePrefix + printable(s);
+            default -> possiblePrefix + value;
+        };
+    }
+
+    public static String printable(Object[] value, String possiblePrefix) {
+        return (value == null) ? "" : possiblePrefix + Arrays.toString(value);
     }
 }
