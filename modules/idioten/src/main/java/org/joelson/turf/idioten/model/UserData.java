@@ -47,6 +47,6 @@ public class UserData implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("UserData[id %d, name %s]", id, name);
+        return String.format("UserData[id=%d, name=%s]", id, name);
     }
 }
