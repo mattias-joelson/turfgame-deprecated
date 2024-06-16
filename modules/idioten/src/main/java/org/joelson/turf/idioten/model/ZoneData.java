@@ -45,6 +45,6 @@ public class ZoneData implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("ZoneData[id %d, name %s]", id, name);
+        return String.format("ZoneData[id=%d, name=%s]", id, name);
     }
 }
