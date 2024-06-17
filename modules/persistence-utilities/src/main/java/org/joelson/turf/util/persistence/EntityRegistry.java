@@ -48,7 +48,8 @@ public class EntityRegistry<T> {
         return query.getResultStream();
     }
 
-    public void persist(T t) {
+    public T persist(T t) {
         entityManager.persist(t);
+        return t;
     }
 }
