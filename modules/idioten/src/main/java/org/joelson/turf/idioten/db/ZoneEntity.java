@@ -11,6 +11,7 @@ import org.joelson.turf.util.StringUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -29,13 +30,18 @@ public class ZoneEntity implements Serializable {
     @Column(nullable = false)
     private String name;
 
+    @NotNull
+    @Column(updatable = false, nullable = false)
+    private Instant time;
+
     public ZoneEntity() {
     }
 
-    static ZoneEntity build(int id, @NotNull String name) {
+    static ZoneEntity build(int id, @NotNull String name, @NotNull Instant time) {
         ZoneEntity zoneEntity = new ZoneEntity();
         zoneEntity.setId(id);
         zoneEntity.setName(name);
+        zoneEntity.setTime(time);
         return zoneEntity;
     }
 
@@ -56,6 +62,14 @@ public class ZoneEntity implements Serializable {
         this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
     }
 
+    public @NotNull Instant getTime() {
+        return time;
+    }
+
+    public void setTime(@NotNull Instant time) {
+        this.time = Objects.requireNonNull(time);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -74,7 +88,7 @@ public class ZoneEntity implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("ZoneEntity[id %d, name %s]", id, name);
+        return String.format("ZoneEntity[%s]", EntityUtil.toStringPart(this));
     }
 
     public ZoneData toData() {

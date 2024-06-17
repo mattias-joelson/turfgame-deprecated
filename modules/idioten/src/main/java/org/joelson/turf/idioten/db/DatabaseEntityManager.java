@@ -4,7 +4,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
+import org.joelson.turf.idioten.model.AssistData;
+import org.joelson.turf.idioten.model.RevisitData;
+import org.joelson.turf.idioten.model.TakeData;
 import org.joelson.turf.idioten.model.UserData;
+import org.joelson.turf.idioten.model.VisitData;
 import org.joelson.turf.idioten.model.ZoneData;
 
 import java.nio.file.Path;
@@ -12,9 +16,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class DatabaseEntityManager {
 
@@ -25,7 +29,9 @@ public class DatabaseEntityManager {
     private static final String DATABASE_NAME = "turfgame_idioten_h2";
     private final EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
+    private AssistRegistry assistRegistry;
     private UserRegistry userRegistry;
+    private VisitRegistry visitRegistry;
     private ZoneRegistry zoneRegistry;
 
     public DatabaseEntityManager(String unit) {
@@ -69,87 +75,93 @@ public class DatabaseEntityManager {
         entityManagerFactory.close();
     }
 
+    public List<AssistData> getAssists() {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return assistRegistry.findAll().map(AssistEntity::toData).toList();
+        }
+
+    }
+
     public UserData getUser(int id) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            UserEntity userEntity = userRegistry.find(id);
-            return (userEntity != null) ? userEntity.toData() : null;
+            return toUserData(userRegistry.find(id));
         }
     }
 
     public UserData getUser(String name) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return userRegistry.findAnyOrNull("name", name).toData();
+            return toUserData(userRegistry.findByName(name));
         }
+    }
+
+    private UserData toUserData(UserEntity user) {
+        return (user != null) ? user.toData() : null;
     }
 
     public List<UserData> getUsers() {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return userRegistry.findAll().map(UserEntity::toData).collect(Collectors.toList());
+            return userRegistry.findAll().map(UserEntity::toData).toList();
         }
     }
 
-    public void updateUsers(Iterable<UserData> newUsers, Iterable<UserData> updatedUsers) {
+    public List<VisitData> getVisits() {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return visitRegistry.findAll().map(VisitEntity::toData).toList();
+        }
+    }
+
+    public void addTake(TakeData takeData, Iterable<UserData> assisted) {
+        addVisit(takeData, VisitType.TAKE, assisted);
+    }
+
+    public void addRevisit(RevisitData revisitData, Iterable<UserData> assisted) {
+        addVisit(revisitData, VisitType.REVISIT, assisted);
+    }
+
+    private void addVisit(VisitData visitData, VisitType visitType, Iterable<UserData> assisted) {
         try (Transaction transaction = new Transaction()) {
             transaction.begin();
-            newUsers.forEach(this::createUser);
-            updatedUsers.forEach(this::updateUser);
+            Instant time = visitData.getTime();
+            ZoneEntity zone = zoneRegistry.getUpdateOrCreate(visitData.getZone(), time);
+            UserEntity user = userRegistry.getUpdateOrCreate(visitData.getUser(), time);
+            VisitEntity visit = visitRegistry.find(zone, user, time);
+            if (visit == null) {
+                VisitEntity newVisit = visitRegistry.create(zone, user, time, visitType);
+                assisted.forEach(
+                        userData -> assistRegistry.create(newVisit, userRegistry.getUpdateOrCreate(userData, time)));
+            }
             transaction.commit();
         }
-    }
-
-    private void createUser(UserData userData) {
-        UserEntity user = UserEntity.build(userData.getId(), userData.getName());
-        userRegistry.persist(user);
-    }
-
-    private void updateUser(UserData userData) {
-        UserEntity user = userRegistry.find(userData.getId());
-        user.setName(userData.getName());
-        userRegistry.persist(user);
     }
 
     public ZoneData getZone(int id) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            ZoneEntity zone = zoneRegistry.find(id);
-            return (zone != null) ? zone.toData() : null;
+            return toZoneData(zoneRegistry.find(id));
         }
     }
 
     public ZoneData getZone(String name) {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return zoneRegistry.findByName(name).toData();
+            return toZoneData(zoneRegistry.findByName(name));
         }
+    }
+
+    private ZoneData toZoneData(ZoneEntity zone) {
+        return (zone != null) ? zone.toData() : null;
     }
 
     public List<ZoneData> getZones() {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
-            return zoneRegistry.findAll().map(ZoneEntity::toData).collect(Collectors.toList());
+            return zoneRegistry.findAll().map(ZoneEntity::toData).toList();
         }
-    }
-
-    public void updateZones(Iterable<ZoneData> newZones, Iterable<ZoneData> changedZones) {
-        try (Transaction transaction = new Transaction()) {
-            transaction.begin();
-            newZones.forEach(this::createZone);
-            changedZones.forEach(this::updateZone);
-            transaction.commit();
-        }
-    }
-
-    private void createZone(ZoneData zoneData) {
-        zoneRegistry.create(zoneData);
-    }
-
-    private void updateZone(ZoneData zoneData) {
-        ZoneEntity zone = zoneRegistry.find(zoneData.getId());
-        zone.setName(zoneData.getName());
-        zoneRegistry.persist(zone);
     }
 
     private final class Transaction implements AutoCloseable {
@@ -163,7 +175,9 @@ public class DatabaseEntityManager {
                 throw new IllegalStateException("Starting new transaction inside existing.");
             }
             entityManager = entityManagerFactory.createEntityManager();
+            assistRegistry = new AssistRegistry(entityManager);
             userRegistry = new UserRegistry(entityManager);
+            visitRegistry = new VisitRegistry(entityManager);
             zoneRegistry = new ZoneRegistry(entityManager);
         }
 
@@ -189,9 +203,10 @@ public class DatabaseEntityManager {
             }
             entityManager.close();
             entityManager = null;
+            assistRegistry = null;
             userRegistry = null;
+            visitRegistry = null;
             zoneRegistry = null;
         }
-
     }
 }

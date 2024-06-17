@@ -1,24 +1,18 @@
 package org.joelson.turf.idioten.model;
 
-import org.joelson.turf.idioten.db.VisitType;
-
 import java.time.Instant;
 import java.util.Objects;
 
-public class VisitData {
+public abstract class VisitData {
 
     private final ZoneData zone;
     private final UserData user;
-    private final Instant when;
-    private final VisitType type;
-    private final UserData assistedUser;
+    private final Instant time;
 
-    public VisitData(ZoneData zone, UserData user, Instant when, VisitType type, UserData assistedUser) {
-        this.zone = zone;
-        this.user = user;
-        this.when = when;
-        this.type = type;
-        this.assistedUser = assistedUser;
+    public VisitData(ZoneData zone, UserData user, Instant time) {
+        this.zone = Objects.requireNonNull(zone);
+        this.user = Objects.requireNonNull(user);
+        this.time = Objects.requireNonNull(time);
     }
 
     public ZoneData getZone() {
@@ -29,16 +23,8 @@ public class VisitData {
         return user;
     }
 
-    public Instant getWhen() {
-        return when;
-    }
-
-    public VisitType getType() {
-        return type;
-    }
-
-    public UserData getAssistedUser() {
-        return assistedUser;
+    public Instant getTime() {
+        return time;
     }
 
     @Override
@@ -48,21 +34,20 @@ public class VisitData {
         }
         if (obj instanceof VisitData that) {
             return Objects.equals(zone, that.zone) && Objects.equals(user, that.user)
-                    && Objects.equals(when, that.when) && Objects.equals(type, that.type)
-                    && Objects.equals(assistedUser, that.assistedUser);
+                    && Objects.equals(time, that.time);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(zone, user, when);
+        return Objects.hash(zone, user, time);
     }
 
     @Override
-    public String toString() {
-        return String.format("TakeData[zone %s, user %s, when %s, type %s, assistedUser %s]",
-                ModelUtil.toStringPart(zone), ModelUtil.toStringPart(user), when, type,
-                ModelUtil.toStringPart(assistedUser));
+    public abstract String toString();
+
+    protected String toStringPart() {
+        return String.format("zone=%s, user=%s, time=%s", zone, user, time);
     }
 }

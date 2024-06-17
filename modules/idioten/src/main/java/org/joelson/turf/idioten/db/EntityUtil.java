@@ -9,11 +9,21 @@ final class EntityUtil {
         throw new InstantiationException("Should not be instantiated!");
     }
 
+    public static String toStringPart(AssistEntity assist) {
+        return String.format("visit=[%s], user=[%s]", toStringPart(assist.getVisit()), toStringPart(assist.getUser()));
+    }
+
     public static String toStringPart(UserEntity user) {
         if (user == null) {
             return "N/A";
         }
         return toStringPart(user, UserEntity::getId, UserEntity::getName);
+    }
+
+    public static String toStringPart(VisitEntity visit) {
+        return toStringPart(visit, VisitEntity::getId,
+                v -> String.format("zone=[%s], user=[%s], time=%s, type=%s", toStringPart(visit.getZone()),
+                        toStringPart(visit.getUser()), visit.getTime(), visit.getType()));
     }
 
     public static String toStringPart(ZoneEntity zone) {

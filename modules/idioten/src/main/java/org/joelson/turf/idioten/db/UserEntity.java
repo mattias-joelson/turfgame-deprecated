@@ -11,6 +11,7 @@ import org.joelson.turf.util.StringUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -29,13 +30,18 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private String name;
 
+    @NotNull
+    @Column(nullable = false)
+    private Instant time;
+
     public UserEntity() {
     }
 
-    public static UserEntity build(int id, @NotNull String name) {
+    public static UserEntity build(int id, @NotNull String name, @NotNull Instant time) {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(id);
         userEntity.setName(name);
+        userEntity.setTime(time);
         return userEntity;
     }
 
@@ -53,6 +59,14 @@ public class UserEntity implements Serializable {
 
     public void setName(String name) {
         this.name = StringUtil.requireNotNullAndNotEmpty(name, "Name can not be null", "Name can not be empty");
+    }
+
+    public @NotNull Instant getTime() {
+        return time;
+    }
+
+    public void setTime(@NotNull Instant time) {
+        this.time = Objects.requireNonNull(time);
     }
 
     @Override
@@ -73,7 +87,7 @@ public class UserEntity implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("UserEntity[id %d, name %s]", id, name);
+        return String.format("UserEntity[%s]", EntityUtil.toStringPart(this));
     }
 
     public UserData toData() {
