@@ -128,9 +128,9 @@ public class DatabaseEntityManager {
             transaction.begin();
             Instant time = visitData.getTime();
             ZoneEntity zone = zoneRegistry.getUpdateOrCreate(visitData.getZone(), time);
-            UserEntity user = userRegistry.getUpdateOrCreate(visitData.getUser(), time);
-            VisitEntity visit = visitRegistry.find(zone, user, time);
+            VisitEntity visit = visitRegistry.find(zone, time);
             if (visit == null) {
+                UserEntity user = userRegistry.getUpdateOrCreate(visitData.getUser(), time);
                 VisitEntity newVisit = visitRegistry.create(zone, user, time, visitType);
                 assisted.forEach(
                         userData -> assistRegistry.create(newVisit, userRegistry.getUpdateOrCreate(userData, time)));
