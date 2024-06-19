@@ -22,7 +22,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "visits", indexes = { @Index(columnList = "id", unique = true), @Index(columnList = "zone_id"),
         @Index(columnList = "user_id"), @Index(columnList = "time") }, uniqueConstraints = {
-        @UniqueConstraint(name = "UniqueZoneUserAndTime", columnNames = { "zone_id", "user_id", "time" }) })
+        @UniqueConstraint(name = "UniqueZoneAndTime", columnNames = { "zone_id", "time" }) })
 public class VisitEntity implements Serializable {
 
     @Serial

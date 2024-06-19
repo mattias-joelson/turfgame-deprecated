@@ -12,11 +12,9 @@ class VisitRegistry extends EntityRegistry<VisitEntity> {
         super(entityManager);
     }
 
-    public VisitEntity find(ZoneEntity zone, UserEntity user, Instant time) {
-        TypedQuery<VisitEntity> query = createQuery(
-                "SELECT v FROM VisitEntity v WHERE v.time=:time AND v.zone=:zone AND v.user=:user");
+    public VisitEntity find(ZoneEntity zone, Instant time) {
+        TypedQuery<VisitEntity> query = createQuery("SELECT v FROM VisitEntity v WHERE v.time=:time AND v.zone=:zone");
         query.setParameter("zone", zone);
-        query.setParameter("user", user);
         query.setParameter("time", time);
         return query.getSingleResultOrNull();
     }
