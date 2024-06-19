@@ -11,6 +11,7 @@ import org.joelson.turf.turfgame.apiv5.FeedTakeover;
 import org.joelson.turf.turfgame.apiv5.User;
 import org.joelson.turf.turfgame.apiv5.Zone;
 import org.joelson.turf.turfgame.apiv5util.FeedsReader;
+import org.joelson.turf.turfgame.util.FeedsPathComparator;
 import org.joelson.turf.util.FilesUtil;
 import org.joelson.turf.util.TimeUtil;
 
@@ -34,7 +35,7 @@ public class IdiotenServer implements Runnable {
         //new Thread(server).start();
         server.openDatabase();
         for (String filename : args) {
-            FilesUtil.forEachFile(Path.of(filename), true, server::addVisits);
+            FilesUtil.forEachFile(Path.of(filename), true, new FeedsPathComparator(), server::addVisits);
         }
         server.printVisits();
         //server.stop();
