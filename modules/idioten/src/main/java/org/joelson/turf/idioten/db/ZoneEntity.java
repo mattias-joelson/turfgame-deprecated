@@ -31,7 +31,7 @@ public class ZoneEntity implements Serializable {
     private String name;
 
     @NotNull
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false)
     private Instant time;
 
     public ZoneEntity() {
