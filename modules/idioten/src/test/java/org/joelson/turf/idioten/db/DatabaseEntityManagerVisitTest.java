@@ -21,8 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class DatabaseEntityManagerVisitTest {
 
     public static final String PERSISTENCE_H2 = "turfgame-idioten-test-h2";
+    ZoneData ZONE = new ZoneData(17, "Donken");
+    UserData USER = new UserData(4711, "Gurkan");
 
     private DatabaseEntityManager entityManager;
+
+    private static Instant getTruncatedInstantNow() {
+        return Instant.now().truncatedTo(ChronoUnit.SECONDS);
+    }
 
     @BeforeEach
     public void setupEntityManager() {
@@ -35,26 +41,23 @@ public class DatabaseEntityManagerVisitTest {
         entityManager = null;
     }
 
-
     @Test
     public void testAddTake() {
-        ZoneData zone = new ZoneData(17, "Donken");
-        UserData user = new UserData(4711, "Gurkan");
-        Instant time = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        TakeData take = new TakeData(zone, user, time);
+        Instant time = getTruncatedInstantNow();
+        TakeData take = new TakeData(ZONE, USER, time);
         entityManager.addTake(take, List.of());
 
         assertEquals(1, entityManager.getZones().size());
-        assertEquals(zone.getId(), entityManager.getZone(zone.getName()).getId());
-        assertEquals(zone.getName(), entityManager.getZone(zone.getId()).getName());
-        assertNull(entityManager.getZone(zone.getId() + 1));
-        assertNull(entityManager.getZone(zone.getName() + "!"));
+        assertEquals(ZONE.getId(), entityManager.getZone(ZONE.getName()).getId());
+        assertEquals(ZONE.getName(), entityManager.getZone(ZONE.getId()).getName());
+        assertNull(entityManager.getZone(ZONE.getId() + 1));
+        assertNull(entityManager.getZone(ZONE.getName() + "!"));
 
         assertEquals(1, entityManager.getUsers().size());
-        assertEquals(user.getId(), entityManager.getUser(user.getName()).getId());
-        assertEquals(user.getName(), entityManager.getUser(user.getId()).getName());
-        assertNull(entityManager.getUser(user.getId() + 1));
-        assertNull(entityManager.getUser(user.getName() + "!"));
+        assertEquals(USER.getId(), entityManager.getUser(USER.getName()).getId());
+        assertEquals(USER.getName(), entityManager.getUser(USER.getId()).getName());
+        assertNull(entityManager.getUser(USER.getId() + 1));
+        assertNull(entityManager.getUser(USER.getName() + "!"));
 
         List<VisitData> visits = entityManager.getVisits();
         assertEquals(1, visits.size());
@@ -65,23 +68,21 @@ public class DatabaseEntityManagerVisitTest {
 
     @Test
     public void testAddRevisit() {
-        ZoneData zone = new ZoneData(167, "SvårZon");
-        UserData user = new UserData(71, "Uzam");
-        Instant time = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        RevisitData revisit = new RevisitData(zone, user, time);
+        Instant time = getTruncatedInstantNow();
+        RevisitData revisit = new RevisitData(ZONE, USER, time);
         entityManager.addRevisit(revisit, List.of());
 
         assertEquals(1, entityManager.getZones().size());
-        assertEquals(zone.getId(), entityManager.getZone(zone.getName()).getId());
-        assertEquals(zone.getName(), entityManager.getZone(zone.getId()).getName());
-        assertNull(entityManager.getZone(zone.getId() + 1));
-        assertNull(entityManager.getZone(zone.getName() + "!"));
+        assertEquals(ZONE.getId(), entityManager.getZone(ZONE.getName()).getId());
+        assertEquals(ZONE.getName(), entityManager.getZone(ZONE.getId()).getName());
+        assertNull(entityManager.getZone(ZONE.getId() + 1));
+        assertNull(entityManager.getZone(ZONE.getName() + "!"));
 
         assertEquals(1, entityManager.getUsers().size());
-        assertEquals(user.getId(), entityManager.getUser(user.getName()).getId());
-        assertEquals(user.getName(), entityManager.getUser(user.getId()).getName());
-        assertNull(entityManager.getUser(user.getId() + 1));
-        assertNull(entityManager.getUser(user.getName() + "!"));
+        assertEquals(USER.getId(), entityManager.getUser(USER.getName()).getId());
+        assertEquals(USER.getName(), entityManager.getUser(USER.getId()).getName());
+        assertNull(entityManager.getUser(USER.getId() + 1));
+        assertNull(entityManager.getUser(USER.getName() + "!"));
 
         List<VisitData> visits = entityManager.getVisits();
         assertEquals(1, visits.size());
@@ -92,24 +93,22 @@ public class DatabaseEntityManagerVisitTest {
 
     @Test
     public void testAddTakeWithAssists() {
-        ZoneData zone = new ZoneData(17, "HedvigZon");
-        UserData user = new UserData(4711, "Takan");
         Instant time = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        TakeData take = new TakeData(zone, user, time);
+        TakeData take = new TakeData(ZONE, USER, time);
         UserData assister1 = new UserData(167, "assist-1");
         UserData assister2 = new UserData(173, "assist-2");
         List<UserData> assisted = List.of(assister1, assister2);
         entityManager.addTake(take, assisted);
 
         assertEquals(1, entityManager.getZones().size());
-        assertEquals(zone.getId(), entityManager.getZone(zone.getName()).getId());
-        assertEquals(zone.getName(), entityManager.getZone(zone.getId()).getName());
-        assertNull(entityManager.getZone(zone.getId() + 1));
-        assertNull(entityManager.getZone(zone.getName() + "!"));
+        assertEquals(ZONE.getId(), entityManager.getZone(ZONE.getName()).getId());
+        assertEquals(ZONE.getName(), entityManager.getZone(ZONE.getId()).getName());
+        assertNull(entityManager.getZone(ZONE.getId() + 1));
+        assertNull(entityManager.getZone(ZONE.getName() + "!"));
 
         List<UserData> users = entityManager.getUsers();
         assertEquals(1 + assisted.size(), users.size());
-        assertTrue(users.contains(user));
+        assertTrue(users.contains(USER));
         assertTrue(users.contains(assister1));
         assertTrue(users.contains(assister2));
 
@@ -117,8 +116,8 @@ public class DatabaseEntityManagerVisitTest {
         assertEquals(1, visits.size());
         assertEquals(take, visits.get(0));
 
-        AssistData assistData1 = new AssistData(zone, assister1, time, user);
-        AssistData assistData2 = new AssistData(zone, assister2, time, user);
+        AssistData assistData1 = new AssistData(ZONE, assister1, time, USER);
+        AssistData assistData2 = new AssistData(ZONE, assister2, time, USER);
         List<AssistData> assists = entityManager.getAssists();
         assertEquals(assisted.size(), entityManager.getAssists().size());
         AssistData firstAssist = assists.get(0);
