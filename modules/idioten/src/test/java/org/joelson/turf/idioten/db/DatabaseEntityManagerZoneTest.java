@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -18,8 +19,21 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 public class DatabaseEntityManagerZoneTest {
 
     public static final String PERSISTENCE_H2 = "turfgame-idioten-test-h2";
+    private static final UserData USER = new UserData(1, "User");
 
     private DatabaseEntityManager entityManager;
+
+    private static Instant getTruncatedInstantNow() {
+        return Instant.now().truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    private static Instant addMinutes(Instant instant, long minutes) {
+        return instant.plus(minutes, ChronoUnit.MINUTES);
+    }
+
+    private static Instant addDays(Instant instant, long days) {
+        return instant.plus(days, ChronoUnit.MINUTES);
+    }
 
     @BeforeEach
     public void setupEntityManager() {
@@ -33,22 +47,38 @@ public class DatabaseEntityManagerZoneTest {
     }
 
     @Test
+    public void testFindZoneByName() {
+        ZoneData firstZone = new ZoneData(1, "Zone");
+        Instant firstTime = getTruncatedInstantNow();
+        entityManager.addTake(new TakeData(firstZone, USER, firstTime), List.of());
+        ZoneData zoneEntity = entityManager.getZone(firstZone.getName());
+        assertEquals(firstZone, zoneEntity);
+
+        ZoneData nextZone = new ZoneData(firstZone.getId() + 1, firstZone.getName());
+        Instant nextTime = addMinutes(firstTime, 30);
+        entityManager.addTake(new TakeData(nextZone, USER, nextTime), List.of());
+        zoneEntity = entityManager.getZone(firstZone.getName());
+        assertEquals(nextZone, zoneEntity);
+
+        assertEquals(Set.of(nextZone, firstZone), Set.copyOf(entityManager.getZones()));
+    }
+
+    @Test
     public void testZoneRenamed() {
         ZoneData zone = new ZoneData(1, "first");
-        Instant time = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+        Instant time = getTruncatedInstantNow();
         ZoneData zoneNewName = new ZoneData(zone.getId(), "second");
-        Instant timeNew = time.plus(1, ChronoUnit.DAYS);
-        UserData user = new UserData(1, "player");
+        Instant timeNew = addDays(time, 1);
 
-        entityManager.addTake(new TakeData(zoneNewName, user, timeNew), List.of());
-        entityManager.addTake(new TakeData(zone, user, time), List.of());
+        entityManager.addTake(new TakeData(zoneNewName, USER, timeNew), List.of());
+        entityManager.addTake(new TakeData(zone, USER, time), List.of());
 
         List<VisitData> takes = entityManager.getVisits();
         assertEquals(2, takes.size());
         for (VisitData take : takes) {
             assertInstanceOf(TakeData.class, take);
             assertEquals(zoneNewName, take.getZone());
-            assertEquals(user, take.getUser());
+            assertEquals(USER, take.getUser());
         }
         if (takes.get(0).getTime().equals(time)) {
             assertEquals(timeNew, takes.get(1).getTime());

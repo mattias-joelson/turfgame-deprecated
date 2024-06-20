@@ -5,6 +5,7 @@ import org.joelson.turf.idioten.model.UserData;
 import org.joelson.turf.util.persistence.EntityRegistry;
 
 import java.time.Instant;
+import java.util.Comparator;
 
 class UserRegistry extends EntityRegistry<UserEntity> {
 
@@ -13,7 +14,7 @@ class UserRegistry extends EntityRegistry<UserEntity> {
     }
 
     public UserEntity findByName(String name) {
-        return findAnyOrNull("name", name);
+        return findAll("name", name).max(Comparator.comparing(UserEntity::getTime)).orElse(null);
     }
 
     public UserEntity create(UserData userData, Instant time) {

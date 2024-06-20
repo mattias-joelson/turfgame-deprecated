@@ -5,6 +5,7 @@ import org.joelson.turf.idioten.model.ZoneData;
 import org.joelson.turf.util.persistence.EntityRegistry;
 
 import java.time.Instant;
+import java.util.Comparator;
 
 class ZoneRegistry extends EntityRegistry<ZoneEntity> {
 
@@ -13,7 +14,7 @@ class ZoneRegistry extends EntityRegistry<ZoneEntity> {
     }
 
     public ZoneEntity findByName(String name) {
-        return findAnyOrNull("name", name);
+        return findAll("name", name).max(Comparator.comparing(ZoneEntity::getTime)).orElse(null);
     }
 
     public ZoneEntity create(ZoneData zoneData, Instant time) {
