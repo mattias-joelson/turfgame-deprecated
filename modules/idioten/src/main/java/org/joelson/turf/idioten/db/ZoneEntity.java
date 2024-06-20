@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "zones",
-        indexes = { @Index(columnList = "id", unique = true), @Index(columnList = "name", unique = true) })
+        indexes = { @Index(columnList = "id", unique = true), @Index(columnList = "name") })
 public class ZoneEntity implements Serializable {
 
     @Serial
