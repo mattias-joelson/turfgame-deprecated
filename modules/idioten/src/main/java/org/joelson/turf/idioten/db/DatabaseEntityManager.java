@@ -19,6 +19,7 @@ import java.sql.Statement;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class DatabaseEntityManager {
 
@@ -105,6 +106,57 @@ public class DatabaseEntityManager {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
             return userRegistry.findAll().map(UserEntity::toData).toList();
+        }
+    }
+
+    private static Stream<VisitData> sortByTime(Stream<VisitData> visits) {
+        return visits.sorted(DatabaseEntityManager::compareVisitData);
+    }
+
+    private static int compareVisitData(VisitData v1, VisitData v2) {
+        int timeCompare = v1.getTime().compareTo(v2.getTime());
+        if (timeCompare == 0) {
+            if (v2 instanceof AssistData) {
+                return (v1 instanceof AssistData) ? 0 : -1;
+            } else {
+                return (v1 instanceof AssistData) ? 1 : 0;
+            }
+        } else {
+            return timeCompare;
+        }
+    }
+
+    public List<VisitData> getVisits(ZoneData zoneData) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            ZoneEntity zone = zoneRegistry.find(zoneData.getId());
+            if (zone == null) {
+                return List.of();
+            }
+            return sortByTime(visitRegistry.findAllByZone(zone).flatMap(
+                    visit -> Stream.concat(Stream.of(visit.toData()),
+                            assistRegistry.findAllByVisit(visit).map(AssistEntity::toData)))).toList();
+        }
+    }
+
+    public List<VisitData> getVisits(UserData userData) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            UserEntity user = userRegistry.find(userData.getId());
+            if (user == null) {
+                return List.of();
+            }
+            return sortByTime(Stream.concat(visitRegistry.findAllByUser(user).map(VisitEntity::toData),
+                    assistRegistry.findAllByUser(user).map(AssistEntity::toData))).toList();
+        }
+    }
+
+    public List<VisitData> getVisits(Instant from, Instant to) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return sortByTime(visitRegistry.findAllBetween(from, to).flatMap(
+                    visit -> Stream.concat(Stream.of(visit.toData()),
+                            assistRegistry.findAllByVisit(visit).map(AssistEntity::toData)))).toList();
         }
     }
 
