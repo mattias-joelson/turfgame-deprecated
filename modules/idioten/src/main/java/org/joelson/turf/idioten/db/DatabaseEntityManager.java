@@ -17,6 +17,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -167,16 +168,17 @@ public class DatabaseEntityManager {
         }
     }
 
-    public void addTake(TakeData takeData, Iterable<UserData> assisted) {
-        addVisit(takeData, VisitType.TAKE, assisted);
+    public List<VisitData> addTake(TakeData takeData, Iterable<UserData> assisted) {
+        return addVisit(takeData, VisitType.TAKE, assisted);
     }
 
-    public void addRevisit(RevisitData revisitData, Iterable<UserData> assisted) {
-        addVisit(revisitData, VisitType.REVISIT, assisted);
+    public List<VisitData> addRevisit(RevisitData revisitData, Iterable<UserData> assisted) {
+        return addVisit(revisitData, VisitType.REVISIT, assisted);
     }
 
-    private void addVisit(VisitData visitData, VisitType visitType, Iterable<UserData> assisted) {
+    private List<VisitData> addVisit(VisitData visitData, VisitType visitType, Iterable<UserData> assisted) {
         try (Transaction transaction = new Transaction()) {
+            List<VisitData> visits = new ArrayList<>();
             transaction.begin();
             Instant time = visitData.getTime();
             ZoneEntity zone = zoneRegistry.getUpdateOrCreate(visitData.getZone(), time);
@@ -184,10 +186,14 @@ public class DatabaseEntityManager {
             if (visit == null) {
                 UserEntity user = userRegistry.getUpdateOrCreate(visitData.getUser(), time);
                 VisitEntity newVisit = visitRegistry.create(zone, user, time, visitType);
-                assisted.forEach(
-                        userData -> assistRegistry.create(newVisit, userRegistry.getUpdateOrCreate(userData, time)));
+                visits.add(newVisit.toData());
+                for (UserData assister : assisted) {
+                    AssistEntity assist = assistRegistry.create(newVisit, userRegistry.getUpdateOrCreate(assister, time));
+                    visits.add(assist.toData());
+                }
             }
             transaction.commit();
+            return visits;
         }
     }
 
