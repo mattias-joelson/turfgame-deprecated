@@ -4,8 +4,6 @@ import org.joelson.turf.idioten.model.TakeData;
 import org.joelson.turf.idioten.model.UserData;
 import org.joelson.turf.idioten.model.VisitData;
 import org.joelson.turf.idioten.model.ZoneData;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -16,12 +14,9 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
-public class DatabaseEntityManagerZoneTest {
+public class DatabaseEntityManagerZoneTest extends DatabaseEntityManagerTest {
 
-    public static final String PERSISTENCE_H2 = "turfgame-idioten-test-h2";
     private static final UserData USER = new UserData(1, "User");
-
-    private DatabaseEntityManager entityManager;
 
     private static Instant getTruncatedInstantNow() {
         return Instant.now().truncatedTo(ChronoUnit.SECONDS);
@@ -35,32 +30,21 @@ public class DatabaseEntityManagerZoneTest {
         return instant.plus(days, ChronoUnit.MINUTES);
     }
 
-    @BeforeEach
-    public void setupEntityManager() {
-        entityManager = new DatabaseEntityManager(PERSISTENCE_H2);
-    }
-
-    @AfterEach
-    public void closeEntityManager() {
-        entityManager.close();
-        entityManager = null;
-    }
-
     @Test
     public void testFindZoneByName() {
         ZoneData firstZone = new ZoneData(1, "Zone");
         Instant firstTime = getTruncatedInstantNow();
-        entityManager.addTake(new TakeData(firstZone, USER, firstTime), List.of());
-        ZoneData zoneEntity = entityManager.getZone(firstZone.getName());
+        getEntityManager().addTake(new TakeData(firstZone, USER, firstTime), List.of());
+        ZoneData zoneEntity = getEntityManager().getZone(firstZone.getName());
         assertEquals(firstZone, zoneEntity);
 
         ZoneData nextZone = new ZoneData(firstZone.getId() + 1, firstZone.getName());
         Instant nextTime = addMinutes(firstTime, 30);
-        entityManager.addTake(new TakeData(nextZone, USER, nextTime), List.of());
-        zoneEntity = entityManager.getZone(firstZone.getName());
+        getEntityManager().addTake(new TakeData(nextZone, USER, nextTime), List.of());
+        zoneEntity = getEntityManager().getZone(firstZone.getName());
         assertEquals(nextZone, zoneEntity);
 
-        assertEquals(Set.of(nextZone, firstZone), Set.copyOf(entityManager.getZones()));
+        assertEquals(Set.of(nextZone, firstZone), Set.copyOf(getEntityManager().getZones()));
     }
 
     @Test
@@ -70,10 +54,10 @@ public class DatabaseEntityManagerZoneTest {
         ZoneData zoneNewName = new ZoneData(zone.getId(), "second");
         Instant timeNew = addDays(time, 1);
 
-        entityManager.addTake(new TakeData(zoneNewName, USER, timeNew), List.of());
-        entityManager.addTake(new TakeData(zone, USER, time), List.of());
+        getEntityManager().addTake(new TakeData(zoneNewName, USER, timeNew), List.of());
+        getEntityManager().addTake(new TakeData(zone, USER, time), List.of());
 
-        List<VisitData> takes = entityManager.getVisits();
+        List<VisitData> takes = getEntityManager().getVisits();
         assertEquals(2, takes.size());
         for (VisitData take : takes) {
             assertInstanceOf(TakeData.class, take);
@@ -85,6 +69,6 @@ public class DatabaseEntityManagerZoneTest {
         } else {
             assertEquals(time, takes.get(1).getTime());
         }
-        assertEquals(1, entityManager.getUsers().size());
+        assertEquals(1, getEntityManager().getUsers().size());
     }
 }
