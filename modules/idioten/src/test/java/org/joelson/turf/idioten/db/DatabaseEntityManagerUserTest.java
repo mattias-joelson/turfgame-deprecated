@@ -5,10 +5,10 @@ import org.joelson.turf.idioten.model.TakeData;
 import org.joelson.turf.idioten.model.UserData;
 import org.joelson.turf.idioten.model.VisitData;
 import org.joelson.turf.idioten.model.ZoneData;
+import org.joelson.turf.idioten.util.InstantUtil;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 
@@ -19,28 +19,16 @@ public class DatabaseEntityManagerUserTest extends DatabaseEntityManagerTest {
 
     private static final ZoneData ZONE = new ZoneData(1, "ZoneZone");
 
-    private static Instant getTruncatedInstantNow() {
-        return Instant.now().truncatedTo(ChronoUnit.SECONDS);
-    }
-
-    private static Instant addMinutes(Instant instant, long minutes) {
-        return instant.plus(minutes, ChronoUnit.MINUTES);
-    }
-
-    private static Instant addDays(Instant instant, long days) {
-        return instant.plus(days, ChronoUnit.MINUTES);
-    }
-
     @Test
     public void testFindUserByName() {
         UserData firstUser = new UserData(1, "User");
-        Instant firstTime = getTruncatedInstantNow();
+        Instant firstTime = InstantUtil.getInstantNowTruncatedtoSecond();
         getEntityManager().addTake(new TakeData(ZONE, firstUser, firstTime), List.of());
         UserData userEntity = getEntityManager().getUser(firstUser.getName());
         assertEquals(firstUser, userEntity);
 
         UserData nextUser = new UserData(firstUser.getId() + 1, firstUser.getName());
-        Instant nextTime = addMinutes(firstTime, 30);
+        Instant nextTime = InstantUtil.addMinutes(firstTime, 30);
         getEntityManager().addTake(new TakeData(ZONE, nextUser, nextTime), List.of());
         userEntity = getEntityManager().getUser(firstUser.getName());
         assertEquals(nextUser, userEntity);
@@ -51,11 +39,11 @@ public class DatabaseEntityManagerUserTest extends DatabaseEntityManagerTest {
     @Test
     public void testUserRenamedAndSameName() {
         UserData user = new UserData(1, "player");
-        Instant time = getTruncatedInstantNow();
+        Instant time = InstantUtil.getInstantNowTruncatedtoSecond();
         UserData userRevisit = new UserData(1, "player-renamed");
-        Instant timeRevisit = addDays(time, 1);
+        Instant timeRevisit = InstantUtil.addDays(time, 1);
         UserData userNext = new UserData(2, userRevisit.getName());
-        Instant timeNext = addMinutes(timeRevisit, 30);
+        Instant timeNext = InstantUtil.addMinutes(timeRevisit, 30);
 
         getEntityManager().addTake(new TakeData(ZONE, user, time), List.of());
         getEntityManager().addTake(new TakeData(ZONE, userNext, timeNext), List.of());

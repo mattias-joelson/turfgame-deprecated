@@ -4,6 +4,7 @@ import org.joelson.turf.idioten.db.DatabaseEntityManager;
 import org.joelson.turf.idioten.model.RevisitData;
 import org.joelson.turf.idioten.model.TakeData;
 import org.joelson.turf.idioten.model.UserData;
+import org.joelson.turf.idioten.model.VisitData;
 import org.joelson.turf.idioten.model.ZoneData;
 import org.joelson.turf.turfgame.FeedObject;
 import org.joelson.turf.turfgame.apiv5.FeedTakeover;
@@ -20,10 +21,12 @@ import java.util.List;
 
 public class FeedImporter {
 
-    private DatabaseEntityManager entityManager = null;
+    private final DatabaseEntityManager entityManager;
+    private final ProgressUpdater progressUpdater;
 
-    public FeedImporter(DatabaseEntityManager entityManager) {
+    public FeedImporter(DatabaseEntityManager entityManager, ProgressUpdater progressUpdater) {
         this.entityManager = entityManager;
+        this.progressUpdater = progressUpdater;
     }
 
     public void addVisits(Path path) {
@@ -43,11 +46,13 @@ public class FeedImporter {
             if (assisted != null && assisted.length > 0) {
                 assists = Arrays.stream(assisted).map(user -> new UserData(user.getId(), user.getName())).toList();
             }
+            List<VisitData> visits;
             if (previousOwner == null || previousOwner.getId() != currentOwner.getId()) {
-                entityManager.addTake(new TakeData(zoneData, userData, time), assists);
+                visits = entityManager.addTake(new TakeData(zoneData, userData, time), assists);
             } else {
-                entityManager.addRevisit(new RevisitData(zoneData, userData, time), assists);
+                visits = entityManager.addRevisit(new RevisitData(zoneData, userData, time), assists);
             }
+            progressUpdater.updateWithVisits(visits);
         }
     }
 }

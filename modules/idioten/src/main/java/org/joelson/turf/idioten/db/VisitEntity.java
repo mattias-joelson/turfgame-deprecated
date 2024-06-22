@@ -17,12 +17,13 @@ import org.joelson.turf.idioten.model.VisitData;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Entity
 @Table(name = "visits", indexes = { @Index(columnList = "id", unique = true), @Index(columnList = "zone_id"),
-        @Index(columnList = "user_id"), @Index(columnList = "time") }, uniqueConstraints = {
-        @UniqueConstraint(name = "UniqueZoneAndTime", columnNames = { "zone_id", "time" }) })
+        @Index(columnList = "user_id"), @Index(columnList = "time") },
+        uniqueConstraints = { @UniqueConstraint(name = "unique_zone_and_time", columnNames = { "zone_id", "time" }) })
 public class VisitEntity implements Serializable {
 
     @Serial
@@ -64,6 +65,13 @@ public class VisitEntity implements Serializable {
         return visitEntity;
     }
 
+    private static Instant instantTruncatedToSecond(Instant instant) {
+        if (!instant.truncatedTo(ChronoUnit.SECONDS).equals(instant)) {
+            throw new IllegalArgumentException(String.format("Instant %s not truncated to second.", instant));
+        }
+        return instant;
+    }
+
     public int getId() {
         return id;
     }
@@ -93,7 +101,7 @@ public class VisitEntity implements Serializable {
     }
 
     public void setTime(@NotNull Instant time) {
-        this.time = Objects.requireNonNull(time);
+        this.time = instantTruncatedToSecond(Objects.requireNonNull(time));
     }
 
     public @NotNull VisitType getType() {

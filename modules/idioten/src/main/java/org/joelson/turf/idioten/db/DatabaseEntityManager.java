@@ -8,6 +8,7 @@ import org.joelson.turf.idioten.model.AssistData;
 import org.joelson.turf.idioten.model.RevisitData;
 import org.joelson.turf.idioten.model.TakeData;
 import org.joelson.turf.idioten.model.UserData;
+import org.joelson.turf.idioten.model.UserVisitsData;
 import org.joelson.turf.idioten.model.VisitData;
 import org.joelson.turf.idioten.model.ZoneData;
 
@@ -33,6 +34,7 @@ public class DatabaseEntityManager {
     private EntityManager entityManager;
     private AssistRegistry assistRegistry;
     private UserRegistry userRegistry;
+    private UserVisitsRegistry userVisitsRegistry;
     private VisitRegistry visitRegistry;
     private ZoneRegistry zoneRegistry;
 
@@ -54,6 +56,23 @@ public class DatabaseEntityManager {
     private static String createJdbcURL(Path directoryPath, boolean openExisting) {
         return String.format("jdbc:h2:%s/%s;IFEXISTS=%s;", directoryPath, DATABASE_NAME,
                 (openExisting) ? "TRUE" : "FALSE");
+    }
+
+    private static Stream<VisitData> sortByTime(Stream<VisitData> visits) {
+        return visits.sorted(DatabaseEntityManager::compareVisitData);
+    }
+
+    private static int compareVisitData(VisitData v1, VisitData v2) {
+        int timeCompare = v1.getTime().compareTo(v2.getTime());
+        if (timeCompare == 0) {
+            if (v2 instanceof AssistData) {
+                return (v1 instanceof AssistData) ? 0 : -1;
+            } else {
+                return (v1 instanceof AssistData) ? 1 : 0;
+            }
+        } else {
+            return timeCompare;
+        }
     }
 
     public void importDatabase(Path importFile) throws SQLException {
@@ -110,20 +129,49 @@ public class DatabaseEntityManager {
         }
     }
 
-    private static Stream<VisitData> sortByTime(Stream<VisitData> visits) {
-        return visits.sorted(DatabaseEntityManager::compareVisitData);
+    public int increaseUserVisits(UserData userData, Instant date) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.begin();
+            UserEntity user = userRegistry.find(userData.getId());
+            UserVisitsEntity userVisits = userVisitsRegistry.find(user, date);
+            int visits = 1;
+            if (userVisits == null) {
+                userVisitsRegistry.create(user, date, visits);
+            } else {
+                visits = userVisits.getVisits() + 1;
+                userVisits.setVisits(visits);
+                userVisitsRegistry.persist(userVisits);
+            }
+            transaction.commit();
+            return visits;
+        }
     }
 
-    private static int compareVisitData(VisitData v1, VisitData v2) {
-        int timeCompare = v1.getTime().compareTo(v2.getTime());
-        if (timeCompare == 0) {
-            if (v2 instanceof AssistData) {
-                return (v1 instanceof AssistData) ? 0 : -1;
-            } else {
-                return (v1 instanceof AssistData) ? 1 : 0;
+    public List<UserVisitsData> getUserVisits(UserData userData) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            UserEntity user = userRegistry.find(userData.getId());
+            if (user == null) {
+                return List.of();
             }
-        } else {
-            return timeCompare;
+            return userVisitsRegistry.findAllByUser(user).map(UserVisitsEntity::toData)
+                    .sorted(UserVisitsData::compareUserVisitsData).toList();
+        }
+    }
+
+    public List<UserVisitsData> getUserVisits(Instant date) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return userVisitsRegistry.findAllByDate(date).map(UserVisitsEntity::toData)
+                    .sorted(UserVisitsData::compareUserVisitsData).toList();
+        }
+    }
+
+    public List<UserVisitsData> getUserVisits() {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return userVisitsRegistry.findAll().map(UserVisitsEntity::toData)
+                    .sorted(UserVisitsData::compareUserVisitsData).toList();
         }
     }
 
@@ -188,7 +236,8 @@ public class DatabaseEntityManager {
                 VisitEntity newVisit = visitRegistry.create(zone, user, time, visitType);
                 visits.add(newVisit.toData());
                 for (UserData assister : assisted) {
-                    AssistEntity assist = assistRegistry.create(newVisit, userRegistry.getUpdateOrCreate(assister, time));
+                    AssistEntity assist =
+                            assistRegistry.create(newVisit, userRegistry.getUpdateOrCreate(assister, time));
                     visits.add(assist.toData());
                 }
             }
@@ -235,6 +284,7 @@ public class DatabaseEntityManager {
             entityManager = entityManagerFactory.createEntityManager();
             assistRegistry = new AssistRegistry(entityManager);
             userRegistry = new UserRegistry(entityManager);
+            userVisitsRegistry = new UserVisitsRegistry(entityManager);
             visitRegistry = new VisitRegistry(entityManager);
             zoneRegistry = new ZoneRegistry(entityManager);
         }
@@ -263,6 +313,7 @@ public class DatabaseEntityManager {
             entityManager = null;
             assistRegistry = null;
             userRegistry = null;
+            userVisitsRegistry = null;
             visitRegistry = null;
             zoneRegistry = null;
         }
