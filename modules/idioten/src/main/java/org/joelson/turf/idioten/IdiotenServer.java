@@ -2,6 +2,7 @@ package org.joelson.turf.idioten;
 
 import jakarta.persistence.PersistenceException;
 import org.joelson.turf.idioten.controller.FeedImporter;
+import org.joelson.turf.idioten.controller.ProgressUpdater;
 import org.joelson.turf.idioten.db.DatabaseEntityManager;
 import org.joelson.turf.turfgame.util.FeedsPathComparator;
 import org.joelson.turf.util.FilesUtil;
@@ -68,9 +69,10 @@ public class IdiotenServer implements Runnable {
     }
 
     private void readVisits(String[] filenames) throws IOException {
-        FeedImporter feedImportUtil = new FeedImporter(entityManager);
+        ProgressUpdater progressUpdater = new ProgressUpdater(entityManager);
+        FeedImporter feedImporter = new FeedImporter(entityManager, progressUpdater);
         for (String filename : filenames) {
-            FilesUtil.forEachFile(Path.of(filename), true, new FeedsPathComparator(), feedImportUtil::addVisits);
+            FilesUtil.forEachFile(Path.of(filename), true, new FeedsPathComparator(), feedImporter::addVisits);
         }
     }
 

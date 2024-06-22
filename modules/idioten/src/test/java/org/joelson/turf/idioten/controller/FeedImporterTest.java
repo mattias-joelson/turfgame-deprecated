@@ -7,6 +7,7 @@ import org.joelson.turf.idioten.model.RevisitData;
 import org.joelson.turf.idioten.model.UserData;
 import org.joelson.turf.idioten.model.VisitData;
 import org.joelson.turf.idioten.model.ZoneData;
+import org.joelson.turf.idioten.util.InstantUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -24,11 +25,7 @@ public class FeedImporterTest extends DatabaseEntityManagerTest {
 
     public static void readFeedResource(DatabaseEntityManager entityManager) {
         String filename = FeedImporterTest.class.getResource("/feeds_takeover_2024-06-17_10-24-17.json").getFile();
-        new FeedImporter(entityManager).addVisits(new File(filename).toPath());
-    }
-
-    private static Instant toInstant(String datatime) {
-        return LocalDateTime.parse(datatime).atZone(TimeZone.getTimeZone("UTC/Greenwich").toZoneId()).toInstant();
+        new FeedImporter(entityManager, new ProgressUpdater(entityManager)).addVisits(new File(filename).toPath());
     }
 
     @Test
@@ -64,16 +61,15 @@ public class FeedImporterTest extends DatabaseEntityManagerTest {
                 .sorted(Comparator.comparing(UserData::getId)).collect(Collectors.toMap(e -> e, e -> 1, Integer::sum))
                 .entrySet().stream().filter(e -> e.getValue() > 1)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        userVisitsMap.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getValue)).forEach(
-                System.out::println);
+        userVisitsMap.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(System.out::println);
         assists.stream().filter(assist -> userVisitsMap.containsKey(assist.getUser())).forEach(System.out::println);
 
         int noFreshwaterVisits = 0;
         int noGamlaStanTVisits = 0;
         int noJossesDaVisits = 0;
         int noPuffaVisits = 0;
-        Instant from = toInstant("2024-06-17T10:20:50");
-        Instant to = toInstant("2024-06-17T10:24:10");
+        Instant from = InstantUtil.toInstant("2024-06-17T10:20:50");
+        Instant to = InstantUtil.toInstant("2024-06-17T10:24:10");
         int noBetweenVisits = 0;
 
         for (VisitData visit : visits) {
@@ -125,8 +121,8 @@ public class FeedImporterTest extends DatabaseEntityManagerTest {
         assertEquals(2, getEntityManager().getVisits(new ZoneData(21667, "GamlaStanT")).size());
         assertEquals(16, getEntityManager().getVisits(new UserData(113416, "jösses...då")).size());
         assertEquals(15, getEntityManager().getVisits(new UserData(414549, "puffa")).size());
-        Instant from = toInstant("2024-06-17T10:20:50");
-        Instant to = toInstant("2024-06-17T10:24:10");
+        Instant from = InstantUtil.toInstant("2024-06-17T10:20:50");
+        Instant to = InstantUtil.toInstant("2024-06-17T10:24:10");
         assertEquals(218, getEntityManager().getVisits(from, to).size());
     }
 }

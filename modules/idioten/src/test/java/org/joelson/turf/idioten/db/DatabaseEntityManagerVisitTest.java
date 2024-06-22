@@ -6,6 +6,7 @@ import org.joelson.turf.idioten.model.TakeData;
 import org.joelson.turf.idioten.model.UserData;
 import org.joelson.turf.idioten.model.VisitData;
 import org.joelson.turf.idioten.model.ZoneData;
+import org.joelson.turf.idioten.util.InstantUtil;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -21,13 +22,9 @@ public class DatabaseEntityManagerVisitTest extends DatabaseEntityManagerTest{
     ZoneData ZONE = new ZoneData(17, "Donken");
     UserData USER = new UserData(4711, "Gurkan");
 
-    private static Instant getTruncatedInstantNow() {
-        return Instant.now().truncatedTo(ChronoUnit.SECONDS);
-    }
-
     @Test
     public void testAddTake() {
-        Instant time = getTruncatedInstantNow();
+        Instant time = InstantUtil.getInstantNowTruncatedtoSecond();
         TakeData take = new TakeData(ZONE, USER, time);
         getEntityManager().addTake(take, List.of());
 
@@ -52,7 +49,7 @@ public class DatabaseEntityManagerVisitTest extends DatabaseEntityManagerTest{
 
     @Test
     public void testAddRevisit() {
-        Instant time = getTruncatedInstantNow();
+        Instant time = InstantUtil.getInstantNowTruncatedtoSecond();
         RevisitData revisit = new RevisitData(ZONE, USER, time);
         getEntityManager().addRevisit(revisit, List.of());
 
