@@ -80,7 +80,6 @@
   </dependencies>
 
   <modules>
-    <module>modules/resources</module>
     <module>modules/hibernate-h2</module>
     <module>modules/persistence-utilities</module>
     <module>modules/application</module>
