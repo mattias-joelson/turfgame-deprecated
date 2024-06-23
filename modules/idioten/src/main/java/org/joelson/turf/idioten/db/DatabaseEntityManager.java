@@ -8,6 +8,7 @@ import org.joelson.turf.idioten.model.AssistData;
 import org.joelson.turf.idioten.model.RevisitData;
 import org.joelson.turf.idioten.model.TakeData;
 import org.joelson.turf.idioten.model.UserData;
+import org.joelson.turf.idioten.model.UserProgressData;
 import org.joelson.turf.idioten.model.UserVisitsData;
 import org.joelson.turf.idioten.model.VisitData;
 import org.joelson.turf.idioten.model.ZoneData;
@@ -34,6 +35,7 @@ public class DatabaseEntityManager {
     private EntityManager entityManager;
     private AssistRegistry assistRegistry;
     private UserRegistry userRegistry;
+    private UserProgressRegistry userProgressRegistry;
     private UserVisitsRegistry userVisitsRegistry;
     private VisitRegistry visitRegistry;
     private ZoneRegistry zoneRegistry;
@@ -73,6 +75,18 @@ public class DatabaseEntityManager {
         } else {
             return timeCompare;
         }
+    }
+
+    private static UserData toUserData(UserEntity user) {
+        return (user != null) ? user.toData() : null;
+    }
+
+    private static UserProgressData toUserProgressData(UserProgressEntity userProgress) {
+        return (userProgress != null) ? userProgress.toData() : null;
+    }
+
+    private static ZoneData toZoneData(ZoneEntity zone) {
+        return (zone != null) ? zone.toData() : null;
     }
 
     public void importDatabase(Path importFile) throws SQLException {
@@ -118,14 +132,81 @@ public class DatabaseEntityManager {
         }
     }
 
-    private UserData toUserData(UserEntity user) {
-        return (user != null) ? user.toData() : null;
-    }
-
     public List<UserData> getUsers() {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
             return userRegistry.findAll().map(UserEntity::toData).toList();
+        }
+    }
+
+    public UserProgressData getUserProgress(UserData userData, UserProgressType type, Instant date) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            UserEntity user = userRegistry.find(userData.getId());
+            if (user == null) {
+                return null;
+            }
+            return toUserProgressData(userProgressRegistry.find(user, type, date));
+        }
+    }
+
+    public List<UserProgressData> getUserProgress(UserData userData) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            UserEntity user = userRegistry.find(userData.getId());
+            if (user == null) {
+                return List.of();
+            }
+            return userProgressRegistry.findAllByUser(user).map(UserProgressEntity::toData)
+                    .sorted(UserProgressData::compareUserProgressData).toList();
+        }
+    }
+
+    public List<UserProgressData> getUserProgress(UserProgressType type) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return userProgressRegistry.findAllByType(type).map(UserProgressEntity::toData)
+                    .sorted(UserProgressData::compareUserProgressData).toList();
+        }
+    }
+
+    public List<UserProgressData> getUserProgress(Instant date) {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return userProgressRegistry.findAllByDate(date).map(UserProgressEntity::toData)
+                    .sorted(UserProgressData::compareUserProgressData).toList();
+        }
+    }
+
+    public List<UserProgressData> getUserProgress() {
+        try (Transaction transaction = new Transaction()) {
+            transaction.use();
+            return userProgressRegistry.findAll().map(UserProgressEntity::toData)
+                    .sorted(UserProgressData::compareUserProgressData).toList();
+        }
+    }
+
+    public UserProgressData addUserProgress(UserData userData, UserProgressType type, Instant date,
+            int previousDayCompleted, int dayCompleted, Instant time) {
+        try (Transaction transaction = new Transaction()) {
+            UserProgressEntity userProgress;
+            transaction.begin();
+            UserEntity user = userRegistry.getUpdateOrCreate(userData, time);
+            userProgress = userProgressRegistry.create(user, type, date, previousDayCompleted, dayCompleted, time);
+            transaction.commit();
+            return toUserProgressData(userProgress);
+        }
+    }
+
+    public UserProgressData increaseUserProgressDayCompleted(
+            UserData userData, UserProgressType type, Instant date, Instant time) {
+        try (Transaction transaction = new Transaction()) {
+            UserProgressEntity userProgress;
+            transaction.begin();
+            UserEntity user = userRegistry.find(userData.getId());
+            userProgress = userProgressRegistry.increaseUserProgressDayCompleted(user, type, date, time);
+            transaction.commit();
+            return toUserProgressData(userProgress);
         }
     }
 
@@ -260,10 +341,6 @@ public class DatabaseEntityManager {
         }
     }
 
-    private ZoneData toZoneData(ZoneEntity zone) {
-        return (zone != null) ? zone.toData() : null;
-    }
-
     public List<ZoneData> getZones() {
         try (Transaction transaction = new Transaction()) {
             transaction.use();
@@ -284,6 +361,7 @@ public class DatabaseEntityManager {
             entityManager = entityManagerFactory.createEntityManager();
             assistRegistry = new AssistRegistry(entityManager);
             userRegistry = new UserRegistry(entityManager);
+            userProgressRegistry = new UserProgressRegistry(entityManager);
             userVisitsRegistry = new UserVisitsRegistry(entityManager);
             visitRegistry = new VisitRegistry(entityManager);
             zoneRegistry = new ZoneRegistry(entityManager);
@@ -313,6 +391,7 @@ public class DatabaseEntityManager {
             entityManager = null;
             assistRegistry = null;
             userRegistry = null;
+            userProgressRegistry = null;
             userVisitsRegistry = null;
             visitRegistry = null;
             zoneRegistry = null;
