@@ -1,6 +1,7 @@
 package org.joelson.turf.idioten.controller;
 
 import org.joelson.turf.idioten.db.DatabaseEntityManagerTest;
+import org.joelson.turf.idioten.model.RevisitData;
 import org.joelson.turf.idioten.model.TakeData;
 import org.joelson.turf.idioten.model.UserData;
 import org.joelson.turf.idioten.model.UserVisitsData;
@@ -16,19 +17,44 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProgressUpdaterTest extends DatabaseEntityManagerTest {
 
+    public static final ZoneData ZONE = new ZoneData(1, "Zone");
+    public static final UserData USER = new UserData(1, "Taker");
+    public static final UserData ASSISTER = new UserData(USER.getId() + 1, "Assister");
+
     @Test
     public void testSingleTake() {
-        ZoneData zone = new ZoneData(1, "Zone");
-        UserData user = new UserData(1, "Taker");
         Instant time = InstantUtil.getInstantNowTruncatedtoSecond();
-        UserData assister = new UserData(user.getId() + 1, "Assister");
 
         ProgressUpdater progressUpdater = new ProgressUpdater(getEntityManager());
-        progressUpdater.updateWithVisits(getEntityManager().addTake(new TakeData(zone, user, time), List.of(assister)));
+        progressUpdater.updateWithVisits(getEntityManager().addTake(new TakeData(ZONE, USER, time),
+                List.of(ASSISTER)));
 
         List<UserVisitsData> userVisits = getEntityManager().getUserVisits();
         Instant date = time.truncatedTo(ChronoUnit.DAYS);
-        assertEquals(List.of(new UserVisitsData(user, date, 1), new UserVisitsData(assister, date, 1)), userVisits);
+        assertEquals(List.of(new UserVisitsData(USER, date, 1), new UserVisitsData(ASSISTER, date, 1)), userVisits);
+    }
+
+    @Test
+    public void testMultipleDates() {
+        Instant takeTime = InstantUtil.getInstantNowTruncatedtoSecond();
+        Instant revisitTime = InstantUtil.addDays(takeTime, 1);
+        Instant nextTime = InstantUtil.addDays(revisitTime, 1);
+
+        ProgressUpdater progressUpdater = new ProgressUpdater(getEntityManager());
+        progressUpdater.updateWithVisits(getEntityManager().addTake(new TakeData(ZONE, USER, takeTime),
+                List.of(ASSISTER)));
+        progressUpdater.updateWithVisits(getEntityManager().addRevisit(new RevisitData(ZONE, USER, revisitTime),
+                List.of(ASSISTER)));
+        progressUpdater.updateWithVisits(getEntityManager().addTake(new TakeData(ZONE, ASSISTER, nextTime),
+                List.of()));
+
+        List<UserVisitsData> userVisits = getEntityManager().getUserVisits();
+        Instant takeDate = takeTime.truncatedTo(ChronoUnit.DAYS);
+        Instant revisitDate = revisitTime.truncatedTo(ChronoUnit.DAYS);
+        Instant nextDate = nextTime.truncatedTo(ChronoUnit.DAYS);
+        assertEquals(List.of(new UserVisitsData(USER, takeDate, 1), new UserVisitsData(USER, revisitDate, 1),
+                new UserVisitsData(ASSISTER, takeDate, 1), new UserVisitsData(ASSISTER, revisitDate, 1),
+                new UserVisitsData(ASSISTER, nextDate, 1)), userVisits);
     }
 
     @Test
