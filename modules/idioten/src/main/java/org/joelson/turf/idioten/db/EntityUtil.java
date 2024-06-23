@@ -20,6 +20,13 @@ final class EntityUtil {
         return toStringPart(user, UserEntity::getId, UserEntity::getName);
     }
 
+    public static String toStringPart(UserProgressEntity userProgress) {
+        return String.format("user=[%s], type=%s, date=%s, previousDayCompleted=%d, dayCompleted=%d, timeCompleted=%s",
+                userProgress.getUser(), userProgress.getType(), userProgress.getDate(),
+                userProgress.getPreviousDayCompleted(), userProgress.getDayCompleted(),
+                userProgress.getTimeCompleted());
+    }
+
     public static String toStringPart(UserVisitsEntity userVisits) {
         return String.format("user=[%s], date=%s, visits=%d", toStringPart(userVisits.getUser()), userVisits.getDate(),
                 userVisits.getVisits());

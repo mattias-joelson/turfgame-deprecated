@@ -9,6 +9,7 @@
     <class>org.joelson.turf.idioten.db.AssistEntity</class>
     <class>org.joelson.turf.idioten.db.AssistId</class>
     <class>org.joelson.turf.idioten.db.UserEntity</class>
+    <class>org.joelson.turf.idioten.db.UserProgressEntity</class>
     <class>org.joelson.turf.idioten.db.UserVisitsEntity</class>
     <class>org.joelson.turf.idioten.db.VisitEntity</class>
     <class>org.joelson.turf.idioten.db.VisitType</class>
