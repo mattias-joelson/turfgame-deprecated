@@ -14,9 +14,6 @@ final class EntityUtil {
     }
 
     public static String toStringPart(UserEntity user) {
-        if (user == null) {
-            return "N/A";
-        }
         return toStringPart(user, UserEntity::getId, UserEntity::getName);
     }
 
@@ -34,8 +31,8 @@ final class EntityUtil {
 
     public static String toStringPart(VisitEntity visit) {
         return toStringPart(visit, VisitEntity::getId,
-                v -> String.format("zone=[%s], user=[%s], time=%s, type=%s", toStringPart(visit.getZone()),
-                        toStringPart(visit.getUser()), visit.getTime(), visit.getType()));
+                v -> String.format("zone=[%s], user=[%s], time=%s, type=%s", toStringPart(v.getZone()),
+                        toStringPart(v.getUser()), v.getTime(), v.getType()));
     }
 
     public static String toStringPart(ZoneEntity zone) {
