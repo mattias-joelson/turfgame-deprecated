@@ -84,7 +84,7 @@
     <module>modules/hibernate-h2</module>
     <module>modules/persistence-utilities</module>
     <module>modules/application</module>
-    <module>modules/idioten</module>
+    <module>modules/daily-increase</module>
   </modules>
 
   <properties>
