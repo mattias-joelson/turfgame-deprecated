@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @Entity
 @IdClass(UserVisitsId.class)
-@Table(name = "users_visits", indexes = { @Index(columnList = "user_id"), @Index(columnList = "date") })
+@Table(name = "user_visits", indexes = { @Index(columnList = "user_id"), @Index(columnList = "date") })
 public class UserVisitsEntity implements Serializable {
 
     @Serial
@@ -31,6 +31,7 @@ public class UserVisitsEntity implements Serializable {
     @JoinColumn(name = "user_id", updatable = false, nullable = false)
     private UserEntity user;
 
+    @Id
     @NotNull
     @Column(updatable = false, nullable = false)
     private Instant date;
